@@ -3,7 +3,7 @@ import test from 'ava';
 import m from '../lib';
 
 test('throw if no type definition was found', async t => {
-	await t.throws(m({cwd: path.join(__dirname, 'fixtures')}), 'The type definition `index.d.ts` does not exist. Create one and try again.');
+	await t.throws(m({cwd: path.join(__dirname, 'fixtures/no-tsd')}), 'The type definition `index.d.ts` does not exist. Create one and try again.');
 });
 
 test('throw if no test is found', async t => {
