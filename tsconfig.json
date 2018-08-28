@@ -1,0 +1,28 @@
+{
+	"compilerOptions": {
+		"outDir": "dist",
+		"target": "es6",
+		"lib": [
+			"es2015"
+		],
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"declaration": true,
+		"pretty": true,
+		"newLine": "lf",
+		"stripInternal": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"noEmitOnError": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"exclude": [
+		"node_modules",
+		"dist",
+		"source/test/fixtures"
+	]
+}

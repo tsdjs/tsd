@@ -1,0 +1,58 @@
+{
+	"name": "tsd-check",
+	"version": "0.0.0",
+	"description": "Check TypeScript type definitions",
+	"license": "MIT",
+	"repository": "SamVerschueren/tsd-check",
+	"author": {
+		"name": "Sam Verschueren",
+		"email": "sam.verschueren@gmail.com",
+		"url": "github.com/SamVerschueren"
+	},
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
+	"bin": "dist/cli.js",
+	"engines": {
+		"node": ">=6"
+	},
+	"scripts": {
+		"prepublishOnly": "npm run build && chmod +x dist/cli.js",
+		"pretest": "npm run build && cpy \"./**/**\" \"../../../dist/test/fixtures/\" --parents --cwd=source/test/fixtures",
+		"test": "npm run lint && ava dist/test/test.js",
+		"build": "npm run clean && tsc",
+		"clean": "del-cli dist",
+		"lint": "tslint -p . --format stylish"
+	},
+	"files": [
+		"dist/index.js",
+		"dist/index.d.ts",
+		"dist/cli.js",
+		"dist/lib"
+	],
+	"keywords": [
+		"typescript",
+		"tsd",
+		"check",
+		"typings",
+		"types",
+		"typedefs",
+		"typedefinitions"
+	],
+	"dependencies": {
+		"eslint-formatter-pretty": "^1.3.0",
+		"meow": "^5.0.0",
+		"path-exists": "^3.0.0",
+		"read-pkg-up": "^4.0.0",
+		"typescript": "^3.0.1",
+		"update-notifier": "^2.5.0"
+	},
+	"devDependencies": {
+		"@types/node": "^10.7.1",
+		"@types/update-notifier": "^2.2.0",
+		"ava": "*",
+		"cpy-cli": "^2.0.0",
+		"del-cli": "^1.1.0",
+		"tslint": "^5.11.0",
+		"tslint-xo": "^0.9.0"
+	}
+}
