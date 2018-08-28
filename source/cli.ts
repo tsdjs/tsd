@@ -25,9 +25,9 @@ const cli = meow(`
 
 		const diagnostics = await tsdCheck(options);
 
-		console.log(formatter(diagnostics));
-
 		if (diagnostics.length > 0) {
+			console.log(formatter(diagnostics));
+
 			throw new Error(`Found ${diagnostics.length} issues.`);
 		}
 	} catch {
