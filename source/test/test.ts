@@ -14,7 +14,21 @@ test('return diagnostics', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/failure')});
 
 	t.true(diagnostics.length === 1);
-	t.is(diagnostics[0].messageText, 'Argument of type \'number\' is not assignable to parameter of type \'string\'.');
+	t.is(diagnostics[0].message, 'Argument of type \'number\' is not assignable to parameter of type \'string\'.');
+});
+
+test('fail if typings file is not part of `files` list', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/no-files')});
+
+	t.deepEqual(diagnostics, [
+		{
+			fileName: 'package.json',
+			message: 'TypeScript type definition is not part of the `files` list.',
+			severity: 'error',
+			line: 3,
+			column: 1
+		}
+	]);
 });
 
 test('return no diagnostics', async t => {

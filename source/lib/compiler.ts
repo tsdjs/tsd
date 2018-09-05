@@ -1,4 +1,6 @@
-import {createProgram, getPreEmitDiagnostics, ScriptTarget, ModuleResolutionKind} from 'typescript';
+import * as path from 'path';
+import {createProgram, getPreEmitDiagnostics, ScriptTarget, ModuleResolutionKind, flattenDiagnosticMessageText} from 'typescript';
+import {Diagnostic, Context} from './interfaces';
 
 const loadConfig = () => {
 	return {
@@ -8,15 +10,38 @@ const loadConfig = () => {
 };
 
 /**
- * Get a list of diagnostics for the given file.
+ * Get a list of TypeScript diagnostics within the current context.
  *
- * @param fileName - Name of the file run the diagnosis on.
+ * @param context - The context object.
  * @returns List of diagnostics
  */
-export const getDiagnostics = (fileName: string) => {
+export const getDiagnostics = (context: Context): Diagnostic[] => {
 	const compilerOptions = loadConfig();
+
+	const fileName = path.join(context.cwd, context.testFile);
 
 	const program = createProgram([fileName], compilerOptions);
 
-	return getPreEmitDiagnostics(program);
+	// Retrieve the TypeScript compiler diagnostics
+	const diagnostics = getPreEmitDiagnostics(program);
+
+	const result: Diagnostic[] = [];
+
+	for (const diagnostic of diagnostics) {
+		if (!diagnostic.file) {
+			continue;
+		}
+
+		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start as number);
+
+		result.push({
+			fileName: diagnostic.file.fileName,
+			message: flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
+			severity: 'error',
+			line: position.line + 1,
+			column: position.character
+		});
+	}
+
+	return result;
 };

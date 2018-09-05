@@ -1,7 +1,9 @@
 import * as path from 'path';
 import * as readPkgUp from 'read-pkg-up';
 import * as pathExists from 'path-exists';
-import {getDiagnostics} from './compiler';
+import {getDiagnostics as getTSDiagnostics} from './compiler';
+import getCustomDiagnostics from './rules';
+import {Context} from './interfaces';
 
 interface Options {
 	cwd: string;
@@ -48,5 +50,15 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 
 	const testFile = await findTestFile(typingsFile, options);
 
-	return getDiagnostics(path.join(options.cwd, testFile));
+	const context: Context = {
+		cwd: options.cwd,
+		pkg,
+		typingsFile,
+		testFile
+	};
+
+	return [
+		...getCustomDiagnostics(context),
+		...getTSDiagnostics(context)
+	];
 };
