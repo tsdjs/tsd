@@ -36,3 +36,9 @@ test('return no diagnostics', async t => {
 
 	t.true(diagnostics.length === 0);
 });
+
+test('support top-level await', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/top-level-await')});
+
+	t.true(diagnostics.length === 0);
+});

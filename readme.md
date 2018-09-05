@@ -61,6 +61,18 @@ If we don't change the test file and we run the `tsd-check` command again, the t
 
 <img src="screenshot.png" width="1330">
 
+### Top-level `await`
+
+If your method returns a `Promise`, you can use top-level `await` to resolve the value instead of wrapping it in an `async` [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE).
+
+```ts
+import {expectType} from 'tsd-check';
+import concat from '.';
+
+expectType<Promise<string>>(concat('foo', 'bar'));
+
+expectType<string>(await concat('foo', 'bar'));
+```
 
 
 ## Assertions

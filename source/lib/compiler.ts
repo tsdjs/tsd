@@ -2,6 +2,11 @@ import * as path from 'path';
 import {createProgram, getPreEmitDiagnostics, ScriptTarget, ModuleResolutionKind, flattenDiagnosticMessageText} from 'typescript';
 import {Diagnostic, Context} from './interfaces';
 
+// List of diagnostic codes that should be ignored
+const ignoredDiagnostics = new Set<number>([
+	1308 // Support top-level `await`
+]);
+
 const loadConfig = () => {
 	return {
 		moduleResolution: ModuleResolutionKind.NodeJs,
@@ -28,7 +33,7 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 	const result: Diagnostic[] = [];
 
 	for (const diagnostic of diagnostics) {
-		if (!diagnostic.file) {
+		if (!diagnostic.file || ignoredDiagnostics.has(diagnostic.code)) {
 			continue;
 		}
 
