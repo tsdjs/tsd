@@ -22,7 +22,7 @@ export default (context: Context): Diagnostic[] => {
 	return [
 		{
 			fileName: 'package.json',
-			message: 'TypeScript type definition is not part of the `files` list.',
+			message: `TypeScript type definition \`${typingsFileName}\` is not part of the \`files\` list.`,
 			severity: 'error',
 			...getJSONPropertyPosition(content, 'files')
 		}

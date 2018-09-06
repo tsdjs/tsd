@@ -23,7 +23,7 @@ test('fail if typings file is not part of `files` list', async t => {
 	t.deepEqual(diagnostics, [
 		{
 			fileName: 'package.json',
-			message: 'TypeScript type definition is not part of the `files` list.',
+			message: 'TypeScript type definition `index.d.ts` is not part of the `files` list.',
 			severity: 'error',
 			line: 3,
 			column: 1
