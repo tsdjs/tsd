@@ -77,14 +77,15 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		createDocumentRegistry()
 	);
 
-	// Get the relevant diagnostics - this is 3x faster than `getPreEmitDiagnostics`.
-	const diagnostics = service.getCompilerOptionsDiagnostics()
-	.concat(service.getSyntacticDiagnostics(fileName))
-	.concat(service.getSemanticDiagnostics(fileName));
-
 	const result: Diagnostic[] = [];
 
-	for (const diagnostic of diagnostics) {
+	const program = service.getProgram();
+
+	if (program === undefined) {
+		return result;
+	}
+
+	for (const diagnostic of program.getSemanticDiagnostics()) {
 		if (!diagnostic.file || ignoredDiagnostics.has(diagnostic.code)) {
 			continue;
 		}
