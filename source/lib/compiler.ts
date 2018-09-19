@@ -1,5 +1,18 @@
 import * as path from 'path';
-import {createProgram, getPreEmitDiagnostics, ScriptTarget, ModuleResolutionKind, flattenDiagnosticMessageText} from 'typescript';
+import {existsSync, readFileSync} from 'fs';
+import {
+	getDefaultLibFilePath,
+	ScriptSnapshot,
+	ScriptTarget,
+	ModuleResolutionKind,
+	flattenDiagnosticMessageText,
+	CompilerOptions,
+	sys,
+	MapLike,
+	LanguageServiceHost,
+	createLanguageService,
+	createDocumentRegistry
+} from 'typescript';
 import {Diagnostic, Context} from './interfaces';
 
 // List of diagnostic codes that should be ignored
@@ -7,10 +20,41 @@ const ignoredDiagnostics = new Set<number>([
 	1308 // Support top-level `await`
 ]);
 
-const loadConfig = () => {
+const loadConfig = () : CompilerOptions => {
 	return {
 		moduleResolution: ModuleResolutionKind.NodeJs,
+		skipLibCheck: true,
 		target: ScriptTarget.ES2015
+	};
+};
+
+/**
+ * Create language service host
+ *
+ * @param rootFileName - The root file
+ * @param options - The typescript compiler options
+ * @returns LanguageServiceHost
+ */
+export const createServiceHost = (rootFileName: string, options: CompilerOptions): LanguageServiceHost => {
+	const files: MapLike<{ version: number }> = {};
+	files[rootFileName] = {version: 0};
+
+	// No need to implement cache because we don't support incremental builds
+	return {
+		getScriptFileNames: () => [rootFileName],
+		getScriptVersion: fileName => files[fileName] && files[fileName].version.toString(),
+		getScriptSnapshot: fileName => {
+			if (!existsSync(fileName)) {
+				return;
+			}
+			return ScriptSnapshot.fromString(readFileSync(fileName).toString());
+		},
+		getCurrentDirectory: () => process.cwd(),
+		getCompilationSettings: () => options,
+		getDefaultLibFileName: defaultLibFileName => getDefaultLibFilePath(defaultLibFileName),
+		fileExists: sys.fileExists,
+		readFile: sys.readFile,
+		readDirectory: sys.readDirectory
 	};
 };
 
@@ -25,10 +69,18 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 
 	const fileName = path.join(context.cwd, context.testFile);
 
-	const program = createProgram([fileName], compilerOptions);
+	const servicesHost = createServiceHost(fileName, compilerOptions);
 
-	// Retrieve the TypeScript compiler diagnostics
-	const diagnostics = getPreEmitDiagnostics(program);
+	// Create the language service files
+	const service = createLanguageService(
+		servicesHost,
+		createDocumentRegistry()
+	);
+
+	// Get the relevant diagnostics - this is 3x faster than `getPreEmitDiagnostics`.
+	const diagnostics = service.getCompilerOptionsDiagnostics()
+	.concat(service.getSyntacticDiagnostics(fileName))
+	.concat(service.getSemanticDiagnostics(fileName));
 
 	const result: Diagnostic[] = [];
 
