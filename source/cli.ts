@@ -30,7 +30,8 @@ const cli = meow(`
 
 			throw new Error(`Found ${diagnostics.length} issues.`);
 		}
-	} catch {
+	} catch (e) {
+		console.error(e)
 		process.exit(1);
 	}
 })();
