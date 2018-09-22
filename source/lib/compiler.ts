@@ -13,13 +13,14 @@ const ignoredDiagnostics = new Set<number>([
 	1308 // Support top-level `await`
 ]);
 
-const loadConfig = () : CompilerOptions => {
+const loadConfig = (): CompilerOptions => {
 	return {
 		moduleResolution: ModuleResolutionKind.NodeJs,
 		skipLibCheck: true,
 		target: ScriptTarget.ES2015
 	};
 };
+
 /**
  * Get a list of TypeScript diagnostics within the current context.
  *
