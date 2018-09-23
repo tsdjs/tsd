@@ -1,5 +1,11 @@
 import * as path from 'path';
-import {createProgram, getPreEmitDiagnostics, ScriptTarget, ModuleResolutionKind, flattenDiagnosticMessageText} from 'typescript';
+import {
+	ScriptTarget,
+	ModuleResolutionKind,
+	flattenDiagnosticMessageText,
+	CompilerOptions,
+	createProgram
+} from 'typescript';
 import {Diagnostic, Context} from './interfaces';
 
 // List of diagnostic codes that should be ignored
@@ -7,9 +13,10 @@ const ignoredDiagnostics = new Set<number>([
 	1308 // Support top-level `await`
 ]);
 
-const loadConfig = () => {
+const loadConfig = (): CompilerOptions => {
 	return {
 		moduleResolution: ModuleResolutionKind.NodeJs,
+		skipLibCheck: true,
 		target: ScriptTarget.ES2015
 	};
 };
@@ -25,12 +32,11 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 
 	const fileName = path.join(context.cwd, context.testFile);
 
+	const result: Diagnostic[] = [];
+
 	const program = createProgram([fileName], compilerOptions);
 
-	// Retrieve the TypeScript compiler diagnostics
-	const diagnostics = getPreEmitDiagnostics(program);
-
-	const result: Diagnostic[] = [];
+	const diagnostics = program.getSemanticDiagnostics().concat(program.getSyntacticDiagnostics());
 
 	for (const diagnostic of diagnostics) {
 		if (!diagnostic.file || ignoredDiagnostics.has(diagnostic.code)) {

@@ -17,6 +17,18 @@ test('return diagnostics', async t => {
 	t.is(diagnostics[0].message, 'Argument of type \'number\' is not assignable to parameter of type \'string\'.');
 });
 
+test('return diagnostics also from imported files', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/failure-nested')});
+
+	t.true(diagnostics.length === 2);
+
+	t.is(diagnostics[0].message, 'Argument of type \'number\' is not assignable to parameter of type \'string\'.');
+	t.is(path.basename(diagnostics[0].fileName), 'child.test-d.ts');
+
+	t.is(diagnostics[1].message, 'Argument of type \'number\' is not assignable to parameter of type \'string\'.');
+	t.is(path.basename(diagnostics[1].fileName), 'index.test-d.ts');
+});
+
 test('fail if typings file is not part of `files` list', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/no-files')});
 
