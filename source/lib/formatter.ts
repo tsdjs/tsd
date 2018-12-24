@@ -8,7 +8,7 @@ import {Diagnostic} from './interfaces';
  * @returns Beautiful diagnostics output
  */
 export default (diagnostics: Diagnostic[]) => {
-	const fileMap = new Map<string>();
+	const fileMap = new Map<string, any>();
 
 	for (const diagnostic of diagnostics) {
 		let entry = fileMap.get(diagnostic.fileName);
