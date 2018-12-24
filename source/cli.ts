@@ -26,11 +26,10 @@ const cli = meow(`
 		const diagnostics = await tsdCheck(options);
 
 		if (diagnostics.length > 0) {
-			console.log(formatter(diagnostics));
-
-			throw new Error(`Found ${diagnostics.length} issues.`);
+			throw new Error(formatter(diagnostics));
 		}
-	} catch {
+	} catch (error) {
+		console.error(error.message);
 		process.exit(1);
 	}
 })();
