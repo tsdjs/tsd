@@ -10,7 +10,7 @@ interface Options {
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
-	const typings = pkg.typings || 'index.d.ts';
+	const typings = pkg.types || pkg.typings || 'index.d.ts';
 
 	const typingsExist = await pathExists(path.join(options.cwd, typings));
 

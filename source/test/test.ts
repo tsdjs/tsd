@@ -49,6 +49,24 @@ test('return no diagnostics', async t => {
 	t.true(diagnostics.length === 0);
 });
 
+test('support non-barrel main', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/test-non-barrel-main')});
+
+	t.true(diagnostics.length === 0);
+});
+
+test('support non-barrel main using `types` property', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/test-non-barrel-main-via-types')});
+
+	t.true(diagnostics.length === 0);
+});
+
+test('support testing in sub-directories', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/test-in-subdir')});
+
+	t.true(diagnostics.length === 0);
+});
+
 test('support top-level await', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/top-level-await')});
 
