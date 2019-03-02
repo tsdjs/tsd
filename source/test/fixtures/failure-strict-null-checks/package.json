@@ -1,0 +1,8 @@
+{
+	"name": "foo",
+	"tsd-check": {
+		"compilerOptions": {
+			"strict": true
+		}
+	}
+}

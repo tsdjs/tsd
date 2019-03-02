@@ -7,17 +7,26 @@ import {
 	createProgram
 } from 'typescript';
 import {Diagnostic, Context} from './interfaces';
+import * as pkgConf from 'pkg-conf';
 
 // List of diagnostic codes that should be ignored
 const ignoredDiagnostics = new Set<number>([
 	1308 // Support top-level `await`
 ]);
 
-const loadConfig = (): CompilerOptions => {
+const loadConfig = (cwd: string): CompilerOptions => {
+	const config = pkgConf.sync('tsd-check', {
+		cwd,
+		defaults: {compilerOptions: {}}
+	});
+
 	return {
-		moduleResolution: ModuleResolutionKind.NodeJs,
-		skipLibCheck: true,
-		target: ScriptTarget.ES2015
+		...config.compilerOptions,
+		...{
+			moduleResolution: ModuleResolutionKind.NodeJs,
+			skipLibCheck: true,
+			target: ScriptTarget.ES2015
+		}
 	};
 };
 
@@ -28,7 +37,7 @@ const loadConfig = (): CompilerOptions => {
  * @returns List of diagnostics
  */
 export const getDiagnostics = (context: Context): Diagnostic[] => {
-	const compilerOptions = loadConfig();
+	const compilerOptions = loadConfig(context.cwd);
 
 	const fileName = path.join(context.cwd, context.testFile);
 
