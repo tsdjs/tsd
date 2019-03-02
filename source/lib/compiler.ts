@@ -17,15 +17,19 @@ const ignoredDiagnostics = new Set<number>([
 const loadConfig = (cwd: string): CompilerOptions => {
 	const config = pkgConf.sync('tsd-check', {
 		cwd,
-		defaults: {compilerOptions: {}}
+		defaults: {
+			compilerOptions: {
+				strict: true,
+				target: ScriptTarget.ES2017
+			}
+		}
 	});
 
 	return {
 		...config.compilerOptions,
 		...{
 			moduleResolution: ModuleResolutionKind.NodeJs,
-			skipLibCheck: true,
-			target: ScriptTarget.ES2015
+			skipLibCheck: true
 		}
 	};
 };
@@ -45,14 +49,18 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 
 	const program = createProgram([fileName], compilerOptions);
 
-	const diagnostics = program.getSemanticDiagnostics().concat(program.getSyntacticDiagnostics());
+	const diagnostics = program
+		.getSemanticDiagnostics()
+		.concat(program.getSyntacticDiagnostics());
 
 	for (const diagnostic of diagnostics) {
 		if (!diagnostic.file || ignoredDiagnostics.has(diagnostic.code)) {
 			continue;
 		}
 
-		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start as number);
+		const position = diagnostic.file.getLineAndCharacterOfPosition(
+			diagnostic.start as number
+		);
 
 		result.push({
 			fileName: diagnostic.file.fileName,

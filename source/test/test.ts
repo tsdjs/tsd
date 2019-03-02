@@ -43,7 +43,7 @@ test('fail if typings file is not part of `files` list', async t => {
 	]);
 });
 
-test('fail if tests don\'t pass in strict mode with strict mode enabled in settings', async t => {
+test('fail if tests don\'t pass in strict mode', async t => {
 	const diagnostics = await m({
 		cwd: path.join(__dirname, 'fixtures/failure-strict-null-checks')
 	});
@@ -58,6 +58,14 @@ test('fail if tests don\'t pass in strict mode with strict mode enabled in setti
 	t.is(severity, 'error');
 	t.is(line, 4);
 	t.is(column, 19);
+});
+
+test('pass in loose mode when strict mode is disabled in settings', async t => {
+	const diagnostics = await m({
+		cwd: path.join(__dirname, 'fixtures/non-strict-check-with-config')
+	});
+
+	t.true(diagnostics.length === 0);
 });
 
 test('return no diagnostics', async t => {
