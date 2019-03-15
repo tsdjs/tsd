@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as pkgConf from 'pkg-conf';
 import {
 	ScriptTarget,
 	ModuleResolutionKind,
@@ -8,7 +9,6 @@ import {
 	JsxEmit
 } from 'typescript';
 import {Diagnostic, Context} from './interfaces';
-import * as pkgConf from 'pkg-conf';
 
 // List of diagnostic codes that should be ignored
 const ignoredDiagnostics = new Set<number>([
