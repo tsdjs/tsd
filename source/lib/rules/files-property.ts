@@ -11,9 +11,15 @@ import {getJSONPropertyPosition} from '../utils';
  */
 export default (context: Context): Diagnostic[] => {
 	const {pkg, typingsFile} = context;
-	const typingsFileName = path.basename(typingsFile);
 
-	if (!Array.isArray(pkg.files) || pkg.files.indexOf(typingsFileName) !== -1) {
+	if (!Array.isArray(pkg.files)) {
+		return [];
+	}
+
+	const normalizedTypingsFile = path.normalize(typingsFile);
+	const normalizedFiles = (pkg.files as string[]).map(path.normalize);
+
+	if (normalizedFiles.includes(normalizedTypingsFile)) {
 		return [];
 	}
 
@@ -22,7 +28,7 @@ export default (context: Context): Diagnostic[] => {
 	return [
 		{
 			fileName: 'package.json',
-			message: `TypeScript type definition \`${typingsFileName}\` is not part of the \`files\` list.`,
+			message: `TypeScript type definition \`${normalizedTypingsFile}\` is not part of the \`files\` list.`,
 			severity: 'error',
 			...getJSONPropertyPosition(content, 'files')
 		}
