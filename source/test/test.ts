@@ -43,6 +43,31 @@ test('fail if typings file is not part of `files` list', async t => {
 	]);
 });
 
+test('fail if tests don\'t pass in strict mode', async t => {
+	const diagnostics = await m({
+		cwd: path.join(__dirname, 'fixtures/failure-strict-null-checks')
+	});
+
+	const {fileName, message, severity, line, column} = diagnostics[0];
+	t.true(/failure-strict-null-checks\/index.test-d.ts$/.test(fileName));
+	t.is(
+		message,
+		`Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type \'null\' is not assignable to type 'number'.`
+	);
+	t.is(severity, 'error');
+	t.is(line, 4);
+	t.is(column, 19);
+});
+
+test('pass in loose mode when strict mode is disabled in settings', async t => {
+	const diagnostics = await m({
+		cwd: path.join(__dirname, 'fixtures/non-strict-check-with-config')
+	});
+
+	t.true(diagnostics.length === 0);
+});
+
 test('return no diagnostics', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/success')});
 
