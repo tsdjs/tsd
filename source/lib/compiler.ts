@@ -4,7 +4,8 @@ import {
 	ModuleResolutionKind,
 	flattenDiagnosticMessageText,
 	CompilerOptions,
-	createProgram
+	createProgram,
+	JsxEmit
 } from 'typescript';
 import {Diagnostic, Context} from './interfaces';
 import * as pkgConf from 'pkg-conf';
@@ -20,6 +21,7 @@ const loadConfig = (cwd: string): CompilerOptions => {
 		defaults: {
 			compilerOptions: {
 				strict: true,
+				jsx: JsxEmit.React,
 				target: ScriptTarget.ES2017
 			}
 		}
