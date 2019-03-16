@@ -79,7 +79,7 @@ expectError(await concat(true, false));
 
 ## Assertions
 
-### expectType<T>(value)
+### expectType&lt;T&gt;(value)
 
 Check if a value is of a specific type.
 
@@ -87,7 +87,7 @@ Check if a value is of a specific type.
 
 Check if the function call has argument type errors.
 
-### expectError<T>(value)
+### expectError&lt;T&gt;(value)
 
 Check if a value is of the provided type `T`.
 
