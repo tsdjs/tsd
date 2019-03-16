@@ -1,7 +1,7 @@
 {
 	"name": "foo",
 	"main": "src/index.js",
-	"typings": "src/index.d.ts",
+	"types": "src/index.d.ts",
 	"files": [
 		"src/index.js",
 		"src/index.d.ts"

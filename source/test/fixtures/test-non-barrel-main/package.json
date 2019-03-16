@@ -1,7 +1,7 @@
 {
 	"name": "foo",
 	"main": "foo.js",
-	"typings": "foo.d.ts",
+	"types": "foo.d.ts",
 	"files": [
 		"foo.js",
 		"foo.d.ts"

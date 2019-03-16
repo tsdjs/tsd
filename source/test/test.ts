@@ -37,8 +37,34 @@ test('fail if typings file is not part of `files` list', async t => {
 			fileName: 'package.json',
 			message: 'TypeScript type definition `index.d.ts` is not part of the `files` list.',
 			severity: 'error',
-			line: 3,
+			line: 4,
 			column: 1
+		}
+	]);
+});
+
+test('fail if `types` property is not set', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/types-property/no-property')});
+
+	t.deepEqual(diagnostics, [
+		{
+			fileName: 'package.json',
+			message: 'Can\'t find `types` property.',
+			severity: 'error'
+		}
+	]);
+});
+
+test('fail if `typings` property is is used instead of `types`', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/types-property/typings')});
+
+	t.deepEqual(diagnostics, [
+		{
+			fileName: 'package.json',
+			message: 'Use property `types` instead of `typings`.',
+			severity: 'error',
+			column: 1,
+			line: 3
 		}
 	]);
 });
