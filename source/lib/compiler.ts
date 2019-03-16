@@ -6,13 +6,16 @@ import {
 	flattenDiagnosticMessageText,
 	CompilerOptions,
 	createProgram,
-	JsxEmit
+	JsxEmit,
+	SyntaxKind,
+	SourceFile,
+	Diagnostic as TSDiagnostic
 } from 'typescript';
-import {Diagnostic, Context} from './interfaces';
+import {Diagnostic, DiagnosticCode, Context, Position} from './interfaces';
 
 // List of diagnostic codes that should be ignored
 const ignoredDiagnostics = new Set<number>([
-	1308 // Support top-level `await`
+	DiagnosticCode.AwaitIsOnlyAllowedInAsyncFunction
 ]);
 
 const loadConfig = (cwd: string): CompilerOptions => {
@@ -37,6 +40,66 @@ const loadConfig = (cwd: string): CompilerOptions => {
 };
 
 /**
+ * Extract all the `expectError` statements and convert it to a range map.
+ *
+ * @param sourceFile - File to extract the statements from.
+ */
+const extractExpectErrorRanges = (sourceFile: SourceFile) => {
+	const expectedErrors = new Map<Position, Pick<Diagnostic, 'fileName' | 'line' | 'column'>>();
+
+	for (const statement of sourceFile.statements) {
+		if (statement.kind !== SyntaxKind.ExpressionStatement || !statement.getText().startsWith('expectError')) {
+			continue;
+		}
+
+		const position = {
+			start: statement.getStart(),
+			end: statement.getEnd()
+		};
+
+		const pos = statement.getSourceFile().getLineAndCharacterOfPosition(statement.getStart());
+
+		expectedErrors.set(position, {
+			fileName: statement.getSourceFile().fileName,
+			line: pos.line + 1,
+			column: pos.character
+		});
+	}
+
+	return expectedErrors;
+};
+
+/**
+ * Check if the provided diagnostic should be ignored.
+ *
+ * @param diagnostic - The diagnostic to validate.
+ * @param expectedErrors - Map of the expected errors.
+ * @return Boolean indicating if the diagnostic should be ignored or not.
+ */
+const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Position, any>): boolean => {
+	if (ignoredDiagnostics.has(diagnostic.code)) {
+		// Filter out diagnostics which are present in the `ignoredDiagnostics` set
+		return true;
+	}
+
+	if (diagnostic.code !== DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType) {
+		return false;
+	}
+
+	for (const [range] of expectedErrors) {
+		const start = diagnostic.start as number;
+
+		if (start > range.start && start < range.end) {
+			// Remove the expected error from the Map so it's not being reported as failure
+			expectedErrors.delete(range);
+			return true;
+		}
+	}
+
+	return false;
+};
+
+/**
  * Get a list of TypeScript diagnostics within the current context.
  *
  * @param context - The context object.
@@ -55,14 +118,14 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		.getSemanticDiagnostics()
 		.concat(program.getSyntacticDiagnostics());
 
+	const expectedErrors = extractExpectErrorRanges(program.getSourceFile(fileName) as SourceFile);
+
 	for (const diagnostic of diagnostics) {
-		if (!diagnostic.file || ignoredDiagnostics.has(diagnostic.code)) {
+		if (!diagnostic.file || ignoreDiagnostic(diagnostic, expectedErrors)) {
 			continue;
 		}
 
-		const position = diagnostic.file.getLineAndCharacterOfPosition(
-			diagnostic.start as number
-		);
+		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start as number);
 
 		result.push({
 			fileName: diagnostic.file.fileName,
@@ -70,6 +133,14 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 			severity: 'error',
 			line: position.line + 1,
 			column: position.character
+		});
+	}
+
+	for (const [, diagnostic] of expectedErrors) {
+		result.push({
+			...diagnostic,
+			message: 'Expected an error, but found none.',
+			severity: 'error'
 		});
 	}
 

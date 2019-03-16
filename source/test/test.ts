@@ -97,3 +97,51 @@ test('support top-level await', async t => {
 
 	t.true(diagnostics.length === 0);
 });
+
+test('expectError for functions', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/expect-error/functions')});
+
+	t.true(diagnostics.length === 1);
+
+	t.true(diagnostics[0].column === 0);
+	t.true(diagnostics[0].line === 5);
+	t.true(diagnostics[0].message === 'Expected an error, but found none.');
+	t.true(diagnostics[0].severity === 'error');
+});
+
+test('expectError should not ignore syntactical errors', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/expect-error/syntax')});
+
+	t.true(diagnostics.length === 4);
+
+	t.true(diagnostics[0].column === 29);
+	t.true(diagnostics[0].line === 4);
+	t.true(diagnostics[0].message === '\')\' expected.');
+	t.true(diagnostics[0].severity === 'error');
+
+	t.true(diagnostics[1].column === 22);
+	t.true(diagnostics[1].line === 5);
+	t.true(diagnostics[1].message === '\',\' expected.');
+	t.true(diagnostics[1].severity === 'error');
+
+	t.true(diagnostics[2].column === 0);
+	t.true(diagnostics[2].line === 4);
+	t.true(diagnostics[2].message === 'Expected an error, but found none.');
+	t.true(diagnostics[2].severity === 'error');
+
+	t.true(diagnostics[3].column === 0);
+	t.true(diagnostics[3].line === 5);
+	t.true(diagnostics[3].message === 'Expected an error, but found none.');
+	t.true(diagnostics[3].severity === 'error');
+});
+
+test('expectError for values', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/expect-error/values')});
+
+	t.true(diagnostics.length === 1);
+
+	t.true(diagnostics[0].column === 0);
+	t.true(diagnostics[0].line === 4);
+	t.true(diagnostics[0].message === 'Expected an error, but found none.');
+	t.true(diagnostics[0].severity === 'error');
+});

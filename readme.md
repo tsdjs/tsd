@@ -66,12 +66,14 @@ If we don't change the test file and we run the `tsd-check` command again, the t
 If your method returns a `Promise`, you can use top-level `await` to resolve the value instead of wrapping it in an `async` [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE).
 
 ```ts
-import {expectType} from 'tsd-check';
+import {expectType, expectError} from 'tsd-check';
 import concat from '.';
 
 expectType<Promise<string>>(concat('foo', 'bar'));
 
 expectType<string>(await concat('foo', 'bar'));
+
+expectError(await concat(true, false));
 ```
 
 
@@ -80,6 +82,14 @@ expectType<string>(await concat('foo', 'bar'));
 ### expectType<T>(value)
 
 Check if a value is of a specific type.
+
+### expectError(function)
+
+Check if the function call has argument type errors.
+
+### expectError<T>(value)
+
+Check if a value is of the provided type `T`.
 
 
 ## License
