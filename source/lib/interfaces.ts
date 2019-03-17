@@ -8,7 +8,8 @@ export interface Context {
 export enum DiagnosticCode {
 	AwaitIsOnlyAllowedInAsyncFunction = 1308,
 	PropertyDoesNotExistOnType = 2339,
-	ArgumentTypeIsNotAssignableToParameterType = 2345
+	ArgumentTypeIsNotAssignableToParameterType = 2345,
+	CannotAssignToReadOnlyProperty = 2540
 }
 
 export interface Diagnostic {

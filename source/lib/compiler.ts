@@ -71,7 +71,8 @@ const extractExpectErrorRanges = (sourceFile: SourceFile) => {
 
 const diagnosticCodesToIgnore = [
 	DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType,
-	DiagnosticCode.PropertyDoesNotExistOnType
+	DiagnosticCode.PropertyDoesNotExistOnType,
+	DiagnosticCode.CannotAssignToReadOnlyProperty
 ];
 
 /**
