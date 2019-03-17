@@ -69,6 +69,11 @@ const extractExpectErrorRanges = (sourceFile: SourceFile) => {
 	return expectedErrors;
 };
 
+const diagnosticCodesToIgnore = [
+	DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType,
+	DiagnosticCode.PropertyDoesNotExistOnType
+];
+
 /**
  * Check if the provided diagnostic should be ignored.
  *
@@ -82,7 +87,7 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Position
 		return true;
 	}
 
-	if (diagnostic.code !== DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType) {
+	if (!diagnosticCodesToIgnore.includes(diagnostic.code)) {
 		return false;
 	}
 
