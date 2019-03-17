@@ -53,6 +53,7 @@ const extractExpectErrorRanges = (sourceFile: SourceFile) => {
 		}
 
 		const position = {
+			fileName: sourceFile.fileName,
 			start: statement.getStart(),
 			end: statement.getEnd()
 		};
@@ -89,7 +90,12 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Position
 	for (const [range] of expectedErrors) {
 		const start = diagnostic.start as number;
 
-		if (start > range.start && start < range.end) {
+		if (
+			diagnostic.file &&
+			diagnostic.file.fileName === range.fileName &&
+			start > range.start &&
+			start < range.end
+		) {
 			// Remove the expected error from the Map so it's not being reported as failure
 			expectedErrors.delete(range);
 			return true;
@@ -118,7 +124,17 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		.getSemanticDiagnostics()
 		.concat(program.getSyntacticDiagnostics());
 
-	const expectedErrors = extractExpectErrorRanges(program.getSourceFile(fileName) as SourceFile);
+	const expectedErrors = program
+		.getSourceFiles()
+		.filter(file => !file.isDeclarationFile)
+		.map(file => extractExpectErrorRanges(file))
+		.reduce((acc, rangesForFile) => {
+			for (const [position, diagnostic] of rangesForFile.entries()) {
+				acc.set(position, diagnostic);
+			}
+
+			return acc;
+		}, new Map());
 
 	for (const diagnostic of diagnostics) {
 		if (!diagnostic.file || ignoreDiagnostic(diagnostic, expectedErrors)) {

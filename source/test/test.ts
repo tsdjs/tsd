@@ -164,10 +164,17 @@ test('expectError should not ignore syntactical errors', async t => {
 test('expectError for values', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/expect-error/values')});
 
-	t.true(diagnostics.length === 1);
+	t.true(diagnostics.length === 2);
 
+	t.regex(diagnostics[0].fileName, /included-file.ts$/);
 	t.true(diagnostics[0].column === 0);
-	t.true(diagnostics[0].line === 4);
+	t.true(diagnostics[0].line === 3);
 	t.true(diagnostics[0].message === 'Expected an error, but found none.');
 	t.true(diagnostics[0].severity === 'error');
+
+	t.regex(diagnostics[1].fileName, /index.test-d.ts$/);
+	t.true(diagnostics[1].column === 0);
+	t.true(diagnostics[1].line === 5);
+	t.true(diagnostics[1].message === 'Expected an error, but found none.');
+	t.true(diagnostics[1].severity === 'error');
 });

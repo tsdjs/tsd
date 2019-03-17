@@ -19,6 +19,7 @@ export interface Diagnostic {
 }
 
 export interface Position {
+	fileName: string;
 	start: number;
 	end: number;
 }
