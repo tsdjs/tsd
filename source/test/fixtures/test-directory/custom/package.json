@@ -1,0 +1,6 @@
+{
+	"name": "foo",
+	"tsd-check": {
+		"directory": "test"
+	}
+}

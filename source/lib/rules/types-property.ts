@@ -12,16 +12,6 @@ import {getJSONPropertyPosition} from '../utils';
 export default (context: Context): Diagnostic[] => {
 	const {pkg} = context;
 
-	if (!pkg.types && !pkg.typings) {
-		return [
-			{
-				fileName: 'package.json',
-				message: 'Can\'t find `types` property.',
-				severity: 'error'
-			}
-		];
-	}
-
 	if (!pkg.types && pkg.typings) {
 		const content = fs.readFileSync(path.join(context.cwd, 'package.json'), 'utf8');
 

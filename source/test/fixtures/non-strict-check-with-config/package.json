@@ -1,6 +1,5 @@
 {
 	"name": "foo",
-	"types": "index.d.ts",
 	"tsd-check": {
 		"compilerOptions": {
 			"strict": false
