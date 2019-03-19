@@ -7,21 +7,17 @@ import {Config} from './interfaces';
  * @param pkg - The package.json object.
  * @returns The config object.
  */
-export default (pkg: any): Config => {
-	const config = {
+export default (pkg: {'tsd-check'?: Partial<Config>}): Config => {
+	const pkgConfig = pkg['tsd-check'] || {};
+
+	return {
 		directory: 'test-d',
+		...pkgConfig,
 		compilerOptions: {
 			strict: true,
 			jsx: JsxEmit.React,
-			target: ScriptTarget.ES2017
-		},
-		...pkg['tsd-check']
-	};
-
-	return {
-		...config,
-		compilerOptions: {
-			...config.compilerOptions,
+			target: ScriptTarget.ES2017,
+			...pkgConfig.compilerOptions,
 			...{
 				moduleResolution: ModuleResolutionKind.NodeJs,
 				skipLibCheck: true
