@@ -112,6 +112,21 @@ test('support top-level await', async t => {
 	t.true(diagnostics.length === 0);
 });
 
+test('support default test directory', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/test-directory/default')});
+
+	t.true(diagnostics.length === 0);
+});
+
+test('support setting a custom test directory', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/test-directory/custom')});
+
+	t.true(diagnostics[0].column === 0);
+	t.true(diagnostics[0].line === 4);
+	t.true(diagnostics[0].message === 'Expected an error, but found none.');
+	t.true(diagnostics[0].severity === 'error');
+});
+
 test('expectError for functions', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/expect-error/functions')});
 

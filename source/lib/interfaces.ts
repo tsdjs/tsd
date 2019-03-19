@@ -1,8 +1,16 @@
+import {CompilerOptions} from 'typescript';
+
+export interface Config {
+	directory: string;
+	compilerOptions: CompilerOptions;
+}
+
 export interface Context {
 	cwd: string;
 	pkg: any;
 	typingsFile: string;
-	testFile: string;
+	testFiles: string[];
+	config: Config;
 }
 
 export enum DiagnosticCode {
@@ -20,7 +28,8 @@ export interface Diagnostic {
 	column?: number;
 }
 
-export interface Position {
+export interface Location {
+	fileName: string;
 	start: number;
 	end: number;
 }

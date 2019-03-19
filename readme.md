@@ -76,6 +76,21 @@ expectType<string>(await concat('foo', 'bar'));
 expectError(await concat(true, false));
 ```
 
+### Test directory
+
+When you have spread your tests over multiple files, you can store all those files in a test directory called `test-d`. If you want to use another directory name, you can change it in `package.json`.
+
+```json
+{
+	"name": "my-module",
+	"tsd-check": {
+		"directory": "my-test-dir"
+	}
+}
+```
+
+Now you can put all your test files in the `my-test-dir` directory.
+
 
 ## Assertions
 

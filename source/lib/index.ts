@@ -1,9 +1,11 @@
 import * as path from 'path';
 import * as readPkgUp from 'read-pkg-up';
 import * as pathExists from 'path-exists';
+import globby from 'globby';
 import {getDiagnostics as getTSDiagnostics} from './compiler';
+import loadConfig from './config';
 import getCustomDiagnostics from './rules';
-import {Context} from './interfaces';
+import {Context, Config} from './interfaces';
 
 interface Options {
 	cwd: string;
@@ -21,16 +23,24 @@ const findTypingsFile = async (pkg: any, options: Options) => {
 	return typings;
 };
 
-const findTestFile = async (typingsFile: string, options: Options) => {
+const findTestFiles = async (typingsFile: string, options: Options & {config: Config}) => {
 	const testFile = typingsFile.replace(/\.d\.ts$/, '.test-d.ts');
+	const testDir = options.config.directory;
 
 	const testFileExists = await pathExists(path.join(options.cwd, testFile));
+	const testDirExists = await pathExists(path.join(options.cwd, testDir));
 
-	if (!testFileExists) {
+	if (!testFileExists && !testDirExists) {
 		throw new Error(`The test file \`${testFile}\` does not exist. Create one and try again.`);
 	}
 
-	return testFile;
+	let testFiles = [testFile];
+
+	if (!testFileExists) {
+		testFiles = await globby(`${testDir}/**/*.ts`, {cwd: options.cwd});
+	}
+
+	return testFiles;
 };
 
 /**
@@ -45,16 +55,22 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 		throw new Error('No `package.json` file found. Make sure you are running the command in a Node.js project.');
 	}
 
+	const config = loadConfig(pkg);
+
 	// Look for a typings file, otherwise use `index.d.ts` in the root directory. If the file is not found, throw an error.
 	const typingsFile = await findTypingsFile(pkg, options);
 
-	const testFile = await findTestFile(typingsFile, options);
+	const testFiles = await findTestFiles(typingsFile, {
+		...options,
+		config
+	});
 
 	const context: Context = {
 		cwd: options.cwd,
 		pkg,
 		typingsFile,
-		testFile
+		testFiles,
+		config
 	};
 
 	return [
