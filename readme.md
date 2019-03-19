@@ -91,6 +91,35 @@ When you have spread your tests over multiple files, you can store all those fil
 
 Now you can put all your test files in the `my-test-dir` directory.
 
+### Custom TypeScript config
+
+By default, `tsd-check` applies the following cofiguration:
+
+```json5
+{
+	"strict": true,
+	"jsx": "React",
+	"target": "ES2017",
+	// following options are set and are not overridable:
+	"moduleResolution": "Node",
+	"skipLibCheck": true
+}
+```
+
+If you wish override these options, you have the possibility to provide a custom TypeScript config to `tsd-check` by specifying it in `package.json`.
+
+*Default options will still apply if you don't override them explicitly.* You can't override the `moduleResolution` and `skipLibCheck` options.
+
+```json
+{
+	"name": "my-module",
+	"tsd-check": {
+		"compilerOptions": {
+			"strict": false
+		}
+	}
+}
+```
 
 ## Assertions
 
