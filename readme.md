@@ -1,4 +1,4 @@
-# tsd-check [![Build Status](https://travis-ci.org/SamVerschueren/tsd-check.svg?branch=master)](https://travis-ci.org/SamVerschueren/tsd-check)
+# tsd [![Build Status](https://travis-ci.org/SamVerschueren/tsd.svg?branch=master)](https://travis-ci.org/SamVerschueren/tsd)
 
 > Check TypeScript type definitions
 
@@ -6,7 +6,7 @@
 ## Install
 
 ```
-$ npm install tsd-check
+$ npm install tsd
 ```
 
 
@@ -32,19 +32,19 @@ concat('foo', 'bar');
 concat(1, 2);
 ```
 
-Running `npx tsd-check` as a command will verify that the type definition works correctly.
+Running `npx tsd` as a command will verify that the type definition works correctly.
 
 Let's add some extra [assertions](#assertions). We can assert the return type of our function call to match a certain type.
 
 ```ts
-import {expectType} from 'tsd-check';
+import {expectType} from 'tsd';
 import concat from '.';
 
 expectType<string>(concat('foo', 'bar'));
 expectType<string>(concat(1, 2));
 ```
 
-The `tsd-check` command will succeed again.
+The `tsd` command will succeed again.
 
 We change our implementation and type definition to return a `number` when both inputs are of type `number`.
 
@@ -57,7 +57,7 @@ declare const concat: {
 export default concat;
 ```
 
-If we don't change the test file and we run the `tsd-check` command again, the test will fail.
+If we don't change the test file and we run the `tsd` command again, the test will fail.
 
 <img src="screenshot.png" width="1330">
 
@@ -66,7 +66,7 @@ If we don't change the test file and we run the `tsd-check` command again, the t
 If your method returns a `Promise`, you can use top-level `await` to resolve the value instead of wrapping it in an `async` [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE).
 
 ```ts
-import {expectType, expectError} from 'tsd-check';
+import {expectType, expectError} from 'tsd';
 import concat from '.';
 
 expectType<Promise<string>>(concat('foo', 'bar'));
@@ -83,7 +83,7 @@ When you have spread your tests over multiple files, you can store all those fil
 ```json
 {
 	"name": "my-module",
-	"tsd-check": {
+	"tsd": {
 		"directory": "my-test-dir"
 	}
 }
@@ -93,7 +93,7 @@ Now you can put all your test files in the `my-test-dir` directory.
 
 ### Custom TypeScript config
 
-By default, `tsd-check` applies the following configuration:
+By default, `tsd` applies the following configuration:
 
 ```json5
 {
@@ -106,14 +106,14 @@ By default, `tsd-check` applies the following configuration:
 }
 ```
 
-If you wish to override these options, you have the possibility to provide a custom TypeScript config to `tsd-check` by specifying it in `package.json`.
+If you wish to override these options, you have the possibility to provide a custom TypeScript config to `tsd` by specifying it in `package.json`.
 
 *Default options will still apply if you don't override them explicitly.* You can't override the `moduleResolution` and `skipLibCheck` options.
 
 ```json
 {
 	"name": "my-module",
-	"tsd-check": {
+	"tsd": {
 		"compilerOptions": {
 			"strict": false
 		}

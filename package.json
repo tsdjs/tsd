@@ -1,9 +1,9 @@
 {
-	"name": "tsd-check",
+	"name": "tsd",
 	"version": "0.6.0",
 	"description": "Check TypeScript type definitions",
 	"license": "MIT",
-	"repository": "SamVerschueren/tsd-check",
+	"repository": "SamVerschueren/tsd",
 	"author": {
 		"name": "Sam Verschueren",
 		"email": "sam.verschueren@gmail.com",

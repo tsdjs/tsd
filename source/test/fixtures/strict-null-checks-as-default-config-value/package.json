@@ -1,6 +1,6 @@
 {
 	"name": "foo",
-	"tsd-check": {
+	"tsd": {
 		"compilerOptions": {
 		}
 	}

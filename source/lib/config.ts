@@ -7,8 +7,8 @@ import {Config} from './interfaces';
  * @param pkg - The package.json object.
  * @returns The config object.
  */
-export default (pkg: {'tsd-check'?: Partial<Config>}): Config => {
-	const pkgConfig = pkg['tsd-check'] || {};
+export default (pkg: {tsd?: Partial<Config>}): Config => {
+	const pkgConfig = pkg.tsd || {};
 
 	return {
 		directory: 'test-d',

@@ -2,16 +2,16 @@
 import * as meow from 'meow';
 import * as updateNotifier from 'update-notifier';
 import formatter from './lib/formatter';
-import tsdCheck from './lib';
+import tsd from './lib';
 
 const cli = meow(`
 	Usage
-		$ tsd-check [path]
+		$ tsd [path]
 
 	Examples
-	  $ tsd-check /path/to/project
+	  $ tsd /path/to/project
 
-	  $ tsd-check
+	  $ tsd
 
 	    index.test-d.ts
 	    ✖  10:20  Argument of type string is not assignable to parameter of type number.
@@ -23,7 +23,7 @@ const cli = meow(`
 	try {
 		const options = cli.input.length > 0 ? {cwd: cli.input[0]} : undefined;
 
-		const diagnostics = await tsdCheck(options);
+		const diagnostics = await tsd(options);
 
 		if (diagnostics.length > 0) {
 			throw new Error(formatter(diagnostics));
