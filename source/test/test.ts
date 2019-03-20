@@ -58,27 +58,33 @@ test('fail if `typings` property is used instead of `types`', async t => {
 });
 
 test('fail if tests don\'t pass in strict mode', async t => {
-	function assert(diagnostics, expectedFilePathRe) {
-		const {fileName, message, severity, line, column} = diagnostics[0];
-		t.true(new RegExp(expectedFilePathRe).test(fileName));
-		t.is(
-			message,
-			`Argument of type 'number | null' is not assignable to parameter of type 'number'.
-  Type \'null\' is not assignable to type 'number'.`
-		);
-		t.is(severity, 'error');
-		t.is(line, 4);
-		t.is(column, 19);
-	}
+	const diagnostics = await m({
+		cwd: path.join(__dirname, 'fixtures/failure-strict-null-checks')
+	});
 
-	assert(
-		await m({cwd: path.join(__dirname, 'fixtures/failure-strict-null-checks')}),
-		'failure-strict-null-checks\\/index.test-d.ts$'
+	const {fileName, message, severity, line, column} = diagnostics[0];
+	t.true(/failure-strict-null-checks\/index.test-d.ts$/.test(fileName));
+	t.is(message, `Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type \'null\' is not assignable to type 'number'.`
 	);
-	assert(
-		await m({cwd: path.join(__dirname, 'fixtures/failure-strict-null-checks-as-default-config-value')}),
-		'failure-strict-null-checks-as-default-config-value\\/index.test-d.ts$'
+	t.is(severity, 'error');
+	t.is(line, 4);
+	t.is(column, 19);
+});
+
+test('overridden config defaults to `strict` if `strict` is not explicitly overridden', async t => {
+	const diagnostics = await m({
+		cwd: path.join(__dirname, 'fixtures/strict-null-checks-as-default-config-value')
+	});
+
+	const {fileName, message, severity, line, column} = diagnostics[0];
+	t.true(/strict-null-checks-as-default-config-value\/index.test-d.ts$/.test(fileName));
+	t.is(message, `Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type \'null\' is not assignable to type 'number'.`
 	);
+	t.is(severity, 'error');
+	t.is(line, 4);
+	t.is(column, 19);
 });
 
 test('pass in loose mode when strict mode is disabled in settings', async t => {

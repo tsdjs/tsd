@@ -93,7 +93,7 @@ Now you can put all your test files in the `my-test-dir` directory.
 
 ### Custom TypeScript config
 
-By default, `tsd-check` applies the following cofiguration:
+By default, `tsd-check` applies the following configuration:
 
 ```json5
 {
@@ -106,7 +106,7 @@ By default, `tsd-check` applies the following cofiguration:
 }
 ```
 
-If you wish override these options, you have the possibility to provide a custom TypeScript config to `tsd-check` by specifying it in `package.json`.
+If you wish to override these options, you have the possibility to provide a custom TypeScript config to `tsd-check` by specifying it in `package.json`.
 
 *Default options will still apply if you don't override them explicitly.* You can't override the `moduleResolution` and `skipLibCheck` options.
 
