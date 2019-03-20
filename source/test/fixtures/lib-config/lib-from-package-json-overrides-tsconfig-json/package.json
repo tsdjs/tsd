@@ -1,0 +1,11 @@
+{
+	"name": "foo",
+	"tsd": {
+		"compilerOptions": {
+			"lib": [
+				"es2018",
+				"dom"
+			]
+		}
+	}
+}

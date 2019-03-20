@@ -1,9 +1,15 @@
 import {CompilerOptions} from 'typescript';
 
-export interface Config {
-	directory: string;
-	compilerOptions: CompilerOptions;
+export interface RawCompilerOptions {
+	[option: string]: any;
 }
+
+export interface Config<Options = CompilerOptions> {
+	directory: string;
+	compilerOptions: Options;
+}
+
+export type RawConfig = Partial<Config<RawCompilerOptions>>;
 
 export interface Context {
 	cwd: string;

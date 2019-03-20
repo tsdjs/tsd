@@ -62,6 +62,8 @@ test('fail if tests don\'t pass in strict mode', async t => {
 		cwd: path.join(__dirname, 'fixtures/failure-strict-null-checks')
 	});
 
+	t.is(diagnostics.length, 1);
+
 	const {fileName, message, severity, line, column} = diagnostics[0];
 	t.true(/failure-strict-null-checks\/index.test-d.ts$/.test(fileName));
 	t.is(message, `Argument of type 'number | null' is not assignable to parameter of type 'number'.
@@ -77,6 +79,8 @@ test('overridden config defaults to `strict` if `strict` is not explicitly overr
 		cwd: path.join(__dirname, 'fixtures/strict-null-checks-as-default-config-value')
 	});
 
+	t.is(diagnostics.length, 1);
+
 	const {fileName, message, severity, line, column} = diagnostics[0];
 	t.true(/strict-null-checks-as-default-config-value\/index.test-d.ts$/.test(fileName));
 	t.is(message, `Argument of type 'number | null' is not assignable to parameter of type 'number'.
@@ -85,6 +89,48 @@ test('overridden config defaults to `strict` if `strict` is not explicitly overr
 	t.is(severity, 'error');
 	t.is(line, 4);
 	t.is(column, 19);
+});
+
+test('fail if types are used from a lib that wasn\'t explicitely specified', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/lib-config/failure-missing-lib')});
+
+	t.is(diagnostics.length, 2);
+
+	t.true(/failure-missing-lib\/index.d.ts$/.test(diagnostics[0].fileName));
+	t.is(diagnostics[0].message, 'Cannot find name \'Document\'.');
+	t.is(diagnostics[0].severity, 'error');
+	t.is(diagnostics[0].line, 1);
+	t.is(diagnostics[0].column, 24);
+
+	t.true(/failure-missing-lib\/index.test-d.ts$/.test(diagnostics[1].fileName));
+	t.is(diagnostics[1].message, 'Cannot find name \'Document\'.');
+	t.is(diagnostics[1].severity, 'error');
+	t.is(diagnostics[1].line, 4);
+	t.is(diagnostics[1].column, 11);
+});
+
+test('allow specifying a lib as a triple-slash-reference', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/lib-config/lib-as-triple-slash-reference')});
+
+	t.true(diagnostics.length === 0);
+});
+
+test('allow specifying a lib in package.json\'s `tsd` field', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/lib-config/lib-from-package-json')});
+
+	t.true(diagnostics.length === 0);
+});
+
+test('allow specifying a lib in tsconfig.json', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/lib-config/lib-from-tsconfig-json')});
+
+	t.true(diagnostics.length === 0);
+});
+
+test('a lib option in package.json overrdides a lib option in tsconfig.json', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/lib-config/lib-from-package-json-overrides-tsconfig-json')});
+
+	t.true(diagnostics.length === 0);
 });
 
 test('pass in loose mode when strict mode is disabled in settings', async t => {

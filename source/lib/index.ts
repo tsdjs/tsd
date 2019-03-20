@@ -55,7 +55,7 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 		throw new Error('No `package.json` file found. Make sure you are running the command in a Node.js project.');
 	}
 
-	const config = loadConfig(pkg);
+	const config = loadConfig(pkg, options.cwd);
 
 	// Look for a typings file, otherwise use `index.d.ts` in the root directory. If the file is not found, throw an error.
 	const typingsFile = await findTypingsFile(pkg, options);
