@@ -64,9 +64,22 @@ test('fail if tests don\'t pass in strict mode', async t => {
 
 	const {fileName, message, severity, line, column} = diagnostics[0];
 	t.true(/failure-strict-null-checks\/index.test-d.ts$/.test(fileName));
-	t.is(
-		message,
-		`Argument of type 'number | null' is not assignable to parameter of type 'number'.
+	t.is(message, `Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type \'null\' is not assignable to type 'number'.`
+	);
+	t.is(severity, 'error');
+	t.is(line, 4);
+	t.is(column, 19);
+});
+
+test('overridden config defaults to `strict` if `strict` is not explicitly overridden', async t => {
+	const diagnostics = await m({
+		cwd: path.join(__dirname, 'fixtures/strict-null-checks-as-default-config-value')
+	});
+
+	const {fileName, message, severity, line, column} = diagnostics[0];
+	t.true(/strict-null-checks-as-default-config-value\/index.test-d.ts$/.test(fileName));
+	t.is(message, `Argument of type 'number | null' is not assignable to parameter of type 'number'.
   Type \'null\' is not assignable to type 'number'.`
 	);
 	t.is(severity, 'error');
