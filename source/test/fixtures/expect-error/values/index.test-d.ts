@@ -10,10 +10,10 @@ const foo: {readonly bar: string} = {
 expectError(foo.bar = 'quux');
 expectError(foo.quux);
 
-// Ignore errors in deeply nested blocks, too
+// Ignore errors in deeply nested blocks too
 try {
 	if (true) {
 		expectError(foo.bar = 'quux');
 		expectError(foo.quux);
 	}
-} catch (e) {}
+} catch {}
