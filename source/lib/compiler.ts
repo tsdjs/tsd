@@ -1,7 +1,14 @@
 import * as path from 'path';
 import {
-	flattenDiagnosticMessageText, createProgram, SyntaxKind, Diagnostic as TSDiagnostic,
-	Program, SourceFile, Node, forEachChild} from 'typescript';
+	flattenDiagnosticMessageText,
+	createProgram,
+	SyntaxKind,
+	Diagnostic as TSDiagnostic,
+	Program,
+	SourceFile,
+	Node,
+	forEachChild
+} from 'typescript';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 
 // List of diagnostic codes that should be ignored
@@ -23,10 +30,6 @@ const diagnosticCodesToIgnore = new Set<DiagnosticCode>([
 const extractExpectErrorRanges = (program: Program) => {
 	const expectedErrors = new Map<Location, Pick<Diagnostic, 'fileName' | 'line' | 'column'>>();
 
-	for (const sourceFile of program.getSourceFiles()) {
-		walkNodes(sourceFile);
-	}
-
 	function walkNodes(node: Node) {
 		if (node.kind === SyntaxKind.ExpressionStatement && node.getText().startsWith('expectError')) {
 			const location = {
@@ -35,7 +38,9 @@ const extractExpectErrorRanges = (program: Program) => {
 				end: node.getEnd()
 			};
 
-			const pos = node.getSourceFile().getLineAndCharacterOfPosition(node.getStart());
+			const pos = node
+				.getSourceFile()
+				.getLineAndCharacterOfPosition(node.getStart());
 
 			expectedErrors.set(location, {
 				fileName: location.fileName,
@@ -45,6 +50,10 @@ const extractExpectErrorRanges = (program: Program) => {
 		}
 
 		forEachChild(node, walkNodes);
+	}
+
+	for (const sourceFile of program.getSourceFiles()) {
+		walkNodes(sourceFile);
 	}
 
 	return expectedErrors;
