@@ -98,10 +98,10 @@ By default, `tsd-check` applies the following cofiguration:
 ```json5
 {
 	"strict": true,
-	"jsx": "React",
-	"target": "ES2017",
-	// following options are set and are not overridable:
-	"moduleResolution": "Node",
+	"jsx": "react",
+	"target": "es2017",
+	// The following options are set and are not overridable:
+	"moduleResolution": "node",
 	"skipLibCheck": true
 }
 ```
