@@ -91,7 +91,7 @@ test('overridden config defaults to `strict` if `strict` is not explicitly overr
 	t.is(column, 19);
 });
 
-test('fail if types are used from a lib that wasn\'t explicitely specified', async t => {
+test('fail if types are used from a lib that wasn\'t explicitly specified', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/lib-config/failure-missing-lib')});
 
 	t.is(diagnostics.length, 2);

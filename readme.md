@@ -105,7 +105,7 @@ By default, `tsd` applies the following configuration:
 	"moduleResolution": "node"
 ```
 
-These options will be overridden if a `tsconfig.json` file is found in your project. You also have the possibility to provide a custom config by specifying it in `package.json`.
+These options will be overridden if a `tsconfig.json` file is found in your project. You also have the possibility to provide a custom config by specifying it in `package.json`:
 
 ```json
 {
