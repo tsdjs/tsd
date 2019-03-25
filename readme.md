@@ -101,6 +101,7 @@ By default, `tsd` applies the following configuration:
 	"jsx": "React",
 	"lib": ["es2017"],
 	"target": "es2017",
+	"module": "commonjs",
 	// following option is set and is not overridable:
 	"moduleResolution": "node"
 ```

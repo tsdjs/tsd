@@ -8,7 +8,8 @@ import {
 	findConfigFile,
 	sys,
 	readJsonConfigFile,
-	parseJsonSourceFileConfigFileContent
+	parseJsonSourceFileConfigFileContent,
+	ModuleKind
 } from 'typescript';
 import {Config, RawConfig, RawCompilerOptions} from './interfaces';
 
@@ -34,6 +35,7 @@ export default (pkg: {tsd?: RawConfig}, cwd: string): Config => {
 			strict: true,
 			jsx: JsxEmit.React,
 			lib: ['lib.es2017.d.ts'],
+			module: ModuleKind.CommonJS,
 			target: ScriptTarget.ES2017,
 			...tsConfigCompilerOptions,
 			...packageJsonCompilerOptions,
