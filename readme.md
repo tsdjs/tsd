@@ -98,12 +98,13 @@ By default, `tsd` applies the following configuration:
 ```json5
 {
 	"strict": true,
-	"jsx": "React",
-	"lib": ["es2017"],
+	"jsx": "react",
 	"target": "es2017",
+	"lib": ["es2017"],
 	"module": "commonjs",
-	// following option is set and is not overridable:
+	// The following option is set and is not overridable:
 	"moduleResolution": "node"
+}
 ```
 
 These options will be overridden if a `tsconfig.json` file is found in your project. You also have the possibility to provide a custom config by specifying it in `package.json`:
