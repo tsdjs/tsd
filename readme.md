@@ -100,15 +100,14 @@ By default, `tsd` applies the following configuration:
 	"strict": true,
 	"jsx": "react",
 	"target": "es2017",
-	// The following options are set and are not overridable:
-	"moduleResolution": "node",
-	"skipLibCheck": true
+	"lib": ["es2017"],
+	"module": "commonjs",
+	// The following option is set and is not overridable:
+	"moduleResolution": "node"
 }
 ```
 
-If you wish to override these options, you have the possibility to provide a custom TypeScript config to `tsd` by specifying it in `package.json`.
-
-*Default options will still apply if you don't override them explicitly.* You can't override the `moduleResolution` and `skipLibCheck` options.
+These options will be overridden if a `tsconfig.json` file is found in your project. You also have the possibility to provide a custom config by specifying it in `package.json`:
 
 ```json
 {
@@ -120,6 +119,8 @@ If you wish to override these options, you have the possibility to provide a cus
 	}
 }
 ```
+
+*Default options will apply if you don't override them explicitly.* You can't override the `moduleResolution` option.
 
 ## Assertions
 
