@@ -7,57 +7,152 @@ import {
 	Program,
 	SourceFile,
 	Node,
-	forEachChild
+	forEachChild,
+	ExpressionStatement,
+	CallExpression
 } from 'typescript';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 
-// List of diagnostic codes that should be ignored
+type SourceCodeLocation = Pick<Diagnostic, 'fileName' | 'line' | 'column'>;
+
+/**
+ * List of diagnostic codes that should be ignored.
+ */
 const ignoredDiagnostics = new Set<number>([
 	DiagnosticCode.AwaitIsOnlyAllowedInAsyncFunction
 ]);
 
-const diagnosticCodesToIgnore = new Set<DiagnosticCode>([
+/**
+ * List of diagnostic codes that should be ignored when part of an `expectError` statement.
+ */
+const expectErrorRelevantDignosticCodes = new Set<DiagnosticCode>([
 	DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType,
 	DiagnosticCode.PropertyDoesNotExistOnType,
 	DiagnosticCode.CannotAssignToReadOnlyProperty
 ]);
 
+const locationFromNode = (node: Node): SourceCodeLocation => {
+	const pos = node
+		.getSourceFile()
+		.getLineAndCharacterOfPosition(node.getStart());
+
+	return {
+		fileName: node.getSourceFile().fileName,
+		line: pos.line + 1,
+		column: pos.character + 1
+	};
+};
+
+const isExpressionStatement = (node: Node): node is ExpressionStatement =>
+	node.kind === SyntaxKind.ExpressionStatement;
+
+const isCallExpression = (node: Node): node is CallExpression =>
+	node.kind === SyntaxKind.CallExpression;
+
 /**
- * Extract all the `expectError` statements and convert it to a range map.
+ * For `expectType` statements, extract source code location data.
+ *
+ * @param node - The node to examine.
+ */
+const extractExpectTypeDataForNode = (node: Node): { node: CallExpression; location: SourceCodeLocation } | null => {
+	if (!isExpressionStatement(node) || !node.getText().startsWith('expectType')) {
+		return null;
+	}
+
+	if (!isCallExpression(node.expression)) {
+		return null;
+	}
+
+	return {
+		node: node.expression,
+		location: locationFromNode(node.expression)
+	};
+};
+
+/**
+ * For `expectError` statements, extract range and source code location data.
+ *
+ * @param node - The node to examine.
+ */
+const extractExpectErrorDataForNode = (node: Node) => {
+	if (!isExpressionStatement(node) || !node.getText().startsWith('expectError')) {
+		return null;
+	}
+
+	const location = {
+		fileName: node.getSourceFile().fileName,
+		start: node.getStart(),
+		end: node.getEnd()
+	};
+
+	return {
+		location,
+		locationData: locationFromNode(node)
+	};
+};
+
+/**
+ * Extract all the `expectType` and `expectError` statements.
  *
  * @param program - The TypeScript program.
  */
-const extractExpectErrorRanges = (program: Program) => {
-	const expectedErrors = new Map<Location, Pick<Diagnostic, 'fileName' | 'line' | 'column'>>();
+const extractExpectations = (program: Program) => {
+	const expectTypeLocationData = new Map<CallExpression, SourceCodeLocation>();
+	const expectErrorLocationData = new Map<Location, SourceCodeLocation>();
 
 	function walkNodes(node: Node) {
-		if (node.kind === SyntaxKind.ExpressionStatement && node.getText().startsWith('expectError')) {
-			const location = {
-				fileName: node.getSourceFile().fileName,
-				start: node.getStart(),
-				end: node.getEnd()
-			};
+		const expectTypeNodeData = extractExpectTypeDataForNode(node);
+		if (expectTypeNodeData) {
+			expectTypeLocationData.set(expectTypeNodeData.node, expectTypeNodeData.location);
+		}
 
-			const pos = node
-				.getSourceFile()
-				.getLineAndCharacterOfPosition(node.getStart());
-
-			expectedErrors.set(location, {
-				fileName: location.fileName,
-				line: pos.line + 1,
-				column: pos.character
-			});
+		const expectedErrorData = extractExpectErrorDataForNode(node);
+		if (expectedErrorData) {
+			expectErrorLocationData.set(expectedErrorData.location, expectedErrorData.locationData);
 		}
 
 		forEachChild(node, walkNodes);
 	}
 
 	for (const sourceFile of program.getSourceFiles()) {
-		walkNodes(sourceFile);
+		if (!sourceFile.isDeclarationFile) {
+			walkNodes(sourceFile);
+		}
 	}
 
-	return expectedErrors;
+	return {
+		expectTypeLocationData,
+		expectErrorLocationData
+	};
 };
+
+/**
+ * Checks whether a disagnostic reports the same error as a previously collected exact type mismatch error.
+ *
+ * @param diagnostic - The diagnostic to validate.
+ * @param expectTypeFileName - The filename of `expectType` assertion.
+ * @param expectTypeFirstArgumentNode - The node of the `expectType` argument.
+ */
+const diagnosticMatchesExpectTypeAssertion =
+	(diagnostic: TSDiagnostic, expectTypeFileName: string, expectTypeFirstArgumentNode: Node) => {
+		if (
+			diagnostic.code !== DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType ||
+			!diagnostic.file ||
+			diagnostic.file.fileName !== expectTypeFileName
+		) {
+			return false;
+		}
+
+		if (
+			diagnostic.start === expectTypeFirstArgumentNode.getStart() &&
+			// tslint:disable-next-line: no-non-null-assertion
+			diagnostic.start + diagnostic.length! === expectTypeFirstArgumentNode.getEnd()
+		) {
+			return true;
+		}
+
+		return false;
+	};
 
 /**
  * Check if the provided diagnostic should be ignored.
@@ -72,7 +167,7 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
 		return true;
 	}
 
-	if (!diagnosticCodesToIgnore.has(diagnostic.code)) {
+	if (!expectErrorRelevantDignosticCodes.has(diagnostic.code)) {
 		return false;
 	}
 
@@ -103,32 +198,60 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 	const result: Diagnostic[] = [];
 
 	const program = createProgram(fileNames, context.config.compilerOptions);
+	const checker = program.getTypeChecker();
 
-	const diagnostics = program
+	let diagnostics = program
 		.getSemanticDiagnostics()
 		.concat(program.getSyntacticDiagnostics());
 
-	const expectedErrors = extractExpectErrorRanges(program);
+	const {expectTypeLocationData, expectErrorLocationData} = extractExpectations(program);
 
-	for (const diagnostic of diagnostics) {
-		if (!diagnostic.file || ignoreDiagnostic(diagnostic, expectedErrors)) {
+	for (const [expectTypeNode, expectTypeNodeLocation] of expectTypeLocationData.entries()) {
+		if (!expectTypeNode.typeArguments || !expectTypeNode.typeArguments[0] || !expectTypeNode.arguments[0]) {
 			continue;
 		}
 
-		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start as number);
+		const firstTypeArgumentNode = expectTypeNode.typeArguments[0];
+		const firstArgumentNode = expectTypeNode.arguments[0];
+
+		const typeArgumentType = checker.typeToString(checker.getTypeFromTypeNode(firstTypeArgumentNode));
+		const parameterType = checker.typeToString(checker.getTypeAtLocation(firstArgumentNode));
+
+		if (typeArgumentType === parameterType) {
+			continue;
+		}
+
+		result.push({
+			...expectTypeNodeLocation,
+			message: `Expected type: '${typeArgumentType}', got: '${parameterType}' from expression '${expectTypeNode.arguments[0].getText()}'.`,
+			severity: 'error'
+		});
+
+		diagnostics = diagnostics.filter(diagnostic =>
+			!diagnosticMatchesExpectTypeAssertion(diagnostic, expectTypeNodeLocation.fileName, firstArgumentNode)
+		);
+	}
+
+	for (const diagnostic of diagnostics) {
+		if (!diagnostic.file || ignoreDiagnostic(diagnostic, expectErrorLocationData)) {
+			continue;
+		}
+
+		// tslint:disable-next-line: no-non-null-assertion
+		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
 
 		result.push({
 			fileName: diagnostic.file.fileName,
-			message: flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
-			severity: 'error',
 			line: position.line + 1,
-			column: position.character
+			column: position.character + 1,
+			message: flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
+			severity: 'error'
 		});
 	}
 
-	for (const [, diagnostic] of expectedErrors) {
+	for (const [, expectedErrorLocation] of expectErrorLocationData) {
 		result.push({
-			...diagnostic,
+			...expectedErrorLocation,
 			message: 'Expected an error, but found none.',
 			severity: 'error'
 		});

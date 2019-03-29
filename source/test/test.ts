@@ -13,8 +13,9 @@ test('throw if no test is found', async t => {
 test('return diagnostics', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/failure')});
 
-	t.true(diagnostics.length === 1);
-	t.is(diagnostics[0].message, 'Argument of type \'number\' is not assignable to parameter of type \'string\'.');
+	t.true(diagnostics.length === 2);
+	t.is(diagnostics[0].message, 'Expected type: \'string\', got: \'string & number\' from expression \'one(true, 2)\'.');
+	t.is(diagnostics[1].message, 'Argument of type \'true\' is not assignable to parameter of type \'number\'.');
 });
 
 test('return diagnostics also from imported files', async t => {
@@ -22,10 +23,10 @@ test('return diagnostics also from imported files', async t => {
 
 	t.true(diagnostics.length === 2);
 
-	t.is(diagnostics[0].message, 'Argument of type \'number\' is not assignable to parameter of type \'string\'.');
+	t.is(diagnostics[0].message, 'Expected type: \'string\', got: \'number\' from expression \'one(1, 2)\'.');
 	t.is(path.basename(diagnostics[0].fileName), 'child.test-d.ts');
 
-	t.is(diagnostics[1].message, 'Argument of type \'number\' is not assignable to parameter of type \'string\'.');
+	t.is(diagnostics[1].message, 'Expected type: \'string\', got: \'number\' from expression \'one(1, 2)\'.');
 	t.is(path.basename(diagnostics[1].fileName), 'index.test-d.ts');
 });
 
@@ -66,12 +67,26 @@ test('fail if tests don\'t pass in strict mode', async t => {
 
 	const {fileName, message, severity, line, column} = diagnostics[0];
 	t.true(/failure-strict-null-checks\/index.test-d.ts$/.test(fileName));
-	t.is(message, `Argument of type 'number | null' is not assignable to parameter of type 'number'.
-  Type \'null\' is not assignable to type 'number'.`
+	t.is(message, 'Expected type: \'number\', got: \'number | null\' from expression \'aboveZero(1)\'.'
 	);
 	t.is(severity, 'error');
 	t.is(line, 4);
-	t.is(column, 19);
+	t.is(column, 1);
+});
+
+test('fail on non-exact type matches', async t => {
+	const diagnostics = await m({
+		cwd: path.join(__dirname, 'fixtures/failure-exact-types')
+	});
+
+	t.is(diagnostics.length, 1);
+
+	const {fileName, message, severity, line, column} = diagnostics[0];
+	t.true(/failure-exact-types\/index.test-d.ts$/.test(fileName));
+	t.is(message, 'Expected type: \'number\', got: \'1\' from expression \'one\'.');
+	t.is(severity, 'error');
+	t.is(line, 5);
+	t.is(column, 1);
 });
 
 test('overridden config defaults to `strict` if `strict` is not explicitly overridden', async t => {
@@ -83,12 +98,11 @@ test('overridden config defaults to `strict` if `strict` is not explicitly overr
 
 	const {fileName, message, severity, line, column} = diagnostics[0];
 	t.true(/strict-null-checks-as-default-config-value\/index.test-d.ts$/.test(fileName));
-	t.is(message, `Argument of type 'number | null' is not assignable to parameter of type 'number'.
-  Type \'null\' is not assignable to type 'number'.`
+	t.is(message, 'Expected type: \'number\', got: \'number | null\' from expression \'aboveZero(1)\'.'
 	);
 	t.is(severity, 'error');
 	t.is(line, 4);
-	t.is(column, 19);
+	t.is(column, 1);
 });
 
 test('fail if types are used from a lib that wasn\'t explicitly specified', async t => {
@@ -100,13 +114,13 @@ test('fail if types are used from a lib that wasn\'t explicitly specified', asyn
 	t.is(diagnostics[0].message, 'Cannot find name \'Document\'.');
 	t.is(diagnostics[0].severity, 'error');
 	t.is(diagnostics[0].line, 1);
-	t.is(diagnostics[0].column, 24);
+	t.is(diagnostics[0].column, 25);
 
 	t.true(/failure-missing-lib\/index.test-d.ts$/.test(diagnostics[1].fileName));
 	t.is(diagnostics[1].message, 'Cannot find name \'Document\'.');
 	t.is(diagnostics[1].severity, 'error');
 	t.is(diagnostics[1].line, 4);
-	t.is(diagnostics[1].column, 11);
+	t.is(diagnostics[1].column, 12);
 });
 
 test('allow specifying a lib as a triple-slash-reference', async t => {
@@ -180,7 +194,7 @@ test('support default test directory', async t => {
 test('support setting a custom test directory', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/test-directory/custom')});
 
-	t.true(diagnostics[0].column === 0);
+	t.true(diagnostics[0].column === 1);
 	t.true(diagnostics[0].line === 4);
 	t.true(diagnostics[0].message === 'Expected an error, but found none.');
 	t.true(diagnostics[0].severity === 'error');
@@ -191,7 +205,7 @@ test('expectError for functions', async t => {
 
 	t.true(diagnostics.length === 1);
 
-	t.true(diagnostics[0].column === 0);
+	t.true(diagnostics[0].column === 1);
 	t.true(diagnostics[0].line === 5);
 	t.true(diagnostics[0].message === 'Expected an error, but found none.');
 	t.true(diagnostics[0].severity === 'error');
@@ -202,22 +216,22 @@ test('expectError should not ignore syntactical errors', async t => {
 
 	t.true(diagnostics.length === 4);
 
-	t.true(diagnostics[0].column === 29);
+	t.true(diagnostics[0].column === 30);
 	t.true(diagnostics[0].line === 4);
 	t.true(diagnostics[0].message === '\')\' expected.');
 	t.true(diagnostics[0].severity === 'error');
 
-	t.true(diagnostics[1].column === 22);
+	t.true(diagnostics[1].column === 23);
 	t.true(diagnostics[1].line === 5);
 	t.true(diagnostics[1].message === '\',\' expected.');
 	t.true(diagnostics[1].severity === 'error');
 
-	t.true(diagnostics[2].column === 0);
+	t.true(diagnostics[2].column === 1);
 	t.true(diagnostics[2].line === 4);
 	t.true(diagnostics[2].message === 'Expected an error, but found none.');
 	t.true(diagnostics[2].severity === 'error');
 
-	t.true(diagnostics[3].column === 0);
+	t.true(diagnostics[3].column === 1);
 	t.true(diagnostics[3].line === 5);
 	t.true(diagnostics[3].message === 'Expected an error, but found none.');
 	t.true(diagnostics[3].severity === 'error');
@@ -228,7 +242,7 @@ test('expectError for values', async t => {
 
 	t.true(diagnostics.length === 1);
 
-	t.true(diagnostics[0].column === 0);
+	t.true(diagnostics[0].column === 1);
 	t.true(diagnostics[0].line === 4);
 	t.true(diagnostics[0].message === 'Expected an error, but found none.');
 	t.true(diagnostics[0].severity === 'error');
