@@ -28,7 +28,8 @@ const ignoredDiagnostics = new Set<number>([
 const expectErrorRelevantDignosticCodes = new Set<DiagnosticCode>([
 	DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType,
 	DiagnosticCode.PropertyDoesNotExistOnType,
-	DiagnosticCode.CannotAssignToReadOnlyProperty
+	DiagnosticCode.CannotAssignToReadOnlyProperty,
+	DiagnosticCode.TypeIsNotAssignableToOtherType
 ]);
 
 const locationFromNode = (node: Node): SourceCodeLocation => {
