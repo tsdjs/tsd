@@ -229,7 +229,7 @@ test('expectError for values', async t => {
 	t.true(diagnostics.length === 1);
 
 	t.true(diagnostics[0].column === 0);
-	t.true(diagnostics[0].line === 4);
+	t.true(diagnostics[0].line === 5);
 	t.true(diagnostics[0].message === 'Expected an error, but found none.');
 	t.true(diagnostics[0].severity === 'error');
 });
