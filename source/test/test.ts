@@ -1,6 +1,6 @@
 import * as path from 'path';
 import test from 'ava';
-import m from '../lib';
+import {diagnose as m} from '..';
 
 test('throw if no type definition was found', async t => {
 	await t.throwsAsync(m({cwd: path.join(__dirname, 'fixtures/no-tsd')}), 'The type definition `index.d.ts` does not exist. Create one and try again.');
