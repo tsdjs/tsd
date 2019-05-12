@@ -21,10 +21,12 @@ export interface Context {
 
 export enum DiagnosticCode {
 	AwaitIsOnlyAllowedInAsyncFunction = 1308,
+	GenericTypeRequiresTypeArguments = 2314,
 	TypeIsNotAssignableToOtherType = 2322,
 	PropertyDoesNotExistOnType = 2339,
 	ArgumentTypeIsNotAssignableToParameterType = 2345,
-	CannotAssignToReadOnlyProperty = 2540
+	CannotAssignToReadOnlyProperty = 2540,
+	ExpectedArgumentsButGotOther = 2554
 }
 
 export interface Diagnostic {

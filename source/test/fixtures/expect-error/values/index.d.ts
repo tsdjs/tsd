@@ -8,3 +8,5 @@ export default one;
 export const foo: {readonly bar: string};
 
 export function hasProperty(property: {name: string}): boolean;
+
+export interface Options<T> {}

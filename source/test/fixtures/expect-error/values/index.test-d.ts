@@ -1,5 +1,5 @@
 import {expectError} from '../../../..';
-import {foo, hasProperty} from '.';
+import {default as one, foo, hasProperty, Options} from '.';
 
 expectError<string>(1);
 expectError<string>('fo');
@@ -16,3 +16,7 @@ try {
 } catch {}
 
 expectError(hasProperty({name: 1}));
+
+expectError(one(1));
+expectError(one(1, 2, 3));
+expectError({} as Options);
