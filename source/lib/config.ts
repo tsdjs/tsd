@@ -39,7 +39,8 @@ export default (pkg: {tsd?: RawConfig}, cwd: string): Config => {
 			target: ScriptTarget.ES2017,
 			...tsConfigCompilerOptions,
 			...packageJsonCompilerOptions,
-			moduleResolution: ModuleResolutionKind.NodeJs
+			moduleResolution: ModuleResolutionKind.NodeJs,
+			skipLibCheck: false
 		}
 	};
 };

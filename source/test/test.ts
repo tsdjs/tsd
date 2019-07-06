@@ -233,3 +233,14 @@ test('expectError for values', async t => {
 	t.true(diagnostics[0].message === 'Expected an error, but found none.');
 	t.true(diagnostics[0].severity === 'error');
 });
+
+test('missing import', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/missing-import')});
+
+	t.true(diagnostics.length === 1);
+
+	t.true(diagnostics[0].column === 18);
+	t.true(diagnostics[0].line === 3);
+	t.true(diagnostics[0].message === 'Cannot find name \'Primitive\'.');
+	t.true(diagnostics[0].severity === 'error');
+});
