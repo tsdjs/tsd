@@ -189,7 +189,7 @@ test('support setting a custom test directory', async t => {
 test('expectError for functions', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/expect-error/functions')});
 
-	t.true(diagnostics.length === 1);
+	t.true(diagnostics.length === 1, `Diagnostics: ${diagnostics.map(d => d.message)}`);
 
 	t.true(diagnostics[0].column === 0);
 	t.true(diagnostics[0].line === 5);

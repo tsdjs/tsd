@@ -22,7 +22,8 @@ const diagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.CannotAssignToReadOnlyProperty,
 	DiagnosticCode.TypeIsNotAssignableToOtherType,
 	DiagnosticCode.GenericTypeRequiresTypeArguments,
-	DiagnosticCode.ExpectedArgumentsButGotOther
+	DiagnosticCode.ExpectedArgumentsButGotOther,
+	DiagnosticCode.NoOverloadMatches
 ]);
 
 /**
