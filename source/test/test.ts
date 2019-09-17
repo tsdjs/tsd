@@ -7,7 +7,7 @@ test('throw if no type definition was found', async t => {
 });
 
 test('throw if no test is found', async t => {
-	await t.throwsAsync(m({cwd: path.join(__dirname, 'fixtures/no-test')}), 'The test file `index.test-d.ts` does not exist. Create one and try again.');
+	await t.throwsAsync(m({cwd: path.join(__dirname, 'fixtures/no-test')}), 'The test file `index.test-d.ts` or `index.test-d.tsx` does not exist. Create one and try again.');
 });
 
 test('return diagnostics', async t => {
@@ -91,19 +91,19 @@ test('overridden config defaults to `strict` if `strict` is not explicitly overr
 	t.is(column, 19);
 });
 
-test('fail if types are used from a lib that wasn\'t explicitly specified', async t => {
+test('fail if types are used from a lib that was not explicitly specified', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/lib-config/failure-missing-lib')});
 
 	t.is(diagnostics.length, 2);
 
 	t.true(/failure-missing-lib\/index.d.ts$/.test(diagnostics[0].fileName));
-	t.is(diagnostics[0].message, 'Cannot find name \'Document\'.');
+	t.is(diagnostics[0].message, 'Cannot find name \'Window\'.');
 	t.is(diagnostics[0].severity, 'error');
 	t.is(diagnostics[0].line, 1);
-	t.is(diagnostics[0].column, 24);
+	t.is(diagnostics[0].column, 22);
 
 	t.true(/failure-missing-lib\/index.test-d.ts$/.test(diagnostics[1].fileName));
-	t.is(diagnostics[1].message, 'Cannot find name \'Document\'.');
+	t.is(diagnostics[1].message, 'Cannot find name \'Window\'.');
 	t.is(diagnostics[1].severity, 'error');
 	t.is(diagnostics[1].line, 4);
 	t.is(diagnostics[1].column, 11);
@@ -177,6 +177,12 @@ test('support default test directory', async t => {
 	t.true(diagnostics.length === 0);
 });
 
+test('support tsx in subdirectory', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/test-directory/tsx')});
+
+	t.true(diagnostics.length === 0);
+});
+
 test('support setting a custom test directory', async t => {
 	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/test-directory/custom')});
 
@@ -243,4 +249,10 @@ test('missing import', async t => {
 	t.true(diagnostics[0].line === 3);
 	t.true(diagnostics[0].message === 'Cannot find name \'Primitive\'.');
 	t.true(diagnostics[0].severity === 'error');
+});
+
+test('tsx', async t => {
+	const diagnostics = await m({cwd: path.join(__dirname, 'fixtures/tsx')});
+
+	t.true(diagnostics.length === 0);
 });

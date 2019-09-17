@@ -1,3 +1,3 @@
-declare const document: Document;
+declare const window: Window;
 
-export default document;
+export default window;

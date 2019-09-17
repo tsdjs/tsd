@@ -25,19 +25,19 @@ const findTypingsFile = async (pkg: any, options: Options) => {
 
 const findTestFiles = async (typingsFile: string, options: Options & {config: Config}) => {
 	const testFile = typingsFile.replace(/\.d\.ts$/, '.test-d.ts');
+	const tsxTestFile = typingsFile.replace(/\.d\.ts$/, '.test-d.tsx');
 	const testDir = options.config.directory;
 
-	const testFileExists = await pathExists(path.join(options.cwd, testFile));
+	let testFiles = await globby([testFile, tsxTestFile], {cwd: options.cwd});
+
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
 
-	if (!testFileExists && !testDirExists) {
-		throw new Error(`The test file \`${testFile}\` does not exist. Create one and try again.`);
+	if (testFiles.length === 0 && !testDirExists) {
+		throw new Error(`The test file \`${testFile}\` or \`${tsxTestFile}\` does not exist. Create one and try again.`);
 	}
 
-	let testFiles = [testFile];
-
-	if (!testFileExists) {
-		testFiles = await globby(`${testDir}/**/*.ts`, {cwd: options.cwd});
+	if (testFiles.length === 0) {
+		testFiles = await globby([`${testDir}/**/*.ts`, `${testDir}/**/*.tsx`], {cwd: options.cwd});
 	}
 
 	return testFiles;

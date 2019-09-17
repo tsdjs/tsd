@@ -1,4 +1,4 @@
 import {expectType} from '../../../..';
-import document from '.';
+import window from '.';
 
-expectType<Document>(document);
+expectType<Window>(window);
