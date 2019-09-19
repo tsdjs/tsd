@@ -1,1 +1,1 @@
-module.exports.default = window.document;
+module.exports.default = window;
