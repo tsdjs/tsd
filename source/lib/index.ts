@@ -2,14 +2,11 @@ import * as path from 'path';
 import * as readPkgUp from 'read-pkg-up';
 import * as pathExists from 'path-exists';
 import globby from 'globby';
-import {getDiagnostics as getTSDiagnostics} from './compiler';
+import {getTypeScriptResults as getTSDiagnostics} from './compiler';
 import loadConfig from './config';
 import getCustomDiagnostics from './rules';
-import {Context, Config} from './interfaces';
-
-interface Options {
-	cwd: string;
-}
+import {Context, Config, Options} from './interfaces';
+import {verifyMemorySize} from './memory-validator';
 
 const findTypingsFile = async (pkg: any, options: Options) => {
 	const typings = pkg.types || pkg.typings || 'index.d.ts';
@@ -43,12 +40,21 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
 	return testFiles;
 };
 
+// The default options if you were to run tsd on its own
+const defaultOptions: Options = {
+	cwd: process.cwd(),
+	verify: false,
+	writeSnapshot: false,
+	sizeDelta: 10
+};
+
 /**
  * Type check the type definition of the project.
  *
- * @returns A promise which resolves the diagnostics of the type definition.
+ * @returns A promise which resolves the run results with diagnostics and stats for the type definitions.
  */
-export default async (options: Options = {cwd: process.cwd()}) => {
+export default async (inputOptions: Partial<Options> = defaultOptions) => {
+	const options = {...defaultOptions, ...inputOptions};
 	const {pkg} = await readPkgUp({cwd: options.cwd});
 
 	if (!pkg) {
@@ -66,15 +72,18 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 	});
 
 	const context: Context = {
-		cwd: options.cwd,
+		options,
 		pkg,
 		typingsFile,
 		testFiles,
-		config
+		config,
 	};
+
+	const tsResults = getTSDiagnostics(context);
 
 	return [
 		...getCustomDiagnostics(context),
-		...getTSDiagnostics(context)
+		...tsResults.diagnostics,
+		...await verifyMemorySize(context, tsResults.stats)
 	];
 };

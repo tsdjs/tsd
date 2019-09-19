@@ -23,7 +23,7 @@ export default (context: Context): Diagnostic[] => {
 		return [];
 	}
 
-	const content = fs.readFileSync(path.join(context.cwd, 'package.json'), 'utf8');
+	const content = fs.readFileSync(path.join(context.options.cwd, 'package.json'), 'utf8');
 
 	return [
 		{

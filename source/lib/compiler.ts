@@ -7,9 +7,10 @@ import {
 	Program,
 	SourceFile,
 	Node,
-	forEachChild
+	forEachChild,
+	sys
 } from 'typescript';
-import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
+import {Diagnostic, DiagnosticCode, Context, Location, RunResults} from './interfaces';
 
 // List of diagnostic codes that should be ignored
 const ignoredDiagnostics = new Set<number>([
@@ -96,19 +97,15 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
 };
 
 /**
- * Get a list of TypeScript diagnostics within the current context.
+ * Get a list of TypeScript diagnostics for a program
  *
- * @param context - The context object.
- * @returns List of diagnostics
+ * @param program - A set-up TypeScript Program
+ * @returns An array of diagnostics
  */
-export const getDiagnostics = (context: Context): Diagnostic[] => {
-	const fileNames = context.testFiles.map(fileName => path.join(context.cwd, fileName));
+export const getDiagnostics = (program: Program) => {
+	const results: Diagnostic[] = [];
 
-	const result: Diagnostic[] = [];
-
-	const program = createProgram(fileNames, context.config.compilerOptions);
-
-	const diagnostics = program
+		const diagnostics = program
 		.getSemanticDiagnostics()
 		.concat(program.getSyntacticDiagnostics());
 
@@ -121,7 +118,7 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 
 		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start as number);
 
-		result.push({
+		results.push({
 			fileName: diagnostic.file.fileName,
 			message: flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
 			severity: 'error',
@@ -131,12 +128,36 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 	}
 
 	for (const [, diagnostic] of expectedErrors) {
-		result.push({
+		results.push({
 			...diagnostic,
 			message: 'Expected an error, but found none.',
 			severity: 'error'
 		});
 	}
 
-	return result;
+	return results;
+};
+
+/**
+ * Get a list of TypeScript diagnostics, and memory size within the current context.
+ *
+ * @param context - The context object.
+ * @returns An object with memory stats, and diagnostics
+ */
+export const getTypeScriptResults = (context: Context): RunResults => {
+	const fileNames = context.testFiles.map(fileName => path.join(context.options.cwd, fileName));
+
+	const program = createProgram(fileNames, context.config.compilerOptions);
+	const diagnostics = getDiagnostics(program);
+
+	// These are private as of 3.6, but will be public in 3.7 - microsoft/TypeScript#33400
+	const programAny = program as any;
+	const sysAny = sys as any;
+	const stats = {
+		typeCount: programAny.getTypeCount && programAny.getTypeCount(),
+		memoryUsage: sysAny.getMemoryUsage && sysAny.getMemoryUsage(),
+		relationCacheSizes: programAny.getRelationCacheSizes && programAny.getRelationCacheSizes(),
+	};
+
+	return {diagnostics , stats};
 };

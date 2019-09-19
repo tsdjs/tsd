@@ -12,11 +12,18 @@ export interface Config<Options = CompilerOptions> {
 export type RawConfig = Partial<Config<RawCompilerOptions>>;
 
 export interface Context {
-	cwd: string;
 	pkg: any;
 	typingsFile: string;
 	testFiles: string[];
 	config: Config;
+	options: Options
+}
+
+export interface Options {
+	cwd: string;
+	verify: boolean;
+	writeSnapshot: boolean;
+	sizeDelta: number;
 }
 
 export enum DiagnosticCode {
@@ -36,6 +43,17 @@ export interface Diagnostic {
 	severity: 'error' | 'warning';
 	line?: number;
 	column?: number;
+}
+
+export interface ProjectSizeStats {
+	typeCount: number;
+	memoryUsage: number;
+	relationCacheSizes: object;
+}
+
+export interface RunResults {
+	diagnostics: Diagnostic[];
+	stats: ProjectSizeStats;
 }
 
 export interface Location {
