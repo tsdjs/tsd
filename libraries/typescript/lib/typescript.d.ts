@@ -1996,6 +1996,10 @@ declare namespace ts {
         getRootSymbols(symbol: Symbol): ReadonlyArray<Symbol>;
         getContextualType(node: Expression): Type | undefined;
         /**
+         * Checks if type `a` is assignable to type `b`.
+         */
+        isAssignableTo(a: Type, b: Type): boolean;
+        /**
          * returns unknownSignature in the case of an error.
          * returns undefined if the node is not valid.
          * @param argumentCount Apparent number of arguments, passed in case of a possibly incomplete call. This should come from an ArgumentListInfo. See `signatureHelp.ts`.

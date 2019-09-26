@@ -3,6 +3,6 @@ import {LiteralUnion} from '.';
 
 type Pet = LiteralUnion<'dog' | 'cat', string>;
 
-expectType<Pet>('dog');
-expectType<Pet>('cat');
-expectType<Pet>('unicorn');
+expectType<Pet>('dog' as Pet);
+expectType<Pet>('cat' as Pet);
+expectType<Pet>('unicorn' as Pet);

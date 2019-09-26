@@ -1,0 +1,6 @@
+{
+	"name": "foo",
+	"dependencies": {
+		"rxjs": "^6.5.3"
+	}
+}

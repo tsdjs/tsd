@@ -59,7 +59,23 @@ export default concat;
 
 If we don't change the test file and we run the `tsd` command again, the test will fail.
 
-<img src="screenshot.png" width="1330">
+<img src="media/screenshot.png" width="1330">
+
+### Strict type assertions
+
+Type assertions are strict. This means that if you expect the type to be `string | number` but the argument is of type `string`, the tests will fail.
+
+```ts
+import {expectType} from 'tsd';
+import concat from '.';
+
+expectType<string>(concat('foo', 'bar'));
+expectType<string | number>(concat('foo', 'bar'));
+```
+
+If we run `tsd`, we will notice that it reports an error because the `concat` method returns the type `string` and not `string | number`.
+
+<img src="media/strict-assert.png" width="1330">
 
 ### Top-level `await`
 
