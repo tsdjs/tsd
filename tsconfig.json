@@ -23,6 +23,7 @@
 	"exclude": [
 		"node_modules",
 		"dist",
-		"source/test/fixtures"
+		"source/test/fixtures",
+		"libraries"
 	]
 }

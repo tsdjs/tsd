@@ -1,4 +1,4 @@
-import {CompilerOptions} from 'typescript';
+import {CompilerOptions} from '../../libraries/typescript';
 
 export interface RawCompilerOptions {
 	[option: string]: any;

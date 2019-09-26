@@ -8,7 +8,7 @@ import {
 	SourceFile,
 	Node,
 	forEachChild
-} from 'typescript';
+} from '../../libraries/typescript';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 
 // List of diagnostic codes that should be ignored
