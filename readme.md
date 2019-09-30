@@ -153,6 +153,37 @@ Check if the function call has argument type errors.
 Check if a value is of the provided type `T`.
 
 
+## Programmatic API
+
+You can use the programmatic API to retrieve the diagnostics and do something with them. This can be useful to run the tests with AVA, Jest or any other testing framework.
+
+```ts
+import tsd from 'tsd';
+
+(async () => {
+	const diagnostics = await tsd();
+
+	console.log(diagnostics.length);
+	//=> 2
+})();
+```
+
+### tsd([options])
+
+Retrieve the type definition diagnostics of the project.
+
+#### options
+
+Type: `object`
+
+##### cwd
+
+Type: `string`<br>
+Default: `process.cwd()`
+
+Current working directory of the project to retrieve the diagnostics for.
+
+
 ## License
 
 MIT © [Sam Verschueren](https://github.com/SamVerschueren)

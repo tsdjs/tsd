@@ -7,7 +7,7 @@ import loadConfig from './config';
 import getCustomDiagnostics from './rules';
 import {Context, Config} from './interfaces';
 
-interface Options {
+export interface Options {
 	cwd: string;
 }
 

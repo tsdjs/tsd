@@ -6,7 +6,7 @@ import tsd from './lib';
 
 const cli = meow(`
 	Usage
-		$ tsd [path]
+	  $ tsd [path]
 
 	Examples
 	  $ tsd /path/to/project
