@@ -37,3 +37,23 @@ export const expectNotAssignable = <T>(value: any) => {		// tslint:disable-line:
 export const expectError = <T = any>(value: T) => {		// tslint:disable-line:no-unused
 	// Do nothing, the TypeScript compiler handles this for us
 };
+
+/**
+ * Assert that the `expression` provided is marked as `@deprecated`.
+ *
+ * @param expression - Expression that should be marked as `@deprecated`.
+ */
+// @ts-ignore
+export const expectDeprecated = (expression: any) => {		// tslint:disable-line:no-unused
+	// Do nothing, the TypeScript compiler handles this for us
+};
+
+/**
+ * Assert that the `expression` provided is not marked as `@deprecated`.
+ *
+ * @param expression - Expression that should not be marked as `@deprecated`.
+ */
+// @ts-ignore
+export const expectNotDeprecated = (expression: any) => {		// tslint:disable-line:no-unused
+	// Do nothing, the TypeScript compiler handles this for us
+};

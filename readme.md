@@ -174,6 +174,14 @@ Check if the function call has argument type errors.
 
 Check if a value is of the provided type `T`.
 
+### expectDeprecated(value)
+
+Check that `value` is marked a `@deprecated`.
+
+### expectNotDeprecated(value)
+
+Check that `value` is not marked a `@deprecated`.
+
 
 ## Programmatic API
 
