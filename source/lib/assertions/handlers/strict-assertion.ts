@@ -1,5 +1,6 @@
 import {TypeChecker, CallExpression} from '../../../../libraries/typescript/lib/typescript';
 import {Diagnostic} from '../../interfaces';
+import {makeDiagnostic} from '../../utils';
 
 /**
  * Performs strict type assertion between the argument if the assertion, and the generic type of the assertion.
@@ -32,18 +33,10 @@ export const strictAssertion = (checker: TypeChecker, nodes: Set<CallExpression>
 
 		if (!checker.isAssignableTo(expectedType, argumentType)) { // tslint:disable-line:early-exit
 			/**
-			 * At this point, the expected type is not assignable to the argument type, but the argument type is
+			 * The expected type is not assignable to the argument type, but the argument type is
 			 * assignable to the expected type. This means our type is too wide.
 			 */
-			const position = node.getSourceFile().getLineAndCharacterOfPosition(node.getStart());
-
-			diagnostics.push({
-				fileName: node.getSourceFile().fileName,
-				message: `Parameter type \`${checker.typeToString(expectedType)}\` is declared too wide for argument type \`${checker.typeToString(argumentType)}\`.`,
-				severity: 'error',
-				line: position.line + 1,
-				column: position.character,
-			});
+			diagnostics.push(makeDiagnostic(node, `Parameter type \`${checker.typeToString(expectedType)}\` is declared too wide for argument type \`${checker.typeToString(argumentType)}\`.`));
 		}
 	}
 

@@ -5,7 +5,7 @@
  * @param property - Property to search for.
  * @returns Position of the property or `undefined` if the property could not be found.
  */
-export const getJSONPropertyPosition = (content: string, property: string) => {
+export default (content: string, property: string) => {
 	const match = new RegExp(`([\\s\\S]*?)"${property}"`, 'm').exec(content);
 
 	if (!match) {
