@@ -1,14 +1,14 @@
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved. 
+Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0  
- 
+License at http://www.apache.org/licenses/LICENSE-2.0
+
 THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, 
-MERCHANTABLITY OR NON-INFRINGEMENT. 
- 
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
@@ -1995,6 +1995,19 @@ declare namespace ts {
         getAugmentedPropertiesOfType(type: Type): Symbol[];
         getRootSymbols(symbol: Symbol): ReadonlyArray<Symbol>;
         getContextualType(node: Expression): Type | undefined;
+        /**
+		 * Two types are considered identical when
+		 *  - they are both the `any` type,
+		 *  - they are the same primitive type,
+		 *  - they are the same type parameter,
+		 *  - they are union types with identical sets of constituent types, or
+		 *  - they are intersection types with identical sets of constituent types, or
+		 *  - they are object types with identical sets of members.
+		 *
+		 * This relationship is bidirectional.
+		 * See [here](https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md#3.11.2) for more information.
+		 */
+        isIdenticalTo(a: Type, b: Type): boolean;
         /**
          * Checks if type `a` is assignable to type `b`.
          */

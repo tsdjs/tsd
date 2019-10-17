@@ -31,12 +31,18 @@ export const strictAssertion = (checker: TypeChecker, nodes: Set<CallExpression>
 			continue;
 		}
 
-		if (!checker.isAssignableTo(expectedType, argumentType)) { // tslint:disable-line:early-exit
+		if (!checker.isAssignableTo(expectedType, argumentType)) {
 			/**
 			 * The expected type is not assignable to the argument type, but the argument type is
 			 * assignable to the expected type. This means our type is too wide.
 			 */
 			diagnostics.push(makeDiagnostic(node, `Parameter type \`${checker.typeToString(expectedType)}\` is declared too wide for argument type \`${checker.typeToString(argumentType)}\`.`));
+		} else if (!checker.isIdenticalTo(expectedType, argumentType)) {
+			/**
+			 * The expected type and argument type are assignable in both directions. We still have to check
+			 * if the types are identical. See https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md#3.11.2.
+			 */
+			diagnostics.push(makeDiagnostic(node, `Parameter type \`${checker.typeToString(expectedType)}\` is not identical to argument type \`${checker.typeToString(argumentType)}\`.`));
 		}
 	}
 

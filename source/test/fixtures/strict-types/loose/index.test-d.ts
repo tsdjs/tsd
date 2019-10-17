@@ -28,3 +28,9 @@ abstract class Foo<T> {
 expectType<Foo<string | Foo<string | number>> | Foo<Date> | Foo<Symbol>>(
 	one<Foo<Date> | Foo<Symbol> | Foo<Foo<number> | string>>()
 );
+
+expectType<string | number>(one<any>());
+
+expectType<Observable<string | number> | Observable<string | number | boolean> | Observable<any>>(
+	one<Observable<string | number> | Observable<string | number | boolean> | Observable<string>>()
+);

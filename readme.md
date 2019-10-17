@@ -142,7 +142,7 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 
 ### expectType&lt;T&gt;(value)
 
-Check if a value is of a specific type.
+Check that `value` is identical to type `T`.
 
 ### expectError(function)
 

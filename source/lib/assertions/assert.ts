@@ -1,7 +1,7 @@
 /**
- * Assert the type of the value.
+ * Check that `value` is identical to type `T`.
  *
- * @param value - Value that should be type checked.
+ * @param value - Value that should be identical to type `T`.
  */
 // @ts-ignore
 export const expectType = <T>(value: T) => {		// tslint:disable-line:no-unused
