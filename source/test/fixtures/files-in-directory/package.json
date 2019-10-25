@@ -1,0 +1,8 @@
+{
+	"name": "foo",
+	"types": "dist/index.d.ts",
+	"files": [
+		"index.js",
+		"dist"
+	]
+}

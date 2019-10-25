@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as multimatch from 'multimatch';
 import {Context, Diagnostic} from '../interfaces';
 import {getJSONPropertyPosition} from '../utils';
 
@@ -17,9 +18,9 @@ export default (context: Context): Diagnostic[] => {
 	}
 
 	const normalizedTypingsFile = path.normalize(typingsFile);
-	const normalizedFiles = (pkg.files as string[]).map(path.normalize);
+	const normalizedFiles = (pkg.files as string[]).map(normalizeFile);
 
-	if (normalizedFiles.includes(normalizedTypingsFile)) {
+	if (multimatch(normalizedTypingsFile, normalizedFiles).length > 0) {
 		return [];
 	}
 
@@ -34,3 +35,17 @@ export default (context: Context): Diagnostic[] => {
 		}
 	];
 };
+
+function normalizeFile(f: string): string {
+	let normalized = path.normalize(f);
+	const isDir = path.extname(normalized) === '';
+	const hasTrailingSlash = normalized.endsWith('/');
+	const isGlob = normalized.includes('*');
+	if (isDir && !isGlob) {
+		if (!hasTrailingSlash) {
+			normalized += '/';
+		}
+		normalized += '**/*';
+	}
+	return normalized;
+}

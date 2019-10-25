@@ -44,6 +44,7 @@
 		"execa": "^2.0.4",
 		"globby": "^9.1.0",
 		"meow": "^5.0.0",
+		"multimatch": "^4.0.0",
 		"path-exists": "^3.0.0",
 		"read-pkg-up": "^4.0.0",
 		"update-notifier": "^2.5.0"
