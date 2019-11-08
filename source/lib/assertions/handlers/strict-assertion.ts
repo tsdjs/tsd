@@ -1,4 +1,5 @@
-import {TypeChecker, CallExpression} from '../../../../libraries/typescript/lib/typescript';
+import {CallExpression} from '../../../../libraries/typescript/lib/typescript';
+import {TypeChecker} from '../../entities/typescript';
 import {Diagnostic} from '../../interfaces';
 import {makeDiagnostic} from '../../utils';
 
@@ -26,18 +27,18 @@ export const strictAssertion = (checker: TypeChecker, nodes: Set<CallExpression>
 		const expectedType = checker.getTypeFromTypeNode(node.typeArguments[0]);
 		const argumentType = checker.getTypeAtLocation(node.arguments[0]);
 
-		if (!checker.isAssignableTo(argumentType, expectedType)) {
+		if (!checker.isTypeAssignableTo(argumentType, expectedType)) {
 			// The argument type is not assignable to the expected type. TypeScript will catch this for us.
 			continue;
 		}
 
-		if (!checker.isAssignableTo(expectedType, argumentType)) {
+		if (!checker.isTypeAssignableTo(expectedType, argumentType)) {
 			/**
 			 * The expected type is not assignable to the argument type, but the argument type is
 			 * assignable to the expected type. This means our type is too wide.
 			 */
 			diagnostics.push(makeDiagnostic(node, `Parameter type \`${checker.typeToString(expectedType)}\` is declared too wide for argument type \`${checker.typeToString(argumentType)}\`.`));
-		} else if (!checker.isIdenticalTo(expectedType, argumentType)) {
+		} else if (!checker.isTypeIdenticalTo(expectedType, argumentType)) {
 			/**
 			 * The expected type and argument type are assignable in both directions. We still have to check
 			 * if the types are identical. See https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md#3.11.2.
