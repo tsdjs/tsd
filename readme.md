@@ -162,10 +162,6 @@ Check that the type of `value` is assignable to type `T`.
 
 Check that the type of `value` is not assignable to type `T`.
 
-### expectAssignable&lt;T&gt;(value)
-
-Check that `value` is assignable to type `T`.
-
 ### expectError(function)
 
 Check if the function call has argument type errors.
@@ -176,11 +172,11 @@ Check if a value is of the provided type `T`.
 
 ### expectDeprecated(value)
 
-Check that `value` is marked a `@deprecated`.
+Check that `value` is marked a [`@deprecated`](https://jsdoc.app/tags-deprecated.html).
 
 ### expectNotDeprecated(value)
 
-Check that `value` is not marked a `@deprecated`.
+Check that `value` is not marked a [`@deprecated`](https://jsdoc.app/tags-deprecated.html).
 
 
 ## Programmatic API
