@@ -162,6 +162,10 @@ Check that the type of `value` is assignable to type `T`.
 
 Check that the type of `value` is not assignable to type `T`.
 
+### expectAssignable&lt;T&gt;(value)
+
+Check that `value` is assignable to type `T`.
+
 ### expectError(function)
 
 Check if the function call has argument type errors.
