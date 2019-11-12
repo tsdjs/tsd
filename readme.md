@@ -77,6 +77,16 @@ If we run `tsd`, we will notice that it reports an error because the `concat` me
 
 <img src="media/strict-assert.png" width="1330">
 
+If you still want loose type assertion, you can use `expectAssignable` for that.
+
+```ts
+import {expectType, expectAssignable} from 'tsd';
+import concat from '.';
+
+expectType<string>(concat('foo', 'bar'));
+expectAssignable<string | number>(concat('foo', 'bar'));
+```
+
 ### Top-level `await`
 
 If your method returns a `Promise`, you can use top-level `await` to resolve the value instead of wrapping it in an `async` [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE).
@@ -142,7 +152,15 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 
 ### expectType&lt;T&gt;(value)
 
-Check that `value` is identical to type `T`.
+Check that the type of `value` is identical to type `T`.
+
+### expectAssignable&lt;T&gt;(value)
+
+Check that the type of `value` is assignable to type `T`.
+
+### expectNotAssignable&lt;T&gt;(value)
+
+Check that the type of `value` is not assignable to type `T`.
 
 ### expectError(function)
 

@@ -2,15 +2,19 @@ import {CallExpression} from '../../../libraries/typescript/lib/typescript';
 import {TypeChecker} from '../entities/typescript';
 import {Diagnostic} from '../interfaces';
 import {Handler, strictAssertion} from './handlers';
+import {isNotAssignable} from './handlers/assignability';
 
 export enum Assertion {
 	EXPECT_TYPE = 'expectType',
-	EXPECT_ERROR = 'expectError'
+	EXPECT_ERROR = 'expectError',
+	EXPECT_ASSIGNABLE = 'expectAssignable',
+	EXPECT_NOT_ASSIGNABLE = 'expectNotAssignable'
 }
 
 // List of diagnostic handlers attached to the assertion
 const assertionHandlers = new Map<string, Handler | Handler[]>([
-	[Assertion.EXPECT_TYPE, strictAssertion]
+	[Assertion.EXPECT_TYPE, strictAssertion],
+	[Assertion.EXPECT_NOT_ASSIGNABLE, isNotAssignable]
 ]);
 
 /**
