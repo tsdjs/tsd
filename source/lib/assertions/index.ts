@@ -1,20 +1,23 @@
 import {CallExpression} from '../../../libraries/typescript/lib/typescript';
 import {TypeChecker} from '../entities/typescript';
 import {Diagnostic} from '../interfaces';
-import {Handler, strictAssertion} from './handlers';
-import {isNotAssignable} from './handlers/assignability';
+import {Handler, strictAssertion, isNotAssignable, expectDeprecated, expectNotDeprecated} from './handlers';
 
 export enum Assertion {
 	EXPECT_TYPE = 'expectType',
 	EXPECT_ERROR = 'expectError',
 	EXPECT_ASSIGNABLE = 'expectAssignable',
-	EXPECT_NOT_ASSIGNABLE = 'expectNotAssignable'
+	EXPECT_NOT_ASSIGNABLE = 'expectNotAssignable',
+	EXPECT_DEPRECATED = 'expectDeprecated',
+	EXPECT_NOT_DEPRECATED = 'expectNotDeprecated'
 }
 
 // List of diagnostic handlers attached to the assertion
 const assertionHandlers = new Map<string, Handler | Handler[]>([
 	[Assertion.EXPECT_TYPE, strictAssertion],
-	[Assertion.EXPECT_NOT_ASSIGNABLE, isNotAssignable]
+	[Assertion.EXPECT_NOT_ASSIGNABLE, isNotAssignable],
+	[Assertion.EXPECT_DEPRECATED, expectDeprecated],
+	[Assertion.EXPECT_NOT_DEPRECATED, expectNotDeprecated]
 ]);
 
 /**
