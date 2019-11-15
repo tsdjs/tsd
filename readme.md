@@ -154,6 +154,10 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 
 Check that the type of `value` is identical to type `T`.
 
+### expectNotType&lt;T&gt;(value)
+
+Check that the type of `value` is not identical to type `T`.
+
 ### expectAssignable&lt;T&gt;(value)
 
 Check that the type of `value` is assignable to type `T`.

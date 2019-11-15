@@ -9,6 +9,17 @@ export const expectType = <T>(value: T) => {		// tslint:disable-line:no-unused
 };
 
 /**
+ * Check that the type of `value` is not identical to type `T`.
+ *
+ * @param value - Value that should be identical to type `T`.
+ */
+// @ts-ignore
+export const expectNotType = <T>(value: any) => {		// tslint:disable-line:no-unused
+	// TODO Use a `not T` type when possible https://github.com/microsoft/TypeScript/pull/29317
+	// Do nothing, the TypeScript compiler handles this for us
+};
+
+/**
  * Check that the type of `value` is assignable to type `T`.
  *
  * @param value - Value that should be assignable to type `T`.
