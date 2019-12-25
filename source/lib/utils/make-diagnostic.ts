@@ -1,4 +1,4 @@
-import {Node} from '../../../libraries/typescript/lib/typescript';
+import {Node} from '../../../libraries/typescript';
 import {Diagnostic} from '../interfaces';
 
 /**

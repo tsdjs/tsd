@@ -1,4 +1,4 @@
-import {JSDocTagInfo} from '../../../../libraries/typescript/lib/typescript';
+import {JSDocTagInfo} from '../../../../libraries/typescript';
 import {Diagnostic} from '../../interfaces';
 import {Handler} from './handler';
 import {makeDiagnostic, tsutils} from '../../utils';

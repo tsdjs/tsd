@@ -1,4 +1,4 @@
-import {TypeChecker as TSTypeChecker, Type} from '../../../libraries/typescript/lib/typescript';
+import {TypeChecker as TSTypeChecker, Type} from '../../../libraries/typescript';
 
 /**
  * Custom interface for the TypeScript `TypeChecker` interface. This exports extra methods that we need
