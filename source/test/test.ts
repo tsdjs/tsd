@@ -4,11 +4,11 @@ import {verify} from './fixtures/utils';
 import tsd from '..';
 
 test('throw if no type definition was found', async t => {
-	await t.throwsAsync(tsd({cwd: path.join(__dirname, 'fixtures/no-tsd')}), 'The type definition `index.d.ts` does not exist. Create one and try again.');
+	await t.throwsAsync(tsd({cwd: path.join(__dirname, 'fixtures/no-tsd')}), {instanceOf: Error, message: 'The type definition `index.d.ts` does not exist. Create one and try again.'});
 });
 
 test('throw if no test is found', async t => {
-	await t.throwsAsync(tsd({cwd: path.join(__dirname, 'fixtures/no-test')}), 'The test file `index.test-d.ts` or `index.test-d.tsx` does not exist. Create one and try again.');
+	await t.throwsAsync(tsd({cwd: path.join(__dirname, 'fixtures/no-test')}), {instanceOf: Error, message: 'The test file `index.test-d.ts` or `index.test-d.tsx` does not exist. Create one and try again.'});
 });
 
 test('return diagnostics', async t => {
