@@ -18,7 +18,7 @@ const cli = meow(`
 `);
 
 (async () => {	// tslint:disable-line:no-floating-promises
-	updateNotifier({pkg: cli.pkg}).notify();
+	updateNotifier({pkg: (cli.pkg as updateNotifier.Package)}).notify();
 
 	try {
 		const options = cli.input.length > 0 ? {cwd: cli.input[0]} : undefined;
