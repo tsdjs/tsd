@@ -36,6 +36,18 @@ test('fail if typings file is not part of `files` list', async t => {
 	]);
 });
 
+test('allow specifying folders containing typings file in `files` list', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/files-folder')});
+
+	verify(t, diagnostics, []);
+});
+
+test('allow specifying glob patterns containing typings file in `files` list', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/files-glob')});
+
+	verify(t, diagnostics, []);
+});
+
 test('fail if `typings` property is used instead of `types`', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/types-property/typings')});
 
