@@ -4,5 +4,5 @@
 		"dist/**/*.d.ts",
 		"dist/**/*.js"
 	],
-    "types": "dist/index.d.ts"
+	"types": "dist/index.d.ts"
 }

@@ -3,5 +3,5 @@
 	"files": [
 		"dist"
 	],
-    "types": "dist/index.d.ts"
+	"types": "dist/index.d.ts"
 }
