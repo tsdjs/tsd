@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as readPkgUp from 'read-pkg-up';
 import * as pathExists from 'path-exists';
-import globby from 'globby';
+import * as globby from 'globby';
 import {getDiagnostics as getTSDiagnostics} from './compiler';
 import loadConfig from './config';
 import getCustomDiagnostics from './rules';
@@ -49,13 +49,15 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
  * @returns A promise which resolves the diagnostics of the type definition.
  */
 export default async (options: Options = {cwd: process.cwd()}) => {
-	const {pkg} = await readPkgUp({cwd: options.cwd});
+	const pkgResult = await readPkgUp({cwd: options.cwd});
 
-	if (!pkg) {
+	if (!pkgResult) {
 		throw new Error('No `package.json` file found. Make sure you are running the command in a Node.js project.');
 	}
 
-	const config = loadConfig(pkg, options.cwd);
+	const pkg = pkgResult.packageJson;
+
+	const config = loadConfig(pkg as any, options.cwd);
 
 	// Look for a typings file, otherwise use `index.d.ts` in the root directory. If the file is not found, throw an error.
 	const typingsFile = await findTypingsFile(pkg, options);
