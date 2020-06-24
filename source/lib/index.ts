@@ -35,7 +35,7 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
 	const tsxTestFile = typingsFile.replace(/\.d\.ts$/, '.test-d.tsx');
 	const testDir = options.config.directory;
 
-	//@ts-ignore
+	// @ts-expect-error
 	let testFiles = await globby([testFile, tsxTestFile], {cwd: options.cwd});
 
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
@@ -45,7 +45,7 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
 	}
 
 	if (testFiles.length === 0) {
-		//@ts-ignore
+		// @ts-expect-error
 		testFiles = await globby([`${testDir}/**/*.ts`, `${testDir}/**/*.tsx`], {cwd: options.cwd});
 	}
 
