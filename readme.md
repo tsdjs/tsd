@@ -213,6 +213,12 @@ Default: `process.cwd()`
 
 Current working directory of the project to retrieve the diagnostics for.
 
+##### typingsFile
+
+Type: `string`<br>
+Default: `''`
+
+Path to the type definitions of the project.
 
 ## License
 
