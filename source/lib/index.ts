@@ -9,6 +9,7 @@ import {Context, Config} from './interfaces';
 
 export interface Options {
 	cwd: string;
+	typingsFile?: string;
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
@@ -28,6 +29,7 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
 	const tsxTestFile = typingsFile.replace(/\.d\.ts$/, '.test-d.tsx');
 	const testDir = options.config.directory;
 
+	//@ts-ignore
 	let testFiles = await globby([testFile, tsxTestFile], {cwd: options.cwd});
 
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
@@ -37,6 +39,7 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
 	}
 
 	if (testFiles.length === 0) {
+		//@ts-ignore
 		testFiles = await globby([`${testDir}/**/*.ts`, `${testDir}/**/*.tsx`], {cwd: options.cwd});
 	}
 
@@ -49,6 +52,7 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
  * @returns A promise which resolves the diagnostics of the type definition.
  */
 export default async (options: Options = {cwd: process.cwd()}) => {
+	let typingsFile = options.typingsFile ? options.typingsFile : '';
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
 	if (!pkgResult) {
@@ -60,7 +64,9 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 	const config = loadConfig(pkg as any, options.cwd);
 
 	// Look for a typings file, otherwise use `index.d.ts` in the root directory. If the file is not found, throw an error.
-	const typingsFile = await findTypingsFile(pkg, options);
+	if (!typingsFile) {
+		typingsFile = await findTypingsFile(pkg, options);
+	}
 
 	const testFiles = await findTestFiles(typingsFile, {
 		...options,
@@ -68,11 +74,11 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 	});
 
 	const context: Context = {
-		cwd: options.cwd,
 		pkg,
-		typingsFile,
+		config,
 		testFiles,
-		config
+		typingsFile,
+		cwd: options.cwd
 	};
 
 	return [
