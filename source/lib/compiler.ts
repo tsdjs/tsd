@@ -1,4 +1,3 @@
-import * as path from 'path';
 import {
 	flattenDiagnosticMessageText,
 	createProgram,
@@ -65,11 +64,9 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
  * @returns List of diagnostics
  */
 export const getDiagnostics = (context: Context): Diagnostic[] => {
-	const fileNames = context.testFiles.map(fileName => path.join(context.cwd, fileName));
-
 	const diagnostics: Diagnostic[] = [];
 
-	const program = createProgram(fileNames, context.config.compilerOptions);
+	const program = createProgram(context.testFiles, context.config.compilerOptions);
 
 	const tsDiagnostics = program
 		.getSemanticDiagnostics()

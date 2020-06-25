@@ -10,6 +10,7 @@ import {Context, Config} from './interfaces';
 export interface Options {
 	cwd: string;
 	typingsFile?: string;
+	testFiles?: string[];
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
@@ -35,7 +36,6 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
 	const tsxTestFile = typingsFile.replace(/\.d\.ts$/, '.test-d.tsx');
 	const testDir = options.config.directory;
 
-	// @ts-expect-error
 	let testFiles = await globby([testFile, tsxTestFile], {cwd: options.cwd});
 
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
@@ -45,11 +45,10 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
 	}
 
 	if (testFiles.length === 0) {
-		// @ts-expect-error
 		testFiles = await globby([`${testDir}/**/*.ts`, `${testDir}/**/*.tsx`], {cwd: options.cwd});
 	}
 
-	return testFiles;
+	return testFiles.map(fileName => path.join(options.cwd, fileName));
 };
 
 /**
@@ -58,6 +57,7 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
  * @returns A promise which resolves the diagnostics of the type definition.
  */
 export default async (options: Options = {cwd: process.cwd()}) => {
+	let testFiles = options.testFiles ? options.testFiles : [''];
 	let typingsFile = options.typingsFile ? options.typingsFile : '';
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
@@ -68,14 +68,16 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 	const pkg = pkgResult.packageJson;
 	const config = loadConfig(pkg as any, options.cwd);
 
-	// Look for a typings file if not explicitly specified, otherwise use `index.d.ts` in the root directory. 
+	// Look for a typings file if not explicitly specified, otherwise use `index.d.ts` in the root directory.
 	// If the file is not found, throw an error.
 	typingsFile = await findTypingsFile(pkg, options);
 
-	const testFiles = await findTestFiles(typingsFile, {
-		...options,
-		config
-	});
+	if (!testFiles[0]) {
+		testFiles = await findTestFiles(typingsFile, {
+			...options,
+			config
+		});
+	}
 
 	const context: Context = {
 		pkg,

@@ -220,6 +220,13 @@ Default: `''`
 
 Path to the type definitions of the project.
 
+##### testFiles
+
+type: `string[]`
+default: `['']`
+
+An array of test files with their path
+
 ## License
 
 MIT © [Sam Verschueren](https://github.com/SamVerschueren)
