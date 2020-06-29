@@ -13,7 +13,7 @@
 	"typings": "dist/index.d.ts",
 	"bin": "dist/cli.js",
 	"engines": {
-		"node": ">=6"
+		"node": ">=8"
 	},
 	"scripts": {
 		"prepublishOnly": "npm run build",
