@@ -7,7 +7,7 @@
 	"author": {
 		"name": "Sam Verschueren",
 		"email": "sam.verschueren@gmail.com",
-		"url": "https://github.com/SamVerschueren"
+		"url": "github.com/SamVerschueren"
 	},
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
