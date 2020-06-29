@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as globby from 'globby';
 import {Context, Diagnostic} from '../interfaces';
 import {getJSONPropertyPosition} from '../utils';
 
@@ -17,7 +18,7 @@ export default (context: Context): Diagnostic[] => {
 	}
 
 	const normalizedTypingsFile = path.normalize(typingsFile);
-	const normalizedFiles = (pkg.files as string[]).map(path.normalize);
+	const normalizedFiles = globby.sync(pkg.files as string[], {cwd: context.cwd}).map(path.normalize);
 
 	if (normalizedFiles.includes(normalizedTypingsFile)) {
 		return [];

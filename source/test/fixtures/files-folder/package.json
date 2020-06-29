@@ -1,0 +1,7 @@
+{
+	"name": "foo",
+	"files": [
+		"out"
+	],
+	"types": "out/index.d.ts"
+}
