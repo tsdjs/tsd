@@ -14,7 +14,7 @@ export interface Options {
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
-	let typings = options.typingsFile || pkg.types || pkg.typings || 'index.d.ts';
+	const typings = options.typingsFile || pkg.types || pkg.typings || 'index.d.ts';
 	const typingsExist = await pathExists(path.join(options.cwd, typings));
 
 	if (!typingsExist) {
@@ -25,12 +25,15 @@ const findTypingsFile = async (pkg: any, options: Options) => {
 };
 
 const findTestFiles = async (typingsFile: string, options: Options & {config: Config}) => {
+	if (options.testFiles?.length) {
+		return options.testFiles.map(fileName => path.join(options.cwd, fileName));
+	}
+
 	const testFile = typingsFile.replace(/\.d\.ts$/, '.test-d.ts');
 	const tsxTestFile = typingsFile.replace(/\.d\.ts$/, '.test-d.tsx');
 	const testDir = options.config.directory;
 
 	let testFiles = await globby([testFile, tsxTestFile], {cwd: options.cwd});
-
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
 
 	if (testFiles.length === 0 && !testDirExists) {
@@ -50,7 +53,6 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
  * @returns A promise which resolves the diagnostics of the type definition.
  */
 export default async (options: Options = {cwd: process.cwd()}) => {
-	let testFiles = options.testFiles ? options.testFiles : [''];
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
 	if (!pkgResult) {
@@ -64,12 +66,10 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 	// If the file is not found, throw an error.
 	const typingsFile = await findTypingsFile(pkg, options);
 
-	if (!testFiles[0]) {
-		testFiles = await findTestFiles(typingsFile, {
-			...options,
-			config
-		});
-	}
+	const testFiles = await findTestFiles(typingsFile, {
+		...options,
+		config
+	});
 
 	const context: Context = {
 		pkg,
