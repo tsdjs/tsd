@@ -7,7 +7,7 @@ test('identical', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/identicality/identical')});
 
 	verify(t, diagnostics, [
-		[7, 0, 'error', 'Parameter type `any` is declared too wide for argument type `number`.'],
+		[7, 0, 'error', 'Parameter type `any` is not identical to argument type `number`.'],
 		[8, 0, 'error', 'Parameter type `string | number` is declared too wide for argument type `string`.']
 	]);
 });
