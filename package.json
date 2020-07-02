@@ -40,7 +40,7 @@
 		"typedefinitions"
 	],
 	"dependencies": {
-		"eslint-formatter-pretty": "^4.0.0",
+		"eslint-formatter-pretty": "^3.0.1",
 		"globby": "^11.0.1",
 		"meow": "^7.0.1",
 		"path-exists": "^4.0.0",
