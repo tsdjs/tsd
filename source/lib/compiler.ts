@@ -12,7 +12,7 @@ import {handle} from './assertions';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([
-	DiagnosticCode.AwaitIsOnlyAllowedInAsyncFunction
+	DiagnosticCode.TopLevelAwaitOnlyAllowedWhenModuleESNextOrSystem
 ]);
 
 // List of diagnostic codes which should be ignored inside `expectError` statements

@@ -20,7 +20,7 @@ export interface Context {
 }
 
 export enum DiagnosticCode {
-	AwaitIsOnlyAllowedInAsyncFunction = 1308,
+	TopLevelAwaitOnlyAllowedWhenModuleESNextOrSystem = 1378,
 	GenericTypeRequiresTypeArguments = 2314,
 	TypeIsNotAssignableToOtherType = 2322,
 	PropertyDoesNotExistOnType = 2339,

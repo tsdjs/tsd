@@ -1,8 +1,8 @@
 {
   "_from": "typescript",
-  "_id": "typescript@3.7.2",
+  "_id": "typescript@3.9.6",
   "_inBundle": false,
-  "_integrity": "sha512-ml7V7JfiN2Xwvcer+XAf2csGO1bPBdRbFCkYBczNZggrBZ9c7G3riSUeJmqEU5uOtXNPMhE3n+R4FA/3YOAWOQ==",
+  "_integrity": "sha512-Pspx3oKAPJtjNwE92YS05HQoY7z2SFyOpHo9MqJor3BXAGNaPUs83CuVp9VISFkSjyRfiTpmKuAYGJB7S7hOxw==",
   "_location": "/typescript",
   "_phantomChildren": {},
   "_requested": {
@@ -16,19 +16,19 @@
     "fetchSpec": "latest"
   },
   "_requiredBy": [
-    "#USER",
-    "/"
+    "#DEV:/",
+    "#USER"
   ],
-  "_resolved": "https://registry.npmjs.org/typescript/-/typescript-3.7.2.tgz",
-  "_shasum": "27e489b95fa5909445e9fef5ee48d81697ad18fb",
+  "_resolved": "https://registry.npmjs.org/typescript/-/typescript-3.9.6.tgz",
+  "_shasum": "8f3e0198a34c3ae17091b35571d3afd31999365a",
   "_spec": "typescript",
-  "_where": "/Users/sam/Projects/opensource/tsd-check/tmp",
+  "_where": "/Users/sam/Projects/opensource/tsd",
   "author": {
     "name": "Microsoft Corp."
   },
   "bin": {
-    "tsc": "./bin/tsc",
-    "tsserver": "./bin/tsserver"
+    "tsc": "bin/tsc",
+    "tsserver": "bin/tsserver"
   },
   "browser": {
     "fs": false,
@@ -73,9 +73,9 @@
     "@types/through2": "latest",
     "@types/travis-fold": "latest",
     "@types/xml2js": "^0.4.0",
-    "@typescript-eslint/eslint-plugin": "2.3.2",
-    "@typescript-eslint/experimental-utils": "2.3.2",
-    "@typescript-eslint/parser": "2.3.2",
+    "@typescript-eslint/eslint-plugin": "2.18.0",
+    "@typescript-eslint/experimental-utils": "2.18.0",
+    "@typescript-eslint/parser": "2.18.0",
     "async": "latest",
     "azure-devops-node-api": "^8.0.0",
     "browser-resolve": "^1.11.2",
@@ -84,10 +84,10 @@
     "chalk": "latest",
     "convert-source-map": "latest",
     "del": "5.1.0",
-    "eslint": "6.5.1",
-    "eslint-formatter-autolinkable-stylish": "1.0.3",
-    "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-jsdoc": "15.9.9",
+    "eslint": "6.8.0",
+    "eslint-formatter-autolinkable-stylish": "1.1.1",
+    "eslint-plugin-import": "2.20.0",
+    "eslint-plugin-jsdoc": "21.0.0",
     "eslint-plugin-no-null": "1.0.2",
     "fancy-log": "latest",
     "fs-extra": "^6.0.1",
@@ -106,16 +106,16 @@
     "mocha-fivemat-progress-reporter": "latest",
     "ms": "latest",
     "node-fetch": "^2.6.0",
+    "playwright": "0.12.1",
     "plugin-error": "latest",
     "pretty-hrtime": "^1.0.3",
     "prex": "^0.4.3",
     "q": "latest",
     "remove-internal": "^2.9.2",
-    "simple-git": "^1.113.0",
     "source-map-support": "latest",
     "through2": "latest",
     "travis-fold": "latest",
-    "typescript": "next",
+    "typescript": "^3.9.3",
     "vinyl": "latest",
     "vinyl-sourcemaps-apply": "latest",
     "xml2js": "^0.4.19"
@@ -154,9 +154,8 @@
     "setup-hooks": "node scripts/link-hooks.js",
     "start": "node lib/tsc",
     "test": "gulp runtests-parallel --light=false",
-    "test:eslint-rules": "gulp run-eslint-rules-tests",
-    "update-costly-tests": "node scripts/costly-tests.js"
+    "test:eslint-rules": "gulp run-eslint-rules-tests"
   },
   "typings": "./lib/typescript.d.ts",
-  "version": "3.7.2"
+  "version": "3.9.6"
 }
