@@ -14,15 +14,8 @@ export interface Options {
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
-	let typingsExist: boolean;
-	let typings = pkg.types || pkg.typings || 'index.d.ts';
-
-	if (options.typingsFile) {
-		typings = options.typingsFile;
-		typingsExist = await pathExists(options.typingsFile);
-	} else {
-		typingsExist = await pathExists(path.join(options.cwd, typings));
-	}
+	let typings = options.typingsFile || pkg.types || pkg.typings || 'index.d.ts';
+	const typingsExist = await pathExists(path.join(options.cwd, typings));
 
 	if (!typingsExist) {
 		throw new Error(`The type definition \`${typings}\` does not exist. Create one and try again.`);
@@ -58,7 +51,6 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
  */
 export default async (options: Options = {cwd: process.cwd()}) => {
 	let testFiles = options.testFiles ? options.testFiles : [''];
-	let typingsFile = options.typingsFile ? options.typingsFile : '';
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
 	if (!pkgResult) {
@@ -70,7 +62,7 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 
 	// Look for a typings file if not explicitly specified, otherwise use `index.d.ts` in the root directory.
 	// If the file is not found, throw an error.
-	typingsFile = await findTypingsFile(pkg, options);
+	const typingsFile = await findTypingsFile(pkg, options);
 
 	if (!testFiles[0]) {
 		testFiles = await findTestFiles(typingsFile, {
