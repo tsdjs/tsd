@@ -23,12 +23,13 @@ export enum DiagnosticCode {
 	TopLevelAwaitOnlyAllowedWhenModuleESNextOrSystem = 1378,
 	GenericTypeRequiresTypeArguments = 2314,
 	TypeIsNotAssignableToOtherType = 2322,
+	TypeDoesNotSatisfyTheConstraint = 2344,
 	PropertyDoesNotExistOnType = 2339,
 	ArgumentTypeIsNotAssignableToParameterType = 2345,
 	CannotAssignToReadOnlyProperty = 2540,
 	ExpectedArgumentsButGotOther = 2554,
 	NoOverloadMatches = 2769,
-	PropertyMissingInType1ButRequiredInType2 = 2741
+	PropertyMissingInType1ButRequiredInType2 = 2741,
 }
 
 export interface Diagnostic {

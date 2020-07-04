@@ -175,6 +175,12 @@ test('expectError for functions', async t => {
 	]);
 });
 
+test('expectError for generics', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/generics')});
+
+	verify(t, diagnostics, []);
+});
+
 test('expectError should not ignore syntactical errors', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/syntax')});
 
