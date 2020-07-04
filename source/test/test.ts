@@ -202,8 +202,14 @@ test('missing import', async t => {
 	]);
 });
 
-test('tsx', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/tsx')});
+test('tsx component', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/tsx/component')});
+
+	verify(t, diagnostics, []);
+});
+
+test('tsx component type', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/tsx/component-type')});
 
 	verify(t, diagnostics, []);
 });

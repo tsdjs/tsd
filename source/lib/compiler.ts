@@ -16,14 +16,15 @@ const ignoredDiagnostics = new Set<number>([
 ]);
 
 // List of diagnostic codes which should be ignored inside `expectError` statements
-const diagnosticCodesToIgnore = new Set<DiagnosticCode>([
+const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType,
 	DiagnosticCode.PropertyDoesNotExistOnType,
 	DiagnosticCode.CannotAssignToReadOnlyProperty,
 	DiagnosticCode.TypeIsNotAssignableToOtherType,
 	DiagnosticCode.GenericTypeRequiresTypeArguments,
 	DiagnosticCode.ExpectedArgumentsButGotOther,
-	DiagnosticCode.NoOverloadMatches
+	DiagnosticCode.NoOverloadMatches,
+	DiagnosticCode.PropertyMissingInType1ButRequiredInType2
 ]);
 
 /**
@@ -39,7 +40,7 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
 		return true;
 	}
 
-	if (!diagnosticCodesToIgnore.has(diagnostic.code)) {
+	if (!expectErrordiagnosticCodesToIgnore.has(diagnostic.code)) {
 		return false;
 	}
 

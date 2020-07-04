@@ -1,6 +1,7 @@
 import {Component} from 'react';
 
 interface UnicornProps {
+	unicorn: number;
 	rainbow: string;
 }
 
