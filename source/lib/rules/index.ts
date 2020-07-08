@@ -16,10 +16,12 @@ const rules = new Set<RuleFunction>([
  * @param context - The context object.
  * @returns List of diagnostics
  */
-export default (context: Context) => {
+export default (context: Context): Diagnostic[] => {
+	let numTests: number = 0;
 	const diagnostics: Diagnostic[] = [];
 
 	for (const rule of rules) {
+		numTests = numTests + 1;
 		diagnostics.push(...rule(context));
 	}
 

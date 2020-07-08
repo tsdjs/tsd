@@ -64,6 +64,7 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
  * @returns List of diagnostics
  */
 export const getDiagnostics = (context: Context): Diagnostic[] => {
+	let numTests: number = 0;
 	const diagnostics: Diagnostic[] = [];
 
 	const program = createProgram(context.testFiles, context.config.compilerOptions);
@@ -73,6 +74,10 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		.concat(program.getSyntacticDiagnostics());
 
 	const assertions = extractAssertions(program);
+
+	for (const assertion of assertions) {
+		numTests = numTests + assertion[1].size;
+	}
 
 	diagnostics.push(...handle(program.getTypeChecker() as TypeChecker, assertions));
 
