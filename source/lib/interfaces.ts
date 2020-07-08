@@ -17,6 +17,7 @@ export interface Context {
 	typingsFile: string;
 	testFiles: string[];
 	config: Config;
+	verbose: boolean;
 }
 
 export enum DiagnosticCode {

@@ -10,7 +10,8 @@ import {Context, Config} from './interfaces';
 export interface Options {
 	cwd: string;
 	typingsFile?: string;
-	testFiles?: readonly string[];
+	testFiles?: string[];
+	verbose?: boolean;
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
@@ -74,6 +75,7 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
  * @returns A promise which resolves the diagnostics of the type definition.
  */
 export default async (options: Options = {cwd: process.cwd()}) => {
+	const isVerbose = options.verbose ? true : false;
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
 	if (!pkgResult) {
@@ -96,7 +98,9 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 		pkg,
 		typingsFile,
 		testFiles,
-		config
+		typingsFile,
+		cwd: options.cwd,
+		verbose: isVerbose
 	};
 
 	return [
