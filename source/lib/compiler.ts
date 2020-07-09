@@ -6,7 +6,7 @@ import {
 } from '../../libraries/typescript';
 import {TypeChecker} from './entities/typescript';
 import {extractAssertions, parseErrorAssertionToLocation} from './parser';
-import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
+import {Diagnostic, DiagnosticCode, Context, Location, ExtendedDiagnostic} from './interfaces';
 import {handle} from './assertions';
 
 // List of diagnostic codes that should be ignored in general
@@ -63,7 +63,7 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
  * @param context - The context object.
  * @returns List of diagnostics
  */
-export const getDiagnostics = (context: Context): Diagnostic[] => {
+export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
 	let numTests: number = 0;
 	const diagnostics: Diagnostic[] = [];
 
@@ -107,5 +107,5 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		});
 	}
 
-	return diagnostics;
+	return {numTests, diagnostics};
 };

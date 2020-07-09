@@ -1,6 +1,6 @@
 import filesProperty from './files-property';
 import typesProperty from './types-property';
-import {Diagnostic, Context} from '../interfaces';
+import {Diagnostic, Context, ExtendedDiagnostic} from '../interfaces';
 
 type RuleFunction = (context: Context) => Diagnostic[];
 
@@ -16,7 +16,7 @@ const rules = new Set<RuleFunction>([
  * @param context - The context object.
  * @returns List of diagnostics
  */
-export default (context: Context): Diagnostic[] => {
+export default (context: Context): ExtendedDiagnostic => {
 	let numTests: number = 0;
 	const diagnostics: Diagnostic[] = [];
 
@@ -25,5 +25,5 @@ export default (context: Context): Diagnostic[] => {
 		diagnostics.push(...rule(context));
 	}
 
-	return diagnostics;
+	return {numTests, diagnostics};
 };
