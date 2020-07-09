@@ -82,8 +82,23 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 		verbose: isVerbose
 	};
 
-	return [
-		...getCustomDiagnostics(context),
-		...getTSDiagnostics(context)
-	];
+	const tsDiagnostics = getTSDiagnostics(context);
+	const customDiagnostics = getCustomDiagnostics(context);
+
+	if (!isVerbose) {
+		return [
+			...customDiagnostics.diagnostics,
+			...tsDiagnostics.diagnostics
+		];
+	}
+
+	const numTests = tsDiagnostics.numTests + customDiagnostics.numTests;
+
+	return {
+		numTests,
+		diagnostics: [
+			...customDiagnostics.diagnostics,
+			...tsDiagnostics.diagnostics
+		]
+	};
 };
