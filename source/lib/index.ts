@@ -11,7 +11,6 @@ export interface Options {
 	cwd: string;
 	typingsFile?: string;
 	testFiles?: string[];
-	verbose?: boolean;
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
@@ -54,7 +53,6 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
  * @returns A promise which resolves the diagnostics of the type definition.
  */
 export default async (options: Options = {cwd: process.cwd()}) => {
-	const isVerbose = options.verbose ? true : false;
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
 	if (!pkgResult) {
@@ -78,20 +76,11 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 		config,
 		testFiles,
 		typingsFile,
-		cwd: options.cwd,
-		verbose: isVerbose
+		cwd: options.cwd
 	};
 
 	const tsDiagnostics = getTSDiagnostics(context);
 	const customDiagnostics = getCustomDiagnostics(context);
-
-	if (!isVerbose) {
-		return [
-			...customDiagnostics.diagnostics,
-			...tsDiagnostics.diagnostics
-		];
-	}
-
 	const numTests = tsDiagnostics.numTests + customDiagnostics.numTests;
 
 	return {
