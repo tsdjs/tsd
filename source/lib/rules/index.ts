@@ -17,7 +17,7 @@ const rules = new Set<RuleFunction>([
  * @returns List of diagnostics
  */
 export default (context: Context): ExtendedDiagnostic => {
-	let numTests: number = 0;
+	let numTests = 0;
 	const diagnostics: Diagnostic[] = [];
 
 	for (const rule of rules) {

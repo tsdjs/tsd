@@ -1,5 +1,5 @@
 import * as formatter from 'eslint-formatter-pretty';
-import {Diagnostic} from './interfaces';
+import {ExtendedDiagnostic} from './interfaces';
 
 /**
  * Format the TypeScript diagnostics to a human readable output.
@@ -7,7 +7,8 @@ import {Diagnostic} from './interfaces';
  * @param diagnostics - List of TypeScript diagnostics.
  * @returns Beautiful diagnostics output
  */
-export default (diagnostics: Diagnostic[]) => {
+export default (extendedDiagnostics: ExtendedDiagnostic) => {
+	const diagnostics = extendedDiagnostics.diagnostics;
 	const fileMap = new Map<string, any>();
 
 	for (const diagnostic of diagnostics) {
