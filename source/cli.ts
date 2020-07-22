@@ -23,10 +23,11 @@ const cli = meow(`
 	try {
 		const options = cli.input.length > 0 ? {cwd: cli.input[0]} : undefined;
 
-		const diagnostics = await tsd(options);
+		const extendedDiagnostics = await tsd(options);
+		const diagnostics = extendedDiagnostics.diagnostics;
 
 		if (diagnostics.length > 0) {
-			throw new Error(formatter(diagnostics));
+			throw new Error(formatter(extendedDiagnostics));
 		}
 	} catch (error) {
 		console.error(error.message);

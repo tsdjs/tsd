@@ -1,5 +1,5 @@
 import {ExecutionContext} from 'ava';
-import {Diagnostic} from '../../lib/interfaces';
+import {ExtendedDiagnostic} from '../../lib/interfaces';
 
 type Expectation = [number, number, 'error' | 'warning', string, (string | RegExp)?];
 
@@ -7,10 +7,11 @@ type Expectation = [number, number, 'error' | 'warning', string, (string | RegEx
  * Verify a list of diagnostics.
  *
  * @param t - The AVA execution context.
- * @param diagnostics - List of diagnostics to verify.
+ * @param extendedDiagnostics - Object containing numTests and list of diagnostics to verify
  * @param expectations - Expected diagnostics.
  */
-export const verify = (t: ExecutionContext, diagnostics: Diagnostic[], expectations: Expectation[]) => {
+export const verify = (t: ExecutionContext, extendedDiagnostics: ExtendedDiagnostic, expectations: Expectation[]) => {
+	const diagnostics = extendedDiagnostics.diagnostics;
 	t.true(diagnostics.length === expectations.length);
 
 	for (const [index, diagnostic] of diagnostics.entries()) {

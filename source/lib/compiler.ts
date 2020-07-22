@@ -64,7 +64,7 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
  * @returns List of diagnostics
  */
 export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
-	let numTests: number = 0;
+	let numTests = 0;
 	const diagnostics: Diagnostic[] = [];
 
 	const program = createProgram(context.testFiles, context.config.compilerOptions);
