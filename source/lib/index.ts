@@ -62,8 +62,7 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 	const pkg = pkgResult.packageJson;
 	const config = loadConfig(pkg as any, options.cwd);
 
-	// Look for a typings file if not explicitly specified, otherwise use `index.d.ts` in the root directory.
-	// If the file is not found, throw an error.
+	// Look for a typings file, otherwise use `index.d.ts` in the root directory. If the file is not found, throw an error.
 	const typingsFile = await findTypingsFile(pkg, options);
 
 	const testFiles = await findTestFiles(typingsFile, {
@@ -72,11 +71,11 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 	});
 
 	const context: Context = {
+		cwd: options.cwd,
 		pkg,
-		config,
-		testFiles,
 		typingsFile,
-		cwd: options.cwd
+		testFiles,
+		config
 	};
 
 	return [
