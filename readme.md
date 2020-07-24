@@ -222,7 +222,7 @@ Path to the type definitions of the project.
 
 ##### testFiles
 
-type: `string[]`
+type: `string[]`<br>
 default: `['']`
 
 An array of test files with their path
