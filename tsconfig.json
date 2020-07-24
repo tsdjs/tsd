@@ -18,7 +18,6 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"noEmitOnError": true,
-		"sourceMap": true,
 		"forceConsistentCasingInFileNames": true
 	},
 	"exclude": [
