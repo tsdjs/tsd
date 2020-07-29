@@ -102,12 +102,12 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 
 	const tsDiagnostics = getTSDiagnostics(context);
 	const customDiagnostics = getCustomDiagnostics(context);
-	const numTests = tsDiagnostics.numTests + customDiagnostics.numTests;
+	const numTests = tsDiagnostics.numTests;
 
 	return {
 		numTests,
 		diagnostics: [
-			...customDiagnostics.diagnostics,
+			...customDiagnostics,
 			...tsDiagnostics.diagnostics
 		]
 	};
