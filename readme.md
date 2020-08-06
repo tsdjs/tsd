@@ -6,7 +6,7 @@
 
 This tool lets you write tests for your type definitions (i.e. your `.d.ts` files) by creating files with the `.test-d.ts` extension.
 
-These `.test-d.ts` files will not be executed, and not even compiled in the standard way. Instead, these files will be magically parsed for special constructs such as `expectError<Foo>(bar)` and then statically analyzed against your type definitions.
+These `.test-d.ts` files will not be executed, and not even compiled in the standard way. Instead, these files will be parsed for special constructs such as `expectError<Foo>(bar)` and then statically analyzed against your type definitions.
 
 ## Install
 
