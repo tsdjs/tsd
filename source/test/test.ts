@@ -244,3 +244,12 @@ test('specify test files manually', async t => {
 		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
 	]);
 });
+
+test('fails if typings file is not found in the specified path', async t => {
+	const error = await t.throwsAsync(tsd({
+		cwd: path.join(__dirname, 'fixtures/typings-custom-dir'),
+		typingsFile: 'unknown.d.ts'
+	}));
+
+	t.is(error.message, 'The type definition `unknown.d.ts` does not exist. Create one and try again.');
+});
