@@ -231,3 +231,16 @@ test('typings in custom directory', async t => {
 		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
 	]);
 });
+
+test('specify test files manually', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/specify-test-files'),
+		testFiles: [
+			'unknown.test.ts'
+		]
+	});
+
+	verify(t, diagnostics, [
+		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
+	]);
+});
