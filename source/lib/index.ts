@@ -24,10 +24,21 @@ const findTypingsFile = async (pkg: any, options: Options) => {
 	return typings;
 };
 
-const findTestFiles = async (typingsFile: string, options: Options & {config: Config}) => {
+const normalizeTypingsFilePath = (typingsFilePath: string, options: Options) => {
+	if (options.typingsFile) {
+		return path.basename(typingsFilePath);
+	}
+
+	return typingsFilePath;
+};
+
+const findTestFiles = async (typingsFilePath: string, options: Options & {config: Config}) => {
 	if (options.testFiles?.length) {
 		return options.testFiles.map(fileName => path.join(options.cwd, fileName));
 	}
+
+	// Return only the file name if typingsFile option is used.
+	const typingsFile = normalizeTypingsFilePath(typingsFilePath, options);
 
 	const testFile = typingsFile.replace(/\.d\.ts$/, '.test-d.ts');
 	const tsxTestFile = typingsFile.replace(/\.d\.ts$/, '.test-d.tsx');
