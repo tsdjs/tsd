@@ -32,9 +32,19 @@ const normalizeTypingsFilePath = (typingsFilePath: string, options: Options) => 
 	return typingsFilePath;
 };
 
+const findCustomTestFiles = async (testFilesPattern: string[], cwd: string) => {
+	const testFiles = await globby(testFilesPattern, {cwd});
+
+	if (testFiles.length === 0) {
+		throw new Error('Could not find test files. Create one and try again');
+	}
+
+	return testFiles.map(file => path.join(cwd, file));
+};
+
 const findTestFiles = async (typingsFilePath: string, options: Options & {config: Config}) => {
 	if (options.testFiles?.length) {
-		return options.testFiles.map(fileName => path.join(options.cwd, fileName));
+		return findCustomTestFiles(options.testFiles, options.cwd);
 	}
 
 	// Return only the file name if typingsFile option is used.
