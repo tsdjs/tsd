@@ -253,3 +253,9 @@ test('fails if typings file is not found in the specified path', async t => {
 
 	t.is(error.message, 'The type definition `unknown.d.ts` does not exist. Create one and try again.');
 });
+
+test('checking numTests', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/failure')});
+
+	t.is(diagnostics.numTests, 2);
+});
