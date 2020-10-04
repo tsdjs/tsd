@@ -10,7 +10,7 @@ import {Context, Config} from './interfaces';
 export interface Options {
 	cwd: string;
 	typingsFile?: string;
-	testFiles?: string[];
+	testFiles?: readonly string[];
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
@@ -32,7 +32,7 @@ const normalizeTypingsFilePath = (typingsFilePath: string, options: Options) => 
 	return typingsFilePath;
 };
 
-const findCustomTestFiles = async (testFilesPattern: string[], cwd: string) => {
+const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: string) => {
 	const testFiles = await globby(testFilesPattern, {cwd});
 
 	if (testFiles.length === 0) {
