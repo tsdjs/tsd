@@ -36,7 +36,7 @@ const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: str
 	const testFiles = await globby(testFilesPattern, {cwd});
 
 	if (testFiles.length === 0) {
-		throw new Error('Could not find test files. Create one and try again');
+		throw new Error('Could not find any test files. Create one and try again');
 	}
 
 	return testFiles.map(file => path.join(cwd, file));
@@ -47,7 +47,7 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
 		return findCustomTestFiles(options.testFiles, options.cwd);
 	}
 
-	// Return only the file name if typingsFile option is used.
+	// Return only the filename if the `typingsFile` option is used.
 	const typingsFile = normalizeTypingsFilePath(typingsFilePath, options);
 
 	const testFile = typingsFile.replace(/\.d\.ts$/, '.test-d.ts');
