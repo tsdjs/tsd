@@ -216,14 +216,14 @@ Current working directory of the project to retrieve the diagnostics for.
 ##### typingsFile
 
 Type: `string`<br>
-Default: takes value defined in `types` property at `package.json`
+Default: The `types` property in `package.json`.
 
 Path to the type definitions of the project.
 
 ##### testFiles
 
-type: `string[]`<br>
-default: finds files with `.test-d.ts` or `.test-d.tsx` extension
+Type: `string[]`<br>
+Default: Finds files with `.test-d.ts` or `.test-d.tsx` extension.
 
 An array of test files with their path.
 
