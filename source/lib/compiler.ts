@@ -1,4 +1,3 @@
-import * as path from 'path';
 import {
 	flattenDiagnosticMessageText,
 	createProgram,
@@ -7,7 +6,7 @@ import {
 } from '../../libraries/typescript';
 import {TypeChecker} from './entities/typescript';
 import {extractAssertions, parseErrorAssertionToLocation} from './parser';
-import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
+import {Diagnostic, DiagnosticCode, Context, Location, ExtendedDiagnostic} from './interfaces';
 import {handle} from './assertions';
 
 // List of diagnostic codes that should be ignored in general
@@ -66,18 +65,21 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
  * @param context - The context object.
  * @returns List of diagnostics
  */
-export const getDiagnostics = (context: Context): Diagnostic[] => {
-	const fileNames = context.testFiles.map(fileName => path.join(context.cwd, fileName));
-
+export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
+	let numTests = 0;
 	const diagnostics: Diagnostic[] = [];
 
-	const program = createProgram(fileNames, context.config.compilerOptions);
+	const program = createProgram(context.testFiles, context.config.compilerOptions);
 
 	const tsDiagnostics = program
 		.getSemanticDiagnostics()
 		.concat(program.getSyntacticDiagnostics());
 
 	const assertions = extractAssertions(program);
+
+	for (const assertion of assertions) {
+		numTests = numTests + assertion[1].size;
+	}
 
 	diagnostics.push(...handle(program.getTypeChecker() as TypeChecker, assertions));
 
@@ -107,5 +109,5 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		});
 	}
 
-	return diagnostics;
+	return {numTests, diagnostics};
 };

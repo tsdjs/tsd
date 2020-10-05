@@ -244,3 +244,42 @@ test('strict types', async t => {
 
 	verify(t, diagnostics, []);
 });
+
+test('typings in custom directory', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/typings-custom-dir'),
+		typingsFile: 'utils/index.d.ts'
+	});
+
+	verify(t, diagnostics, [
+		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
+	]);
+});
+
+test('specify test files manually', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/specify-test-files'),
+		testFiles: [
+			'unknown.test.ts'
+		]
+	});
+
+	verify(t, diagnostics, [
+		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
+	]);
+});
+
+test('fails if typings file is not found in the specified path', async t => {
+	const error = await t.throwsAsync(tsd({
+		cwd: path.join(__dirname, 'fixtures/typings-custom-dir'),
+		typingsFile: 'unknown.d.ts'
+	}));
+
+	t.is(error.message, 'The type definition `unknown.d.ts` does not exist. Create one and try again.');
+});
+
+test('checking numTests', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/failure')});
+
+	t.is(diagnostics.numTests, 2);
+});

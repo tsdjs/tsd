@@ -40,6 +40,11 @@ export interface Diagnostic {
 	column?: number;
 }
 
+export interface ExtendedDiagnostic {
+	numTests: number;
+	diagnostics: Diagnostic[];
+}
+
 export interface Location {
 	fileName: string;
 	start: number;

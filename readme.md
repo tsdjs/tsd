@@ -198,10 +198,13 @@ You can use the programmatic API to retrieve the diagnostics and do something wi
 import tsd from 'tsd';
 
 (async () => {
-	const diagnostics = await tsd();
+	const diagnoser = await tsd();
 
-	console.log(diagnostics.length);
-	//=> 2
+	// Returns the number of tests evaluated.
+	console.log(diagnoser.numTests)
+
+	// Returns the diagnostics if any or just an empty array.
+	console.log(diagnoser.diagnostics);
 })();
 ```
 
@@ -220,6 +223,19 @@ Default: `process.cwd()`
 
 Current working directory of the project to retrieve the diagnostics for.
 
+##### typingsFile
+
+Type: `string`<br>
+Default: The `types` property in `package.json`.
+
+Path to the type definitions of the project.
+
+##### testFiles
+
+Type: `string[]`<br>
+Default: Finds files with `.test-d.ts` or `.test-d.tsx` extension.
+
+An array of test files with their path.
 
 ## License
 

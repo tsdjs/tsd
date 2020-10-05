@@ -9,11 +9,12 @@ import {Context, Config} from './interfaces';
 
 export interface Options {
 	cwd: string;
+	typingsFile?: string;
+	testFiles?: readonly string[];
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
-	const typings = pkg.types || pkg.typings || 'index.d.ts';
-
+	const typings = options.typingsFile || pkg.types || pkg.typings || 'index.d.ts';
 	const typingsExist = await pathExists(path.join(options.cwd, typings));
 
 	if (!typingsExist) {
@@ -23,13 +24,37 @@ const findTypingsFile = async (pkg: any, options: Options) => {
 	return typings;
 };
 
-const findTestFiles = async (typingsFile: string, options: Options & {config: Config}) => {
+const normalizeTypingsFilePath = (typingsFilePath: string, options: Options) => {
+	if (options.typingsFile) {
+		return path.basename(typingsFilePath);
+	}
+
+	return typingsFilePath;
+};
+
+const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: string) => {
+	const testFiles = await globby(testFilesPattern, {cwd});
+
+	if (testFiles.length === 0) {
+		throw new Error('Could not find any test files. Create one and try again');
+	}
+
+	return testFiles.map(file => path.join(cwd, file));
+};
+
+const findTestFiles = async (typingsFilePath: string, options: Options & {config: Config}) => {
+	if (options.testFiles?.length) {
+		return findCustomTestFiles(options.testFiles, options.cwd);
+	}
+
+	// Return only the filename if the `typingsFile` option is used.
+	const typingsFile = normalizeTypingsFilePath(typingsFilePath, options);
+
 	const testFile = typingsFile.replace(/\.d\.ts$/, '.test-d.ts');
 	const tsxTestFile = typingsFile.replace(/\.d\.ts$/, '.test-d.tsx');
 	const testDir = options.config.directory;
 
 	let testFiles = await globby([testFile, tsxTestFile], {cwd: options.cwd});
-
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
 
 	if (testFiles.length === 0 && !testDirExists) {
@@ -40,7 +65,7 @@ const findTestFiles = async (typingsFile: string, options: Options & {config: Co
 		testFiles = await globby([`${testDir}/**/*.ts`, `${testDir}/**/*.tsx`], {cwd: options.cwd});
 	}
 
-	return testFiles;
+	return testFiles.map(fileName => path.join(options.cwd, fileName));
 };
 
 /**
@@ -56,7 +81,6 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 	}
 
 	const pkg = pkgResult.packageJson;
-
 	const config = loadConfig(pkg as any, options.cwd);
 
 	// Look for a typings file, otherwise use `index.d.ts` in the root directory. If the file is not found, throw an error.
@@ -75,8 +99,15 @@ export default async (options: Options = {cwd: process.cwd()}) => {
 		config
 	};
 
-	return [
-		...getCustomDiagnostics(context),
-		...getTSDiagnostics(context)
-	];
+	const tsDiagnostics = getTSDiagnostics(context);
+	const customDiagnostics = getCustomDiagnostics(context);
+	const numTests = tsDiagnostics.numTests;
+
+	return {
+		numTests,
+		diagnostics: [
+			...customDiagnostics,
+			...tsDiagnostics.diagnostics
+		]
+	};
 };
