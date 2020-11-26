@@ -220,6 +220,14 @@ Default: `process.cwd()`
 
 Current working directory of the project to retrieve the diagnostics for.
 
+### Contributing
+
+## How to update TypeScript version
+
+1. Update typescript version to desired in [package.json](./package.json) `devDependencies` section.
+1. Replace `libraries/typescript` with `node_modules/typescript`.
+1. In [`libraries/typescript/lib/typescript.js`](./libraries/typescript/lib/typescript.js) add `isTypeIdenticalTo` to exports inside `createTypeChecker` function.
+1. Run tests to ensure everything is working
 
 ## License
 
