@@ -4,8 +4,7 @@ import {
 	createProgram,
 	Diagnostic as TSDiagnostic,
 	SourceFile
-} from '../../libraries/typescript';
-import {TypeChecker} from './entities/typescript';
+} from '@tsd/typescript';
 import {extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 import {handle} from './assertions';
@@ -79,7 +78,7 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 
 	const assertions = extractAssertions(program);
 
-	diagnostics.push(...handle(program.getTypeChecker() as TypeChecker, assertions));
+	diagnostics.push(...handle(program.getTypeChecker(), assertions));
 
 	const expectedErrors = parseErrorAssertionToLocation(assertions);
 

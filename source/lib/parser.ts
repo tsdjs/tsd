@@ -1,4 +1,4 @@
-import {Program, Node, CallExpression, forEachChild, isCallExpression, Identifier} from '../../libraries/typescript';
+import {Program, Node, CallExpression, forEachChild, isCallExpression, Identifier} from '@tsd/typescript';
 import {Assertion} from './assertions';
 import {Location, Diagnostic} from './interfaces';
 
