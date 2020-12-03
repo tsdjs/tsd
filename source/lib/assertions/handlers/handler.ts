@@ -1,5 +1,4 @@
-import {CallExpression} from '../../../../libraries/typescript/lib/typescript';
-import {TypeChecker} from '../../entities/typescript';
+import {CallExpression, TypeChecker} from '../../../../libraries/typescript/lib/typescript';
 import {Diagnostic} from '../../interfaces';
 
 /**
