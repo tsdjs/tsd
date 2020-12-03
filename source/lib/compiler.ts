@@ -64,7 +64,7 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
  * @returns List of diagnostics
  */
 export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
-	let numTests = 0;
+	let testCount = 0;
 	const diagnostics: Diagnostic[] = [];
 
 	const program = createProgram(context.testFiles, context.config.compilerOptions);
@@ -76,7 +76,7 @@ export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
 	const assertions = extractAssertions(program);
 
 	for (const assertion of assertions) {
-		numTests = numTests + assertion[1].size;
+		testCount = testCount + assertion[1].size;
 	}
 
 	diagnostics.push(...handle(program.getTypeChecker() as TypeChecker, assertions));
@@ -107,5 +107,5 @@ export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
 		});
 	}
 
-	return {numTests, diagnostics};
+	return {testCount, diagnostics};
 };

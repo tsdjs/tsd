@@ -7,7 +7,7 @@ type Expectation = [number, number, 'error' | 'warning', string, (string | RegEx
  * Verify a list of diagnostics.
  *
  * @param t - The AVA execution context.
- * @param extendedDiagnostics - Object containing numTests and list of diagnostics to verify
+ * @param extendedDiagnostics - Object containing testCount and list of diagnostics to verify
  * @param expectations - Expected diagnostics.
  */
 export const verify = (t: ExecutionContext, extendedDiagnostics: ExtendedDiagnostic, expectations: Expectation[]) => {
