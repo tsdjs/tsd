@@ -1,4 +1,4 @@
-# tsd [![Build Status](https://travis-ci.org/SamVerschueren/tsd.svg?branch=master)](https://travis-ci.org/SamVerschueren/tsd)
+# tsd ![CI](https://github.com/SamVerschueren/tsd/workflows/CI/badge.svg)
 
 > Check TypeScript type definitions
 
