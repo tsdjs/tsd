@@ -225,7 +225,7 @@ Path to the type definition file you want to test. This can be useful when using
 Type: `string[]`<br>
 Default: Finds files with `.test-d.ts` or `.test-d.tsx` extension.
 
-An array of test files with their path.
+An array of test files with their path. Uses [globby](https://github.com/sindresorhus/globby) under the hood so that you can fine tune test file discovery.
 
 ## License
 
