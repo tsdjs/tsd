@@ -39,7 +39,7 @@ export interface Diagnostic {
 }
 
 export interface ExtendedDiagnostic {
-	numTests: number;
+	testCount: number;
 	diagnostics: Diagnostic[];
 }
 

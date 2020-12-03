@@ -194,7 +194,7 @@ import tsd from 'tsd';
 	const diagnoser = await tsd();
 
 	// Returns the number of tests evaluated.
-	console.log(diagnoser.numTests)
+	console.log(diagnoser.testCount)
 
 	// Returns the diagnostics if any or just an empty array.
 	console.log(diagnoser.diagnostics);
