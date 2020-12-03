@@ -221,14 +221,14 @@ Current working directory of the project to retrieve the diagnostics for.
 Type: `string`<br>
 Default: The `types` property in `package.json`.
 
-Path to the type definitions of the project.
+Path to the type definition file you want to test. This can be useful when using a test runner to test specific type definitions per test.
 
 ##### testFiles
 
 Type: `string[]`<br>
 Default: Finds files with `.test-d.ts` or `.test-d.tsx` extension.
 
-An array of test files with their path.
+An array of test files with their path. Uses [globby](https://github.com/sindresorhus/globby) under the hood so that you can fine tune test file discovery.
 
 ## License
 
