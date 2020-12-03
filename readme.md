@@ -218,7 +218,7 @@ Current working directory of the project to retrieve the diagnostics for.
 Type: `string`<br>
 Default: The `types` property in `package.json`.
 
-Path to the type definitions of the project.
+Path to the type definition file you want to test. This can be useful when using a test runner to test specific type definitions per test.
 
 ##### testFiles
 
