@@ -37,6 +37,7 @@ export default (pkg: {tsd?: RawConfig}, cwd: string): Config => {
 			lib: ['lib.es2017.d.ts'],
 			module: ModuleKind.CommonJS,
 			target: ScriptTarget.ES2017,
+			esModuleInterop: true,
 			...tsConfigCompilerOptions,
 			...packageJsonCompilerOptions,
 			moduleResolution: ModuleResolutionKind.NodeJs,

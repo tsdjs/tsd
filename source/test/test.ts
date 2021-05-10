@@ -103,6 +103,14 @@ test('allow specifying a lib in tsconfig.json', async t => {
 	verify(t, diagnostics, []);
 });
 
+test('add support for esm with esModuleInterop', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/esm')
+	});
+
+	verify(t, diagnostics, []);
+});
+
 test('a lib option in package.json overrdides a lib option in tsconfig.json', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/lib-config/lib-from-package-json-overrides-tsconfig-json')});
 
