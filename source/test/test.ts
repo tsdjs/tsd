@@ -111,6 +111,14 @@ test('add support for esm with esModuleInterop', async t => {
 	verify(t, diagnostics, []);
 });
 
+test('add DOM support by default', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/dom')
+	});
+
+	verify(t, diagnostics, []);
+});
+
 test('a lib option in package.json overrdides a lib option in tsconfig.json', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/lib-config/lib-from-package-json-overrides-tsconfig-json')});
 
