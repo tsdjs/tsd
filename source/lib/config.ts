@@ -34,7 +34,7 @@ export default (pkg: {tsd?: RawConfig}, cwd: string): Config => {
 		compilerOptions: {
 			strict: true,
 			jsx: JsxEmit.React,
-			lib: ['es2017', 'dom'],
+			lib: ['es2017', 'dom', 'dom.iterable'],
 			module: ModuleKind.CommonJS,
 			target: ScriptTarget.ES2017,
 			esModuleInterop: true,
