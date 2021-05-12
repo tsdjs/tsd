@@ -19,9 +19,9 @@
 		"prepublishOnly": "npm run build",
 		"pretest": "npm run build && cpy \"./**/**\" \"../../../dist/test/fixtures/\" --parents --cwd=source/test/fixtures",
 		"test": "npm run lint && ava",
-		"build": "npm run clean && tsc && chmod +x dist/cli.js",
+		"build": "npm run clean && tsc --project tsconfig.tsd.json && chmod +x dist/cli.js",
 		"clean": "del-cli dist",
-		"lint": "tslint -p . --format stylish"
+		"lint": "tslint -p tsconfig.tsd.json --format stylish"
 	},
 	"files": [
 		"dist/index.js",
