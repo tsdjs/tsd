@@ -76,15 +76,6 @@ test('overridden config defaults to `strict` if `strict` is not explicitly overr
 	]);
 });
 
-test('fail if types are used from a lib that was not explicitly specified', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/lib-config/failure-missing-lib')});
-
-	verify(t, diagnostics, [
-		[1, 22, 'error', 'Cannot find name \'Window\'.', /failure-missing-lib\/index.d.ts$/],
-		[4, 11, 'error', 'Cannot find name \'Window\'.', /failure-missing-lib\/index.test-d.ts$/]
-	]);
-});
-
 test('allow specifying a lib as a triple-slash-reference', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/lib-config/lib-as-triple-slash-reference')});
 
