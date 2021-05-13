@@ -1,4 +1,4 @@
-import {TypeChecker, Expression, isCallLikeExpression, JSDocTagInfo} from '../../../libraries/typescript/lib/typescript';
+import {TypeChecker, Expression, isCallLikeExpression, JSDocTagInfo} from '@tsd/typescript';
 
 /**
  * Resolve the JSDoc tags from the expression. If these tags couldn't be found, it will return `undefined`.

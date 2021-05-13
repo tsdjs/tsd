@@ -3,13 +3,15 @@ import {
 	createProgram,
 	Diagnostic as TSDiagnostic,
 	SourceFile
-} from '../../libraries/typescript';
+} from '@tsd/typescript';
 import {extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 import {handle} from './assertions';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([
+	// Older TS version report 'await expression only allowed within async function
+	DiagnosticCode.AwaitExpressionOnlyAllowedWithinAsyncFunction,
 	DiagnosticCode.TopLevelAwaitOnlyAllowedWhenModuleESNextOrSystem
 ]);
 

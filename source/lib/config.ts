@@ -10,7 +10,7 @@ import {
 	readJsonConfigFile,
 	parseJsonSourceFileConfigFileContent,
 	ModuleKind
-} from '../../libraries/typescript';
+} from '@tsd/typescript';
 import {Config, RawConfig, RawCompilerOptions} from './interfaces';
 
 /**

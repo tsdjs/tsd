@@ -1,4 +1,4 @@
-import {CallExpression, TypeChecker} from '../../../libraries/typescript/lib/typescript';
+import {CallExpression, TypeChecker} from '@tsd/typescript';
 import {Diagnostic} from '../interfaces';
 import {Handler, isIdentical, isNotIdentical, isNotAssignable, expectDeprecated, expectNotDeprecated} from './handlers';
 
