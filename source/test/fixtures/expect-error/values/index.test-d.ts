@@ -20,3 +20,12 @@ expectError(hasProperty({name: 1}));
 expectError(one(1));
 expectError(one(1, 2, 3));
 expectError({} as Options);
+
+const bar = 1;
+expectError(bar());
+expectError(new bar());
+
+class MyClass {}
+expectError(MyClass());
+
+expectError(new hasProperty({name: 'foo'}));

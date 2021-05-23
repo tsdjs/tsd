@@ -31,6 +31,10 @@ export enum DiagnosticCode {
 	ExpectedArgumentsButGotOther = 2554,
 	NoOverloadMatches = 2769,
 	PropertyMissingInType1ButRequiredInType2 = 2741,
+	ValueOfTypeNotCallable = 2348,
+	ExpressionNotCallable = 2349,
+	OnlyVoidFunctionIsNewCallable = 2350,
+	ExpressionNotConstructable = 2351,
 }
 
 export interface Diagnostic {
