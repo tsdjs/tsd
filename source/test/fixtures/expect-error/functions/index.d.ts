@@ -5,3 +5,10 @@ declare const one: {
 };
 
 export default one;
+
+export const three: {
+	(foo: '*'): string;
+	(foo: 'a' | 'b'): string;
+	(foo: ReadonlyArray<'a' | 'b'>): string;
+	(foo: never): string;
+};
