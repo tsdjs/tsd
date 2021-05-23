@@ -3,3 +3,6 @@ declare const one: {
 };
 
 export default one;
+
+export function two<T1>(foo: T1): T1;
+export function two<T1, T2, T3 extends T2>(foo: T1, bar: T2): T3;

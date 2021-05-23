@@ -6,6 +6,11 @@ declare const one: {
 
 export default one;
 
+export const two: {
+	(foo: string): string;
+	(foo: string, bar: string, baz: string): string;
+};
+
 export const three: {
 	(foo: '*'): string;
 	(foo: 'a' | 'b'): string;

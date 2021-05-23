@@ -34,8 +34,10 @@ export enum DiagnosticCode {
 	ExpressionNotCallable = 2349,
 	OnlyVoidFunctionIsNewCallable = 2350,
 	ExpressionNotConstructable = 2351,
+	NoOverloadExpectsCountOfArguments = 2575,
 	ThisContextOfTypeNotAssignableToMethodOfThisType = 2684,
 	PropertyMissingInType1ButRequiredInType2 = 2741,
+	NoOverloadExpectsCountOfTypeArguments = 2743,
 	NoOverloadMatches = 2769,
 	NewExpressionTargetLackingConstructSignatureHasAnyType = 7009,
 }
