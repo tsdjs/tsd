@@ -31,6 +31,7 @@ export enum DiagnosticCode {
 	ExpectedArgumentsButGotOther = 2554,
 	NoOverloadMatches = 2769,
 	PropertyMissingInType1ButRequiredInType2 = 2741,
+	ThisContextOfTypeNotAssignableToMethodOfThisType = 2684,
 }
 
 export interface Diagnostic {

@@ -25,7 +25,8 @@ const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.GenericTypeRequiresTypeArguments,
 	DiagnosticCode.ExpectedArgumentsButGotOther,
 	DiagnosticCode.NoOverloadMatches,
-	DiagnosticCode.PropertyMissingInType1ButRequiredInType2
+	DiagnosticCode.PropertyMissingInType1ButRequiredInType2,
+	DiagnosticCode.ThisContextOfTypeNotAssignableToMethodOfThisType,
 ]);
 
 /**
