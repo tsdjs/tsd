@@ -34,7 +34,7 @@ export default (pkg: {tsd?: RawConfig}, cwd: string): Config => {
 		compilerOptions: {
 			strict: true,
 			jsx: JsxEmit.React,
-			lib: ['es2017', 'dom', 'dom.iterable'],
+			lib: parseRawLibs(['es2017', 'dom', 'dom.iterable'], cwd),
 			module: ModuleKind.CommonJS,
 			target: ScriptTarget.ES2017,
 			esModuleInterop: true,
@@ -66,4 +66,8 @@ function parseCompilerConfigObject(compilerOptions: RawCompilerOptions, cwd: str
 		sys,
 		cwd
 	).options;
+}
+
+function parseRawLibs(libs: string[], cwd: string): string[] {
+	return parseCompilerConfigObject({lib: libs}, cwd).lib || [];
 }
