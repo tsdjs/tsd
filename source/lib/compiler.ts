@@ -28,7 +28,7 @@ const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.PropertyMissingInType1ButRequiredInType2,
 	DiagnosticCode.TypeHasNoPropertiesInCommonWith,
 	DiagnosticCode.ThisContextOfTypeNotAssignableToMethodOfThisType,
-  DiagnosticCode.ValueOfTypeNotCallable,
+	DiagnosticCode.ValueOfTypeNotCallable,
 	DiagnosticCode.ExpressionNotCallable,
 	DiagnosticCode.OnlyVoidFunctionIsNewCallable,
 	DiagnosticCode.ExpressionNotConstructable
