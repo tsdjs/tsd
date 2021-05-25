@@ -29,6 +29,7 @@ export enum DiagnosticCode {
 	ArgumentTypeIsNotAssignableToParameterType = 2345,
 	CannotAssignToReadOnlyProperty = 2540,
 	ExpectedArgumentsButGotOther = 2554,
+	TypeHasNoPropertiesInCommonWith = 2559,
 	NoOverloadMatches = 2769,
 	PropertyMissingInType1ButRequiredInType2 = 2741,
 	ThisContextOfTypeNotAssignableToMethodOfThisType = 2684,

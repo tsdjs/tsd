@@ -1,8 +1,3 @@
 {
-	"name": "foo",
-	"tsd": {
-		"compilerOptions": {
-			"lib": ["dom"]
-		}
-	}
+	"name": "foo"
 }
