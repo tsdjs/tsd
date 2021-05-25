@@ -32,6 +32,7 @@ export enum DiagnosticCode {
 	TypeHasNoPropertiesInCommonWith = 2559,
 	NoOverloadMatches = 2769,
 	PropertyMissingInType1ButRequiredInType2 = 2741,
+	ThisContextOfTypeNotAssignableToMethodOfThisType = 2684,
 }
 
 export interface Diagnostic {
