@@ -1,5 +1,5 @@
 import {expectError} from '../../../..';
-import {default as one, foo, hasProperty, Options} from '.';
+import {default as one, foo, getFoo, HasKey, hasProperty, Options} from '.';
 
 expectError<string>(1);
 expectError<string>('fo');
@@ -20,6 +20,8 @@ expectError(hasProperty({name: 1}));
 expectError(one(1));
 expectError(one(1, 2, 3));
 expectError({} as Options);
+
+expectError(getFoo({bar: 1} as HasKey<'bar'>));
 
 const bar = 1;
 expectError(bar());

@@ -183,6 +183,12 @@ test('support setting a custom test directory', async t => {
 	]);
 });
 
+test('expectError for classes', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/classes')});
+
+	verify(t, diagnostics, []);
+});
+
 test('expectError for functions', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/functions')});
 
