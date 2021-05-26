@@ -35,7 +35,9 @@ type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
  *
  * @param diagnostic - The diagnostic to validate.
  * @param expectedErrors - Map of the expected errors.
- * @returns Boolean indicating if the diagnostic should be ignored or not.
+ * @returns Whether the diagnostic should be `'preserve'`d, `'ignore'`d or, in case that
+ * the diagnostic is reported from inside of an `expectError` assertion, the `Location`
+ * of the assertion.
  */
 const ignoreDiagnostic = (
 	diagnostic: TSDiagnostic,
@@ -91,6 +93,7 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		}
 
 		const ignoreDiagnosticResult = ignoreDiagnostic(diagnostic, expectedErrors);
+
 		if (ignoreDiagnosticResult !== 'preserve') {
 			if (ignoreDiagnosticResult !== 'ignore') {
 				expectedErrorsLocationsWithFoundDiagnostics.push(ignoreDiagnosticResult);
