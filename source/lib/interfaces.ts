@@ -30,13 +30,14 @@ export enum DiagnosticCode {
 	CannotAssignToReadOnlyProperty = 2540,
 	ExpectedArgumentsButGotOther = 2554,
 	TypeHasNoPropertiesInCommonWith = 2559,
-	NoOverloadMatches = 2769,
-	PropertyMissingInType1ButRequiredInType2 = 2741,
 	ValueOfTypeNotCallable = 2348,
 	ExpressionNotCallable = 2349,
 	OnlyVoidFunctionIsNewCallable = 2350,
 	ExpressionNotConstructable = 2351,
 	ThisContextOfTypeNotAssignableToMethodOfThisType = 2684,
+	PropertyMissingInType1ButRequiredInType2 = 2741,
+	NoOverloadMatches = 2769,
+	NewExpressionTargetLackingConstructSignatureHasAnyType = 7009,
 }
 
 export interface Diagnostic {

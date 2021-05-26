@@ -1,5 +1,5 @@
 import {expectError} from '../../../..';
-import {default as one, foo, getFoo, HasKey, hasProperty, Options} from '.';
+import {default as one, foo, getFoo, HasKey, hasProperty, MyClass, Options} from '.';
 
 expectError<string>(1);
 expectError<string>('fo');
@@ -27,7 +27,7 @@ const bar = 1;
 expectError(bar());
 expectError(new bar());
 
-class MyClass {}
 expectError(MyClass());
 
+// 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.
 expectError(new hasProperty({name: 'foo'}));

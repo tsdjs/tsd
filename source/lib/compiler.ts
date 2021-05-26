@@ -31,7 +31,8 @@ const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.ValueOfTypeNotCallable,
 	DiagnosticCode.ExpressionNotCallable,
 	DiagnosticCode.OnlyVoidFunctionIsNewCallable,
-	DiagnosticCode.ExpressionNotConstructable
+	DiagnosticCode.ExpressionNotConstructable,
+	DiagnosticCode.NewExpressionTargetLackingConstructSignatureHasAnyType,
 ]);
 
 /**
