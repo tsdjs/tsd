@@ -1,3 +1,3 @@
-module.exports.default = (foo, bar) => {
-	return foo + bar;
-};
+module.exports.default = (foo, bar) => foo + bar;
+
+exports.three = (foo) => 'a';

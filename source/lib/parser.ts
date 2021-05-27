@@ -42,15 +42,19 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	return assertions;
 };
 
+export type ExpectedError = Pick<Diagnostic, 'fileName' | 'line' | 'column'>;
+
 /**
  * Loop over all the error assertion nodes and convert them to a location map.
  *
  * @param assertions - Assertion map.
  */
-export const parseErrorAssertionToLocation = (assertions: Map<Assertion, Set<CallExpression>>) => {
+export const parseErrorAssertionToLocation = (
+	assertions: Map<Assertion, Set<CallExpression>>
+): Map<Location, ExpectedError> => {
 	const nodes = assertions.get(Assertion.EXPECT_ERROR);
 
-	const expectedErrors = new Map<Location, Pick<Diagnostic, 'fileName' | 'line' | 'column'>>();
+	const expectedErrors = new Map<Location, ExpectedError>();
 
 	if (!nodes) {
 		// Bail out if we don't have any error nodes

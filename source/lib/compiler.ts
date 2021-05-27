@@ -4,7 +4,7 @@ import {
 	Diagnostic as TSDiagnostic,
 	SourceFile
 } from '@tsd/typescript';
-import {extractAssertions, parseErrorAssertionToLocation} from './parser';
+import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 import {handle} from './assertions';
 
@@ -30,21 +30,28 @@ const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.ThisContextOfTypeNotAssignableToMethodOfThisType
 ]);
 
+type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
+
 /**
  * Check if the provided diagnostic should be ignored.
  *
  * @param diagnostic - The diagnostic to validate.
  * @param expectedErrors - Map of the expected errors.
- * @returns Boolean indicating if the diagnostic should be ignored or not.
+ * @returns Whether the diagnostic should be `'preserve'`d, `'ignore'`d or, in case that
+ * the diagnostic is reported from inside of an `expectError` assertion, the `Location`
+ * of the assertion.
  */
-const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location, any>): boolean => {
+const ignoreDiagnostic = (
+	diagnostic: TSDiagnostic,
+	expectedErrors: Map<Location, ExpectedError>
+): IgnoreDiagnosticResult => {
 	if (ignoredDiagnostics.has(diagnostic.code)) {
 		// Filter out diagnostics which are present in the `ignoredDiagnostics` set
-		return true;
+		return 'ignore';
 	}
 
 	if (!expectErrordiagnosticCodesToIgnore.has(diagnostic.code)) {
-		return false;
+		return 'preserve';
 	}
 
 	const diagnosticFileName = (diagnostic.file as SourceFile).fileName;
@@ -53,13 +60,11 @@ const ignoreDiagnostic = (diagnostic: TSDiagnostic, expectedErrors: Map<Location
 		const start = diagnostic.start as number;
 
 		if (diagnosticFileName === location.fileName && start > location.start && start < location.end) {
-			// Remove the expected error from the Map so it's not being reported as failure
-			expectedErrors.delete(location);
-			return true;
+			return location;
 		}
 	}
 
-	return false;
+	return 'preserve';
 };
 
 /**
@@ -82,9 +87,20 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 	diagnostics.push(...handle(program.getTypeChecker(), assertions));
 
 	const expectedErrors = parseErrorAssertionToLocation(assertions);
+	const expectedErrorsLocationsWithFoundDiagnostics: Location[] = [];
 
 	for (const diagnostic of tsDiagnostics) {
-		if (!diagnostic.file || ignoreDiagnostic(diagnostic, expectedErrors)) {
+		if (!diagnostic.file) {
+			continue;
+		}
+
+		const ignoreDiagnosticResult = ignoreDiagnostic(diagnostic, expectedErrors);
+
+		if (ignoreDiagnosticResult !== 'preserve') {
+			if (ignoreDiagnosticResult !== 'ignore') {
+				expectedErrorsLocationsWithFoundDiagnostics.push(ignoreDiagnosticResult);
+			}
+
 			continue;
 		}
 
@@ -97,6 +113,10 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 			line: position.line + 1,
 			column: position.character
 		});
+	}
+
+	for (const errorLocationToRemove of expectedErrorsLocationsWithFoundDiagnostics) {
+		expectedErrors.delete(errorLocationToRemove);
 	}
 
 	for (const [, diagnostic] of expectedErrors) {
