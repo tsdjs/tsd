@@ -222,6 +222,12 @@ test('expectError for values', async t => {
 	]);
 });
 
+test('expectError for values (noImplicitAny disabled)', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/values-disabled-no-implicit-any')});
+
+	verify(t, diagnostics, []);
+});
+
 test('missing import', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/missing-import')});
 
