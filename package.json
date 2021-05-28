@@ -7,7 +7,7 @@
 	"author": {
 		"name": "Sam Verschueren",
 		"email": "sam.verschueren@gmail.com",
-		"url": "github.com/SamVerschueren"
+		"url": "https://github.com/SamVerschueren"
 	},
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
@@ -43,7 +43,7 @@
 		"@tsd/typescript": "^4.2.4",
 		"eslint-formatter-pretty": "^4.0.0",
 		"globby": "^11.0.1",
-		"meow": "^7.0.1",
+		"meow": "^9.0.0",
 		"path-exists": "^4.0.0",
 		"read-pkg-up": "^7.0.0",
 		"update-notifier": "^4.1.0"
@@ -56,7 +56,7 @@
 		"ava": "^3.8.2",
 		"cpy-cli": "^3.0.0",
 		"del-cli": "^3.0.0",
-		"execa": "^4.0.0",
+		"execa": "^5.0.0",
 		"react": "^16.9.0",
 		"rxjs": "^6.5.3",
 		"tslint": "^5.11.0",
