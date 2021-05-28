@@ -56,7 +56,9 @@ function getOptionsFromTsConfig(cwd: string): CompilerOptions {
 	return parseJsonSourceFileConfigFileContent(
 		readJsonConfigFile(configPath, sys.readFile),
 		sys,
-		path.basename(configPath)
+		path.basename(configPath),
+		undefined,
+		configPath,
 	).options;
 }
 

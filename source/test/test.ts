@@ -305,3 +305,11 @@ test('fails if typings file is not found in the specified path', async t => {
 
 	t.is(error.message, 'The type definition `unknown.d.ts` does not exist. Create one and try again.');
 });
+
+test('includes extended config files along with found ones', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/ts-config-extends')});
+
+	verify(t, diagnostics, [
+		[6, 64, 'error', 'Not all code paths return a value.'],
+	]);
+});
