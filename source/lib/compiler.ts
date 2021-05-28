@@ -35,6 +35,8 @@ const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.OnlyVoidFunctionIsNewCallable,
 	DiagnosticCode.ExpressionNotConstructable,
 	DiagnosticCode.NewExpressionTargetLackingConstructSignatureHasAnyType,
+	DiagnosticCode.MemberCannotHaveOverrideModifierBecauseItIsNotDeclaredInBaseClass,
+	DiagnosticCode.MemberMustHaveOverrideModifier,
 ]);
 
 type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
