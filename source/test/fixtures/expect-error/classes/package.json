@@ -1,3 +1,8 @@
 {
-	"name": "foo"
+	"name": "foo",
+	"tsd": {
+		"compilerOptions": {
+			"noImplicitOverride": true
+		}
+	}
 }

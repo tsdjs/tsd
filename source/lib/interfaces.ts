@@ -39,6 +39,8 @@ export enum DiagnosticCode {
 	PropertyMissingInType1ButRequiredInType2 = 2741,
 	NoOverloadExpectsCountOfTypeArguments = 2743,
 	NoOverloadMatches = 2769,
+	MemberCannotHaveOverrideModifierBecauseItIsNotDeclaredInBaseClass = 4113,
+	MemberMustHaveOverrideModifier = 4114,
 	NewExpressionTargetLackingConstructSignatureHasAnyType = 7009,
 }
 
