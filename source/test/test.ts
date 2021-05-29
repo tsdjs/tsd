@@ -2,6 +2,7 @@ import * as path from 'path';
 import test from 'ava';
 import {verify} from './fixtures/utils';
 import tsd from '..';
+import {Diagnostic} from '../lib/interfaces';
 
 test('throw if no type definition was found', async t => {
 	await t.throwsAsync(tsd({cwd: path.join(__dirname, 'fixtures/no-tsd')}), {message: 'The type definition `index.d.ts` does not exist. Create one and try again.'});
@@ -311,5 +312,49 @@ test('includes extended config files along with found ones', async t => {
 
 	verify(t, diagnostics, [
 		[6, 64, 'error', 'Not all code paths return a value.'],
+	]);
+});
+
+test('errors in libs from node_modules are not reported', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/exclude-node-modules')});
+
+	const [nodeModuleDiagnostics, testFileDiagnostics, otherDiagnostics] = diagnostics.reduce(
+		([nodeModuleDiags, testFileDiags, otherDiags], diagnostic) => {
+			if (/[/\\]node_modules[/\\]/.test(diagnostic.fileName)) {
+				nodeModuleDiags.push(diagnostic);
+			} else if (/[/\\]fixtures[/\\]exclude-node-modules[/\\]/.test(diagnostic.fileName)) {
+				testFileDiags.push(diagnostic);
+			} else {
+				otherDiags.push(diagnostic);
+			}
+			return [nodeModuleDiags, testFileDiags, otherDiags];
+		},
+		[[], [], []] as Diagnostic[][]
+	);
+
+	t.deepEqual(
+		nodeModuleDiagnostics.length,
+		0,
+		'There must be no errors from node_modules folders when standard lib is not available (option `"noLib": true`).',
+	);
+
+	t.true(
+		otherDiagnostics.length > 0,
+		'There must be errors from tsd lib when standard lib is not available (option `"noLib": true`).',
+	);
+
+	const alloweOtherFileFailures = [
+		/[/\\]lib[/\\]index.d.ts$/,
+		/[/\\]lib[/\\]interfaces.d.ts$/,
+	];
+	otherDiagnostics.forEach(diagnostic => {
+		t.true(
+			alloweOtherFileFailures.some(allowedFileRe => allowedFileRe.test(diagnostic.fileName)),
+			`Found diagnostic from an unexpected file: ${diagnostic.fileName} - ${diagnostic.message}`,
+		);
+	});
+
+	verify(t, testFileDiagnostics, [
+		[3, 18, 'error', 'Cannot find name \'Bar\'.']
 	]);
 });

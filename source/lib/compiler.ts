@@ -99,7 +99,10 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 	const expectedErrorsLocationsWithFoundDiagnostics: Location[] = [];
 
 	for (const diagnostic of tsDiagnostics) {
-		if (!diagnostic.file) {
+		/* Filter out all diagnostic messages without a file or from node_modules directories, files under
+		 * node_modules are most definitely not under test.
+		 */
+		if (!diagnostic.file || /[/\\]node_modules[/\\]/.test(diagnostic.file.fileName)) {
 			continue;
 		}
 
