@@ -14,7 +14,12 @@ export interface Options {
 }
 
 const findTypingsFile = async (pkg: any, options: Options) => {
-	const typings = options.typingsFile || pkg.types || pkg.typings || 'index.d.ts';
+	const typings =
+		options.typingsFile ||
+		pkg.types ||
+		pkg.typings ||
+		(pkg.main && path.parse(pkg.main).name + '.d.ts') ||
+		'index.d.ts';
 	const typingsExist = await pathExists(path.join(options.cwd, typings));
 
 	if (!typingsExist) {
