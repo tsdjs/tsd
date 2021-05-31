@@ -13,11 +13,12 @@ export default (context: Context): Diagnostic[] => {
 	const {pkg} = context;
 
 	if (!pkg.types && pkg.typings) {
-		const content = fs.readFileSync(path.join(context.cwd, 'package.json'), 'utf8');
+		const packageJsonFullPath = path.join(context.cwd, 'package.json');
+		const content = fs.readFileSync(packageJsonFullPath, 'utf8');
 
 		return [
 			{
-				fileName: 'package.json',
+				fileName: packageJsonFullPath,
 				message: 'Use property `types` instead of `typings`.',
 				severity: 'error',
 				...getJSONPropertyPosition(content, 'typings')

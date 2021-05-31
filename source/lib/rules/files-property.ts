@@ -24,11 +24,12 @@ export default (context: Context): Diagnostic[] => {
 		return [];
 	}
 
-	const content = fs.readFileSync(path.join(context.cwd, 'package.json'), 'utf8');
+	const packageJsonFullPath = path.join(context.cwd, 'package.json');
+	const content = fs.readFileSync(packageJsonFullPath, 'utf8');
 
 	return [
 		{
-			fileName: 'package.json',
+			fileName: packageJsonFullPath,
 			message: `TypeScript type definition \`${normalizedTypingsFile}\` is not part of the \`files\` list.`,
 			severity: 'error',
 			...getJSONPropertyPosition(content, 'files')

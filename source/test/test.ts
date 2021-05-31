@@ -1,6 +1,6 @@
 import * as path from 'path';
 import test from 'ava';
-import {verify} from './fixtures/utils';
+import {verify, verifyWithFileName} from './fixtures/utils';
 import tsd from '..';
 
 test('throw if no type definition was found', async t => {
@@ -20,18 +20,20 @@ test('return diagnostics', async t => {
 });
 
 test('return diagnostics from imported files as well', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/failure-nested')});
+	const cwd = path.join(__dirname, 'fixtures/failure-nested');
+	const diagnostics = await tsd({cwd});
 
-	verify(t, diagnostics, [
-		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', /child.test-d.ts$/],
-		[6, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', /index.test-d.ts$/]
+	verifyWithFileName(t, cwd, diagnostics, [
+		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', 'child.test-d.ts'],
+		[6, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', 'index.test-d.ts'],
 	]);
 });
 
 test('fail if typings file is not part of `files` list', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/no-files')});
+	const cwd = path.join(__dirname, 'fixtures/no-files');
+	const diagnostics = await tsd({cwd});
 
-	verify(t, diagnostics, [
+	verifyWithFileName(t, cwd, diagnostics, [
 		[3, 1, 'error', 'TypeScript type definition `index.d.ts` is not part of the `files` list.', 'package.json'],
 	]);
 });
@@ -49,39 +51,51 @@ test('allow specifying glob patterns containing typings file in `files` list', a
 });
 
 test('fail if `typings` property is used instead of `types`', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/types-property/typings')});
+	const cwd = path.join(__dirname, 'fixtures/types-property/typings');
+	const diagnostics = await tsd({cwd});
 
-	verify(t, diagnostics, [
+	verifyWithFileName(t, cwd, diagnostics, [
 		[3, 1, 'error', 'Use property `types` instead of `typings`.', 'package.json'],
 	]);
 });
 
 test('fail if tests don\'t pass in strict mode', async t => {
-	const diagnostics = await tsd({
-		cwd: path.join(__dirname, 'fixtures/failure-strict-null-checks')
-	});
+	const cwd = path.join(__dirname, 'fixtures/failure-strict-null-checks');
+	const diagnostics = await tsd({cwd});
 
-	verify(t, diagnostics, [
-		[4, 19, 'error', 'Argument of type \'number | null\' is not assignable to parameter of type \'number\'.\n  Type \'null\' is not assignable to type \'number\'.', /failure-strict-null-checks\/index.test-d.ts$/],
+	verifyWithFileName(t, cwd, diagnostics, [
+		[
+			4,
+			19,
+			'error',
+			'Argument of type \'number | null\' is not assignable to parameter of type \'number\'.\n  Type \'null\' is not assignable to type \'number\'.',
+			'index.test-d.ts',
+		],
 	]);
 });
 
 test('overridden config defaults to `strict` if `strict` is not explicitly overridden', async t => {
-	const diagnostics = await tsd({
-		cwd: path.join(__dirname, 'fixtures/strict-null-checks-as-default-config-value')
-	});
+	const cwd = path.join(__dirname, 'fixtures/strict-null-checks-as-default-config-value');
+	const diagnostics = await tsd({cwd});
 
-	verify(t, diagnostics, [
-		[4, 19, 'error', 'Argument of type \'number | null\' is not assignable to parameter of type \'number\'.\n  Type \'null\' is not assignable to type \'number\'.', /strict-null-checks-as-default-config-value\/index.test-d.ts$/],
+	verifyWithFileName(t, cwd, diagnostics, [
+		[
+			4,
+			19,
+			'error',
+			'Argument of type \'number | null\' is not assignable to parameter of type \'number\'.\n  Type \'null\' is not assignable to type \'number\'.',
+			'index.test-d.ts',
+		],
 	]);
 });
 
 test('fail if types are used from a lib that was not explicitly specified', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/lib-config/failure-missing-lib')});
+	const cwd = path.join(__dirname, 'fixtures/lib-config/failure-missing-lib');
+	const diagnostics = await tsd({cwd});
 
-	verify(t, diagnostics, [
-		[1, 22, 'error', 'Cannot find name \'Window\'.', /failure-missing-lib\/index.d.ts$/],
-		[4, 11, 'error', 'Cannot find name \'Window\'.', /failure-missing-lib\/index.test-d.ts$/]
+	verifyWithFileName(t, cwd, diagnostics, [
+		[1, 22, 'error', 'Cannot find name \'Window\'.', 'index.d.ts'],
+		[4, 11, 'error', 'Cannot find name \'Window\'.', 'index.test-d.ts'],
 	]);
 });
 

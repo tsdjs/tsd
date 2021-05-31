@@ -1,7 +1,21 @@
+import * as path from 'path';
 import {ExecutionContext} from 'ava';
 import {Diagnostic} from '../../lib/interfaces';
 
-type Expectation = [number, number, 'error' | 'warning', string, (string | RegExp)?];
+type Expectation = [
+	line: number,
+	column: number,
+	severity: 'error' | 'warning',
+	message: string,
+];
+
+type ExpectationWithFilename = [
+	line: number,
+	column: number,
+	severity: 'error' | 'warning',
+	message: string,
+	fileName: string,
+];
 
 /**
  * Verify a list of diagnostics.
@@ -11,20 +25,52 @@ type Expectation = [number, number, 'error' | 'warning', string, (string | RegEx
  * @param expectations - Expected diagnostics.
  */
 export const verify = (t: ExecutionContext, diagnostics: Diagnostic[], expectations: Expectation[]) => {
-	t.deepEqual(diagnostics.length, expectations.length, 'Received different count of diagnostics than expected!');
+	const diagnosticObjs = diagnostics.map(({line, column, severity, message}) => ({
+		line,
+		column,
+		severity,
+		message,
+	}));
 
-	for (const [index, diagnostic] of diagnostics.entries()) {
-		t.is(diagnostic.line, expectations[index][0], `"line" for diagnostic ${index} doesn't match!`);
-		t.is(diagnostic.column, expectations[index][1], `"column" for diagnostic ${index} doesn't match!`);
-		t.is(diagnostic.severity, expectations[index][2], `"severity" for diagnostic ${index} doesn't match!`);
-		t.is(diagnostic.message, expectations[index][3], `"message" for diagnostic ${index} doesn't match!`);
+	const expectationObjs = expectations.map(([line, column, severity, message]) => ({
+		line,
+		column,
+		severity,
+		message,
+	}));
 
-		const filename = expectations[index][4];
+	t.deepEqual(diagnosticObjs, expectationObjs, 'Received diagnostics that are different from expectations!');
+};
 
-		if (typeof filename === 'string') {
-			t.is(diagnostic.fileName, filename, `"fileName" for diagnostic ${index} doesn't match!`);
-		} else if (typeof filename === 'object') {
-			t.regex(diagnostic.fileName, filename, `"fileName" for diagnostic ${index} doesn't match!`);
-		}
-	}
+/**
+ * Verify a list of diagnostics including file paths.
+ *
+ * @param t - The AVA execution context.
+ * @param cwd - The working directory as passed to `tsd`.
+ * @param diagnostics - List of diagnostics to verify.
+ * @param expectations - Expected diagnostics.
+ */
+export const verifyWithFileName = (
+	t: ExecutionContext,
+	cwd: string,
+	diagnostics: Diagnostic[],
+	expectations: ExpectationWithFilename[]
+) => {
+	const diagnosticObjs = diagnostics.map(({line, column, severity, message, fileName}) => ({
+		line,
+		column,
+		severity,
+		message,
+		fileName: path.relative(cwd, fileName),
+	}));
+
+	const expectationObjs = expectations.map(([line, column, severity, message, fileName]) => ({
+		line,
+		column,
+		severity,
+		message,
+		fileName,
+	}));
+
+	t.deepEqual(diagnosticObjs, expectationObjs, 'Received diagnostics that are different from expectations!');
 };
