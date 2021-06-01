@@ -146,10 +146,28 @@ test('support non-barrel main', async t => {
 	verify(t, diagnostics, []);
 });
 
-test('support non-barrel main using `types` property', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/test-non-barrel-main-via-types')});
+test('allow omitting `types` property when `main` property is missing but main is a barrel (`index.js`) and .d.ts file matches main', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/no-explicit-types-property/without-main')});
 
-	verify(t, diagnostics, []);
+	verify(t, diagnostics, [
+		[6, 0, 'error', 'Expected an error, but found none.']
+	]);
+});
+
+test('allow omitting `types` property when `main` property is set to a barrel (`index.js`) and .d.ts file matches main', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/no-explicit-types-property/with-main-barrel')});
+
+	verify(t, diagnostics, [
+		[6, 0, 'error', 'Expected an error, but found none.']
+	]);
+});
+
+test('allow omitting `types` property when `main` property is set to non-barrel (`foo.js`) and .d.ts file matches main', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/no-explicit-types-property/with-main-other')});
+
+	verify(t, diagnostics, [
+		[6, 0, 'error', 'Expected an error, but found none.']
+	]);
 });
 
 test('support testing in sub-directories', async t => {
