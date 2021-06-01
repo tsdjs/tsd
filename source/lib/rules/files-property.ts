@@ -13,12 +13,15 @@ import {getJSONPropertyPosition} from '../utils';
 export default (context: Context): Diagnostic[] => {
 	const {pkg, typingsFile} = context;
 
-	if (!Array.isArray(pkg.files)) {
+	const packageFiles = pkg.files;
+	if (!Array.isArray(packageFiles)) {
 		return [];
 	}
 
 	const normalizedTypingsFile = path.normalize(typingsFile);
-	const normalizedFiles = globby.sync(pkg.files as string[], {cwd: context.cwd}).map(path.normalize);
+
+	const patternProcessedPackageFiles = processGitIgnoreStylePatterns(packageFiles);
+	const normalizedFiles = globby.sync(patternProcessedPackageFiles, {cwd: context.cwd}).map(path.normalize);
 
 	if (normalizedFiles.includes(normalizedTypingsFile)) {
 		return [];
@@ -36,3 +39,24 @@ export default (context: Context): Diagnostic[] => {
 		}
 	];
 };
+
+function processGitIgnoreStylePatterns(patterns: readonly string[]): string[] {
+	const processedPatterns = patterns
+		.map(pattern => {
+			const [negatePatternMatch] = pattern.match(/^!+/) || [];
+			const negationMarkersCount = negatePatternMatch ? negatePatternMatch.length : 0;
+
+			return [
+				pattern
+					.slice(negationMarkersCount)
+					// Strip off `/` from the start of the pattern
+					.replace(/^\/+/, ''),
+				negationMarkersCount % 2 === 0
+			] as const;
+		})
+		// Only include pattern if it has an even count of negation markers
+		.filter(([, hasEvenCountOfNegationMarkers]) => hasEvenCountOfNegationMarkers)
+		.map(([processedPattern]) => processedPattern);
+
+	return [...new Set(processedPatterns)];
+}
