@@ -13,7 +13,7 @@ export enum Assertion {
 }
 
 // List of diagnostic handlers attached to the assertion
-const assertionHandlers = new Map<string, Handler | Handler[]>([
+const assertionHandlers = new Map<Assertion, Handler>([
 	[Assertion.EXPECT_TYPE, isIdentical],
 	[Assertion.EXPECT_NOT_TYPE, isNotIdentical],
 	[Assertion.EXPECT_NOT_ASSIGNABLE, isNotAssignable],
@@ -39,12 +39,7 @@ export const handle = (typeChecker: TypeChecker, assertions: Map<Assertion, Set<
 			continue;
 		}
 
-		const handlers = Array.isArray(handler) ? handler : [handler];
-
-		// Iterate over the handlers and invoke them
-		for (const fn of handlers) {
-			diagnostics.push(...fn(typeChecker, nodes));
-		}
+		diagnostics.push(...handler(typeChecker, nodes));
 	}
 
 	return diagnostics;
