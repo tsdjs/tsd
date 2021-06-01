@@ -9,7 +9,7 @@ type Expectation = [
 	message: string,
 ];
 
-type ExpectationWithFilename = [
+type ExpectationWithFileName = [
 	line: number,
 	column: number,
 	severity: 'error' | 'warning',
@@ -54,7 +54,7 @@ export const verifyWithFileName = (
 	t: ExecutionContext,
 	cwd: string,
 	diagnostics: Diagnostic[],
-	expectations: ExpectationWithFilename[]
+	expectations: ExpectationWithFileName[]
 ) => {
 	const diagnosticObjs = diagnostics.map(({line, column, severity, message, fileName}) => ({
 		line,

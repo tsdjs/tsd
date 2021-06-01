@@ -68,3 +68,13 @@ export const expectDeprecated = (expression: any) => {		// tslint:disable-line:n
 export const expectNotDeprecated = (expression: any) => {		// tslint:disable-line:no-unused
 	// Do nothing, the TypeScript compiler handles this for us
 };
+
+/**
+ * Will print a warning with the type of the expression passed as argument.
+ *
+ * @param expression - Expression whose type should be printed as a warning.
+ */
+// @ts-ignore
+export const printType = (expression: any) => {		// tslint:disable-line:no-unused
+	// Do nothing, the TypeScript compiler handles this for us
+};

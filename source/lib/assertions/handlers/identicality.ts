@@ -55,7 +55,7 @@ export const isIdentical = (checker: TypeChecker, nodes: Set<CallExpression>): D
  * Verifies that the argument of the assertion is not identical to the generic type of the assertion.
  *
  * @param checker - The TypeScript type checker.
- * @param nodes - The `expectType` AST nodes.
+ * @param nodes - The `expectNotType` AST nodes.
  * @return List of custom diagnostics.
  */
 export const isNotIdentical = (checker: TypeChecker, nodes: Set<CallExpression>): Diagnostic[] => {

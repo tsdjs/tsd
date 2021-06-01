@@ -189,6 +189,11 @@ Check that `value` is marked a [`@deprecated`](https://jsdoc.app/tags-deprecated
 
 Check that `value` is not marked a [`@deprecated`](https://jsdoc.app/tags-deprecated.html).
 
+### printType(value)
+
+Print the type of `value` as a warning. Useful if you don't know the exact type of the expression
+passed to `printType()` or the type is too complex to write it out by hand.
+
 
 ## Programmatic API
 
