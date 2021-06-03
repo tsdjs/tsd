@@ -2,8 +2,7 @@ import {Program, Node, CallExpression, forEachChild, isCallExpression, Identifie
 import {Assertion} from './assertions';
 import {Location, Diagnostic} from './interfaces';
 
-// TODO: Use Object.values() when targetting Node.js >= 8
-const assertionTypes = new Set<string>(Object.keys(Assertion).map(key => Assertion[key]));
+const assertionFnNames = new Set<string>(Object.values(Assertion));
 
 /**
  * Extract all assertions.
@@ -18,11 +17,11 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	 */
 	function walkNodes(node: Node) {
 		if (isCallExpression(node)) {
-			const text = (node.expression as Identifier).getText();
+			const identifier = (node.expression as Identifier).getText();
 
 			// Check if the call type is a valid assertion
-			if (assertionTypes.has(text)) {
-				const assertion = text as Assertion;
+			if (assertionFnNames.has(identifier)) {
+				const assertion = identifier as Assertion;
 
 				const nodes = assertions.get(assertion) || new Set<CallExpression>();
 

@@ -1,6 +1,14 @@
 import {CallExpression, TypeChecker} from '@tsd/typescript';
 import {Diagnostic} from '../interfaces';
-import {Handler, isIdentical, isNotIdentical, isNotAssignable, expectDeprecated, expectNotDeprecated} from './handlers';
+import {
+	Handler,
+	isIdentical,
+	isNotIdentical,
+	isNotAssignable,
+	expectDeprecated,
+	expectNotDeprecated,
+	prinTypeWarning,
+} from './handlers';
 
 export enum Assertion {
 	EXPECT_TYPE = 'expectType',
@@ -9,7 +17,8 @@ export enum Assertion {
 	EXPECT_ASSIGNABLE = 'expectAssignable',
 	EXPECT_NOT_ASSIGNABLE = 'expectNotAssignable',
 	EXPECT_DEPRECATED = 'expectDeprecated',
-	EXPECT_NOT_DEPRECATED = 'expectNotDeprecated'
+	EXPECT_NOT_DEPRECATED = 'expectNotDeprecated',
+	PRINT_TYPE = 'printType',
 }
 
 // List of diagnostic handlers attached to the assertion
@@ -18,7 +27,8 @@ const assertionHandlers = new Map<Assertion, Handler>([
 	[Assertion.EXPECT_NOT_TYPE, isNotIdentical],
 	[Assertion.EXPECT_NOT_ASSIGNABLE, isNotAssignable],
 	[Assertion.EXPECT_DEPRECATED, expectDeprecated],
-	[Assertion.EXPECT_NOT_DEPRECATED, expectNotDeprecated]
+	[Assertion.EXPECT_NOT_DEPRECATED, expectNotDeprecated],
+	[Assertion.PRINT_TYPE, prinTypeWarning]
 ]);
 
 /**
