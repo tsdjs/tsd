@@ -1,4 +1,4 @@
 {
-  "name": "test",
-  "types": "ts-dist/index.d.ts"
+	"name": "test",
+	"types": "ts-dist/index.d.ts"
 }
