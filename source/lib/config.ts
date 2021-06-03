@@ -1,4 +1,3 @@
-import * as path from 'path';
 import {
 	JsxEmit,
 	ScriptTarget,
@@ -56,7 +55,7 @@ function getOptionsFromTsConfig(cwd: string): CompilerOptions {
 	return parseJsonSourceFileConfigFileContent(
 		readJsonConfigFile(configPath, sys.readFile),
 		sys,
-		path.basename(configPath),
+		cwd,
 		undefined,
 		configPath,
 	).options;

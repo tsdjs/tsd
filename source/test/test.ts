@@ -410,3 +410,9 @@ test('errors in libs from node_modules are not reported', async t => {
 		[3, 18, 'error', 'Cannot find name \'Bar\'.']
 	]);
 });
+
+test('allow specifying `rootDir` option in `tsconfig.json`', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/root-dir')});
+
+	verify(t, diagnostics, []);
+});
