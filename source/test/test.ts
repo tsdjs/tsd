@@ -45,6 +45,26 @@ test('allow specifying folders containing typings file in `files` list', async t
 	verify(t, diagnostics, []);
 });
 
+test('allow specifying negative gitignore-style patterns in `files` list', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/files-gitignore-patterns/negative-pattern')});
+
+	verify(t, diagnostics, [
+		[3, 1, 'error', 'TypeScript type definition `index.d.ts` is not part of the `files` list.'],
+	]);
+});
+
+test('allow specifying negated negative (positive) gitignore-style patterns in `files` list', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/files-gitignore-patterns/negative-pattern-negated')});
+
+	verify(t, diagnostics, []);
+});
+
+test('allow specifying root marker (/) gitignore-style patterns in `files` list', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/files-gitignore-patterns/root-marker-pattern')});
+
+	verify(t, diagnostics, []);
+});
+
 test('allow specifying glob patterns containing typings file in `files` list', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/files-glob')});
 
@@ -389,6 +409,12 @@ test('errors in libs from node_modules are not reported', async t => {
 	verify(t, testFileDiagnostics, [
 		[3, 18, 'error', 'Cannot find name \'Bar\'.']
 	]);
+});
+
+test('allow specifying `rootDir` option in `tsconfig.json`', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/root-dir')});
+
+	verify(t, diagnostics, []);
 });
 
 test('prints the types of expressions passed to `printType` helper', async t => {
