@@ -1,4 +1,5 @@
 {
+	"root": true,
 	"extends": ["xo", "xo-typescript"],
 	"parserOptions": {
 		"project": "tsconfig.tsd.json"
