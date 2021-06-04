@@ -24,11 +24,9 @@
 		"lint": "tslint -p tsconfig.tsd.json --format stylish"
 	},
 	"files": [
-		"dist/index.js",
-		"dist/index.d.ts",
-		"dist/cli.js",
-		"dist/lib",
-		"libraries"
+		"dist/**/*.js",
+		"dist/**/*.d.ts",
+		"!dist/test"
 	],
 	"keywords": [
 		"typescript",
