@@ -1,8 +1,7 @@
 import {
 	flattenDiagnosticMessageText,
 	createProgram,
-	Diagnostic as TSDiagnostic,
-	SourceFile
+	Diagnostic as TSDiagnostic
 } from '@tsd/typescript';
 import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
@@ -63,10 +62,12 @@ const ignoreDiagnostic = (
 		return 'preserve';
 	}
 
-	const diagnosticFileName = (diagnostic.file as SourceFile).fileName;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const diagnosticFileName = diagnostic.file!.fileName;
 
 	for (const [location] of expectedErrors) {
-		const start = diagnostic.start as number;
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const start = diagnostic.start!;
 
 		if (diagnosticFileName === location.fileName && start > location.start && start < location.end) {
 			return location;
@@ -116,7 +117,8 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 			continue;
 		}
 
-		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start as number);
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
 
 		diagnostics.push({
 			fileName: diagnostic.file.fileName,

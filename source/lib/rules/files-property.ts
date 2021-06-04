@@ -43,7 +43,7 @@ export default (context: Context): Diagnostic[] => {
 function processGitIgnoreStylePatterns(patterns: readonly string[]): string[] {
 	const processedPatterns = patterns
 		.map(pattern => {
-			const [negatePatternMatch] = pattern.match(/^!+/) || [];
+			const [negatePatternMatch] = /^!+/.exec(pattern) ?? [];
 			const negationMarkersCount = negatePatternMatch ? negatePatternMatch.length : 0;
 
 			return [

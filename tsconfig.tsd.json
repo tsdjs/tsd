@@ -12,8 +12,8 @@
 		"newLine": "lf",
 		"stripInternal": true,
 		"strict": true,
-		"noImplicitAny": false,
 		"noImplicitReturns": true,
+		"noImplicitOverride": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
@@ -24,6 +24,5 @@
 		"node_modules",
 		"dist",
 		"source/test/fixtures",
-		"libraries"
 	]
 }

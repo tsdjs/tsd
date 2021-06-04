@@ -1,8 +1,7 @@
 import {CompilerOptions} from '@tsd/typescript';
+import {NormalizedPackageJson} from 'read-pkg-up';
 
-export interface RawCompilerOptions {
-	[option: string]: any;
-}
+export type RawCompilerOptions = Record<string, any>;
 
 export interface Config<Options = CompilerOptions> {
 	directory: string;
@@ -11,9 +10,13 @@ export interface Config<Options = CompilerOptions> {
 
 export type RawConfig = Partial<Config<RawCompilerOptions>>;
 
+export type PackageJsonWithTsdConfig = NormalizedPackageJson & {
+	tsd?: RawConfig;
+};
+
 export interface Context {
 	cwd: string;
-	pkg: any;
+	pkg: PackageJsonWithTsdConfig;
 	typingsFile: string;
 	testFiles: string[];
 	config: Config;

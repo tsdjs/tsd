@@ -10,7 +10,7 @@ import {
 	parseJsonSourceFileConfigFileContent,
 	ModuleKind
 } from '@tsd/typescript';
-import {Config, RawConfig, RawCompilerOptions} from './interfaces';
+import {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces';
 
 /**
  * Load the configuration settings.
@@ -18,12 +18,12 @@ import {Config, RawConfig, RawCompilerOptions} from './interfaces';
  * @param pkg - The package.json object.
  * @returns The config object.
  */
-export default (pkg: {tsd?: RawConfig}, cwd: string): Config => {
-	const pkgConfig = pkg.tsd || {};
+export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
+	const pkgConfig = pkg.tsd ?? {};
 
 	const tsConfigCompilerOptions = getOptionsFromTsConfig(cwd);
 	const packageJsonCompilerOptions = parseCompilerConfigObject(
-		pkgConfig.compilerOptions || {},
+		pkgConfig.compilerOptions ?? {},
 		cwd
 	);
 
@@ -70,5 +70,5 @@ function parseCompilerConfigObject(compilerOptions: RawCompilerOptions, cwd: str
 }
 
 function parseRawLibs(libs: string[], cwd: string): string[] {
-	return parseCompilerConfigObject({lib: libs}, cwd).lib || [];
+	return parseCompilerConfigObject({lib: libs}, cwd).lib ?? [];
 }

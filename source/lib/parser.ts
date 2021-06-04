@@ -23,7 +23,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 			if (assertionFnNames.has(identifier)) {
 				const assertion = identifier as Assertion;
 
-				const nodes = assertions.get(assertion) || new Set<CallExpression>();
+				const nodes = assertions.get(assertion) ?? new Set<CallExpression>();
 
 				nodes.add(node);
 

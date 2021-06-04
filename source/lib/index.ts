@@ -5,7 +5,7 @@ import * as globby from 'globby';
 import {getDiagnostics as getTSDiagnostics} from './compiler';
 import loadConfig from './config';
 import getCustomDiagnostics from './rules';
-import {Context, Config} from './interfaces';
+import {Context, Config, Diagnostic, PackageJsonWithTsdConfig} from './interfaces';
 
 export interface Options {
 	cwd: string;
@@ -13,7 +13,7 @@ export interface Options {
 	testFiles?: readonly string[];
 }
 
-const findTypingsFile = async (pkg: any, options: Options) => {
+const findTypingsFile = async (pkg: PackageJsonWithTsdConfig, options: Options): Promise<string> => {
 	const typings =
 		options.typingsFile ||
 		pkg.types ||
@@ -78,15 +78,15 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
  *
  * @returns A promise which resolves the diagnostics of the type definition.
  */
-export default async (options: Options = {cwd: process.cwd()}) => {
+export default async (options: Options = {cwd: process.cwd()}): Promise<Diagnostic[]> => {
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
 	if (!pkgResult) {
 		throw new Error('No `package.json` file found. Make sure you are running the command in a Node.js project.');
 	}
 
-	const pkg = pkgResult.packageJson;
-	const config = loadConfig(pkg as any, options.cwd);
+	const pkg = pkgResult.packageJson as PackageJsonWithTsdConfig;
+	const config = loadConfig(pkg, options.cwd);
 
 	// Look for a typings file, otherwise use `index.d.ts` in the root directory. If the file is not found, throw an error.
 	const typingsFile = await findTypingsFile(pkg, options);

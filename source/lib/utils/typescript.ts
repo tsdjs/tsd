@@ -8,9 +8,9 @@ import {TypeChecker, Expression, isCallLikeExpression, JSDocTagInfo} from '@tsd/
  * @return A unique Set of JSDoc tags or `undefined` if they couldn't be resolved.
  */
 export const resolveJSDocTags = (checker: TypeChecker, expression: Expression): Map<string, JSDocTagInfo> | undefined => {
-	const ref = isCallLikeExpression(expression)
-		? checker.getResolvedSignature(expression)
-		: checker.getSymbolAtLocation(expression);
+	const ref = isCallLikeExpression(expression) ?
+		checker.getResolvedSignature(expression) :
+		checker.getSymbolAtLocation(expression);
 
 	if (!ref) {
 		return;
