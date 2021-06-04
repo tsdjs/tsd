@@ -1,0 +1,9 @@
+{
+	"extends": ["xo", "xo-typescript"],
+	"parserOptions": {
+		"project": "tsconfig.tsd.json"
+	},
+	"rules": {
+		"@typescript-eslint/comma-dangle": "off"
+	}
+}

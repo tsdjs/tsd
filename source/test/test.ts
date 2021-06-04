@@ -370,7 +370,7 @@ test('includes extended config files along with found ones', async t => {
 test('errors in libs from node_modules are not reported', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/exclude-node-modules')});
 
-	const [nodeModuleDiagnostics, testFileDiagnostics, otherDiagnostics] = diagnostics.reduce(
+	const [nodeModuleDiagnostics, testFileDiagnostics, otherDiagnostics] = diagnostics.reduce<Diagnostic[][]>(
 		([nodeModuleDiags, testFileDiags, otherDiags], diagnostic) => {
 			if (/[/\\]node_modules[/\\]/.test(diagnostic.fileName)) {
 				nodeModuleDiags.push(diagnostic);
@@ -379,9 +379,10 @@ test('errors in libs from node_modules are not reported', async t => {
 			} else {
 				otherDiags.push(diagnostic);
 			}
+
 			return [nodeModuleDiags, testFileDiags, otherDiags];
 		},
-		[[], [], []] as Diagnostic[][]
+		[[], [], []]
 	);
 
 	t.deepEqual(

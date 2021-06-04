@@ -29,7 +29,7 @@ const expectDeprecatedHelper = (options: Options): Handler => {
 
 			const message = tsutils.expressionToString(checker, argument);
 
-			diagnostics.push(makeDiagnostic(node, options.message(message || '?')));
+			diagnostics.push(makeDiagnostic(node, options.message(message ?? '?')));
 		}
 
 		return diagnostics;
