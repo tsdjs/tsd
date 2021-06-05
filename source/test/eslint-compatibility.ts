@@ -1,6 +1,6 @@
-import * as path from 'path';
+import path from 'path';
 import test from 'ava';
-import * as execa from 'execa';
+import execa from 'execa';
 
 test('`expectType` is compatible with eslint @typescript-eslint/no-unsafe-call rule', t => {
 	try {
@@ -13,14 +13,14 @@ test('`expectType` is compatible with eslint @typescript-eslint/no-unsafe-call r
 		);
 
 		t.fail('eslint should have found an error!');
-	} catch (e: unknown) {
-		if (!e) {
+	} catch (error: unknown) {
+		if (!error) {
 			t.fail('Thrown error is falsy!');
 		}
 
-		const error = e as execa.ExecaError;
+		const execaError = error as execa.ExecaError;
 
-		const outLines = error.stdout.trim().split('\n');
+		const outLines = execaError.stdout.trim().split('\n');
 
 		t.regex(outLines[0], /fixtures[/\\]eslint-compatibility[/\\]index.test-d.ts$/, 'Lint error found in unexpected file');
 		t.is(outLines[1], '  9:1  error  Unsafe call of an `any` typed value  @typescript-eslint/no-unsafe-call');

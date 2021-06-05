@@ -1,6 +1,6 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import * as globby from 'globby';
+import path from 'path';
+import fs from 'fs';
+import globby from 'globby';
 import {Context, Diagnostic} from '../interfaces';
 import {getJSONPropertyPosition} from '../utils';
 

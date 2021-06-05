@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import * as meow from 'meow';
+import meow from 'meow';
 import formatter from './lib/formatter';
 import tsd from './lib';
 
