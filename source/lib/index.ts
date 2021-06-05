@@ -1,7 +1,7 @@
-import * as path from 'path';
-import * as readPkgUp from 'read-pkg-up';
-import * as pathExists from 'path-exists';
-import * as globby from 'globby';
+import path from 'path';
+import readPkgUp from 'read-pkg-up';
+import pathExists from 'path-exists';
+import globby from 'globby';
 import {getDiagnostics as getTSDiagnostics} from './compiler';
 import loadConfig from './config';
 import getCustomDiagnostics from './rules';

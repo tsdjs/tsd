@@ -1,0 +1,9 @@
+{
+	"root": false,
+	"parserOptions": {
+		"project": "source/test/fixtures/eslint-compatibility/tsconfig.json"
+	},
+	"rules": {
+		"@typescript-eslint/no-unsafe-call": "error"
+	}
+}

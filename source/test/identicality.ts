@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 import test from 'ava';
 import {verify} from './fixtures/utils';
 import tsd from '..';

@@ -1,6 +1,6 @@
-import * as path from 'path';
+import path from 'path';
 import test from 'ava';
-import * as execa from 'execa';
+import execa from 'execa';
 
 interface ExecaError extends Error {
 	readonly exitCode: number;

@@ -18,7 +18,8 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"noEmitOnError": true,
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true,
 	},
 	"exclude": [
 		"node_modules",

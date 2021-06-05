@@ -1,4 +1,4 @@
-import * as formatter from 'eslint-formatter-pretty';
+import formatter from 'eslint-formatter-pretty';
 import {Diagnostic} from './interfaces';
 
 interface FileWithDiagnostics {
