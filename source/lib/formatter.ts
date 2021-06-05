@@ -35,6 +35,5 @@ export default (diagnostics: Diagnostic[]): string => {
 		entry.messages.push(diagnostic);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 	return String(formatter([...fileMap.values()]));
 };
