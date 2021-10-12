@@ -23,6 +23,7 @@ const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.TypeDoesNotSatisfyTheConstraint,
 	DiagnosticCode.GenericTypeRequiresTypeArguments,
 	DiagnosticCode.ExpectedArgumentsButGotOther,
+	DiagnosticCode.ExpectedAtLeastArgumentsButGotOther,
 	DiagnosticCode.NoOverloadExpectsCountOfArguments,
 	DiagnosticCode.NoOverloadExpectsCountOfTypeArguments,
 	DiagnosticCode.NoOverloadMatches,
