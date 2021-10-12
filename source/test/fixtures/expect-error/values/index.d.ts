@@ -13,6 +13,8 @@ export type HasKey<K extends string, V = unknown> = {[P in K]?: V};
 
 export function getFoo<T extends HasKey<'foo'>>(obj: T): T['foo'];
 
+export function atLeastOne(...expected: [unknown, ...Array<unknown>]): void;
+
 export interface Options<T> {}
 
 export class MyClass {}
