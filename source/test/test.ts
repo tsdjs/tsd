@@ -12,8 +12,10 @@ test('throw if no test is found', async t => {
 	await t.throwsAsync(tsd({cwd: path.join(__dirname, 'fixtures/no-test')}), {message: 'The test file `index.test-d.ts` or `index.test-d.tsx` does not exist. Create one and try again.'});
 });
 
-test('return diagnostics', async t => {
+test('return extended diagnostics object', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/failure')});
+
+	t.is(diagnostics.testCount, 2, 'Received test count that is different from expected.');
 
 	verify(t, diagnostics, [
 		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
@@ -430,10 +432,4 @@ test('prints the types of expressions passed to `printType` helper', async t => 
 		[9, 0, 'warning', 'Type for expression `null as unknown` is: `unknown`'],
 		[10, 0, 'warning', 'Type for expression `\'foo\'` is: `"foo"`'],
 	]);
-});
-
-test('checking testCount', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/failure')});
-
-	t.is(diagnostics.testCount, 2);
 });
