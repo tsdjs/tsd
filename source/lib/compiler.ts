@@ -1,11 +1,12 @@
 import {
 	flattenDiagnosticMessageText,
 	createProgram,
+	CallExpression,
 	Diagnostic as TSDiagnostic
 } from '@tsd/typescript';
 import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Context, Diagnostic, DiagnosticCode, ExtendedDiagnostic, Location} from './interfaces';
-import {handle} from './assertions';
+import {Assertion, handle} from './assertions';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([
@@ -79,13 +80,26 @@ const ignoreDiagnostic = (
 };
 
 /**
+ * Count all assertions in the given map.
+ *
+ * @param assertions - The assertions map to count.
+ * @returns Count of assertions.
+ */
+const countAssertions = (assertions: Map<Assertion, Set<CallExpression>>) => {
+	let count = 0;
+	assertions.forEach(nodes => {
+		count += nodes.size;
+	});
+	return count;
+};
+
+/**
  * Get a list of TypeScript diagnostics within the current context.
  *
  * @param context - The context object.
  * @returns List of diagnostics
  */
 export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
-	let testCount = 0;
 	const diagnostics: Diagnostic[] = [];
 
 	const program = createProgram(context.testFiles, context.config.compilerOptions);
@@ -95,10 +109,7 @@ export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
 		.concat(program.getSyntacticDiagnostics());
 
 	const assertions = extractAssertions(program);
-
-	for (const assertion of assertions) {
-		testCount += assertion[1].size;
-	}
+	const testCount = countAssertions(assertions);
 
 	diagnostics.push(...handle(program.getTypeChecker(), assertions));
 
@@ -147,5 +158,5 @@ export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
 		});
 	}
 
-	return {testCount, diagnostics};
+	return {diagnostics, testCount};
 };
