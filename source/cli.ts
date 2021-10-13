@@ -20,10 +20,10 @@ const cli = meow(`
 	try {
 		const options = cli.input.length > 0 ? {cwd: cli.input[0]} : undefined;
 
-		const extendedDiagnostics = await tsd(options);
+		const {diagnostics} = await tsd(options);
 
-		if (extendedDiagnostics.diagnostics.length > 0) {
-			throw new Error(formatter(extendedDiagnostics));
+		if (diagnostics.length > 0) {
+			throw new Error(formatter(diagnostics));
 		}
 	} catch (error: unknown) {
 		if (error && typeof (error as Error).message === 'string') {
