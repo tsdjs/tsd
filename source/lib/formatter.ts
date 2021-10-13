@@ -14,7 +14,7 @@ interface FileWithDiagnostics {
  * @param diagnostics - List of TypeScript diagnostics.
  * @returns Beautiful diagnostics output
  */
-export default (diagnostics: Diagnostic[]) => {
+export default (diagnostics: Diagnostic[]): string => {
 	const fileMap = new Map<string, FileWithDiagnostics>();
 
 	for (const diagnostic of diagnostics) {
