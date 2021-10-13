@@ -368,7 +368,7 @@ test('includes extended config files along with found ones', async t => {
 });
 
 test('errors in libs from node_modules are not reported', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/exclude-node-modules')});
+	const {diagnostics, testCount} = await tsd({cwd: path.join(__dirname, 'fixtures/exclude-node-modules')});
 
 	const [nodeModuleDiagnostics, testFileDiagnostics, otherDiagnostics] = diagnostics.reduce<Diagnostic[][]>(
 		([nodeModuleDiags, testFileDiags, otherDiags], diagnostic) => {
@@ -407,7 +407,7 @@ test('errors in libs from node_modules are not reported', async t => {
 		);
 	});
 
-	verify(t, testFileDiagnostics, [
+	verify(t, {diagnostics: testFileDiagnostics, testCount}, [
 		[3, 18, 'error', 'Cannot find name \'Bar\'.']
 	]);
 });
@@ -430,4 +430,10 @@ test('prints the types of expressions passed to `printType` helper', async t => 
 		[9, 0, 'warning', 'Type for expression `null as unknown` is: `unknown`'],
 		[10, 0, 'warning', 'Type for expression `\'foo\'` is: `"foo"`'],
 	]);
+});
+
+test('checking testCount', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/failure')});
+
+	t.is(diagnostics.testCount, 2);
 });

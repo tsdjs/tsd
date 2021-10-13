@@ -4,7 +4,7 @@ import {
 	Diagnostic as TSDiagnostic
 } from '@tsd/typescript';
 import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
-import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
+import {Context, Diagnostic, DiagnosticCode, ExtendedDiagnostic, Location} from './interfaces';
 import {handle} from './assertions';
 
 // List of diagnostic codes that should be ignored in general
@@ -84,7 +84,8 @@ const ignoreDiagnostic = (
  * @param context - The context object.
  * @returns List of diagnostics
  */
-export const getDiagnostics = (context: Context): Diagnostic[] => {
+export const getDiagnostics = (context: Context): ExtendedDiagnostic => {
+	let testCount = 0;
 	const diagnostics: Diagnostic[] = [];
 
 	const program = createProgram(context.testFiles, context.config.compilerOptions);
@@ -94,6 +95,10 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		.concat(program.getSyntacticDiagnostics());
 
 	const assertions = extractAssertions(program);
+
+	for (const assertion of assertions) {
+		testCount += assertion[1].size;
+	}
 
 	diagnostics.push(...handle(program.getTypeChecker(), assertions));
 
@@ -142,5 +147,5 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		});
 	}
 
-	return diagnostics;
+	return {testCount, diagnostics};
 };

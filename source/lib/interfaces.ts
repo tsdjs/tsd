@@ -56,6 +56,11 @@ export interface Diagnostic {
 	column?: number;
 }
 
+export interface ExtendedDiagnostic {
+	testCount: number;
+	diagnostics: Diagnostic[];
+}
+
 export interface Location {
 	fileName: string;
 	start: number;

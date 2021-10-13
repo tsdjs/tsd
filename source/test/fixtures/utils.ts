@@ -1,6 +1,6 @@
 import path from 'path';
 import {ExecutionContext} from 'ava';
-import {Diagnostic} from '../../lib/interfaces';
+import {ExtendedDiagnostic} from '../../lib/interfaces';
 
 type Expectation = [
 	line: number,
@@ -21,10 +21,14 @@ type ExpectationWithFileName = [
  * Verify a list of diagnostics.
  *
  * @param t - The AVA execution context.
- * @param diagnostics - List of diagnostics to verify.
+ * @param extendedDiagnostics - Object containing list of TypeScript diagnostics and test count.
  * @param expectations - Expected diagnostics.
  */
-export const verify = (t: ExecutionContext, diagnostics: Diagnostic[], expectations: Expectation[]) => {
+export const verify = (
+	t: ExecutionContext,
+	{diagnostics}: ExtendedDiagnostic,
+	expectations: Expectation[]
+) => {
 	const diagnosticObjs = diagnostics.map(({line, column, severity, message}) => ({
 		line,
 		column,
@@ -47,13 +51,13 @@ export const verify = (t: ExecutionContext, diagnostics: Diagnostic[], expectati
  *
  * @param t - The AVA execution context.
  * @param cwd - The working directory as passed to `tsd`.
- * @param diagnostics - List of diagnostics to verify.
+ * @param extendedDiagnostics - Object containing list of TypeScript diagnostics and test count.
  * @param expectations - Expected diagnostics.
  */
 export const verifyWithFileName = (
 	t: ExecutionContext,
 	cwd: string,
-	diagnostics: Diagnostic[],
+	{diagnostics}: ExtendedDiagnostic,
 	expectations: ExpectationWithFileName[]
 ) => {
 	const diagnosticObjs = diagnostics.map(({line, column, severity, message, fileName}) => ({

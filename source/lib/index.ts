@@ -5,7 +5,7 @@ import globby from 'globby';
 import {getDiagnostics as getTSDiagnostics} from './compiler';
 import loadConfig from './config';
 import getCustomDiagnostics from './rules';
-import {Context, Config, Diagnostic, PackageJsonWithTsdConfig} from './interfaces';
+import {Config, Context, ExtendedDiagnostic, PackageJsonWithTsdConfig} from './interfaces';
 
 export interface Options {
 	cwd: string;
@@ -78,7 +78,7 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
  *
  * @returns A promise which resolves the diagnostics of the type definition.
  */
-export default async (options: Options = {cwd: process.cwd()}): Promise<Diagnostic[]> => {
+export default async (options: Options = {cwd: process.cwd()}): Promise<ExtendedDiagnostic> => {
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
 	if (!pkgResult) {
@@ -104,8 +104,14 @@ export default async (options: Options = {cwd: process.cwd()}): Promise<Diagnost
 		config
 	};
 
-	return [
-		...getCustomDiagnostics(context),
-		...getTSDiagnostics(context)
-	];
+	const {diagnostics: tsDiagnostics, testCount} = getTSDiagnostics(context);
+	const customDiagnostics = getCustomDiagnostics(context);
+
+	return {
+		testCount,
+		diagnostics: [
+			...customDiagnostics,
+			...tsDiagnostics
+		]
+	};
 };

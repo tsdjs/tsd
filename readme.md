@@ -204,10 +204,13 @@ You can use the programmatic API to retrieve the diagnostics and do something wi
 import tsd from 'tsd';
 
 (async () => {
-	const diagnostics = await tsd();
+	const {diagnostics, testCount} = await tsd();
 
-	console.log(diagnostics.length);
-	//=> 2
+	// The list of diagnostics if any or just an empty array.
+	console.log(diagnostics);
+
+	// The number of tests evaluated.
+	console.log(testCount)
 })();
 ```
 
