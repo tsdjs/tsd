@@ -16,6 +16,6 @@ export default (node: Node, message: string, severity: 'error' | 'warning' = 'er
 		message,
 		severity,
 		line: position.line + 1,
-		column: position.character,
+		column: position.character + 1,
 	};
 };

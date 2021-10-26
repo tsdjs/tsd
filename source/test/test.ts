@@ -16,7 +16,7 @@ test('return diagnostics', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/failure')});
 
 	verify(t, diagnostics, [
-		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
+		[5, 20, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
 	]);
 });
 
@@ -25,8 +25,8 @@ test('return diagnostics from imported files as well', async t => {
 	const diagnostics = await tsd({cwd});
 
 	verifyWithFileName(t, cwd, diagnostics, [
-		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', 'child.test-d.ts'],
-		[6, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', 'index.test-d.ts'],
+		[5, 20, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', 'child.test-d.ts'],
+		[6, 20, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', 'index.test-d.ts'],
 	]);
 });
 
@@ -87,7 +87,7 @@ test('fail if tests don\'t pass in strict mode', async t => {
 	verifyWithFileName(t, cwd, diagnostics, [
 		[
 			4,
-			19,
+			20,
 			'error',
 			'Argument of type \'number | null\' is not assignable to parameter of type \'number\'.\n  Type \'null\' is not assignable to type \'number\'.',
 			'index.test-d.ts',
@@ -102,7 +102,7 @@ test('overridden config defaults to `strict` if `strict` is not explicitly overr
 	verifyWithFileName(t, cwd, diagnostics, [
 		[
 			4,
-			19,
+			20,
 			'error',
 			'Argument of type \'number | null\' is not assignable to parameter of type \'number\'.\n  Type \'null\' is not assignable to type \'number\'.',
 			'index.test-d.ts',
@@ -115,8 +115,8 @@ test('fail if types are used from a lib that was not explicitly specified', asyn
 	const diagnostics = await tsd({cwd});
 
 	verifyWithFileName(t, cwd, diagnostics, [
-		[1, 22, 'error', 'Cannot find name \'Window\'.', 'index.d.ts'],
-		[4, 11, 'error', 'Cannot find name \'Window\'.', 'index.test-d.ts'],
+		[1, 23, 'error', 'Cannot find name \'Window\'.', 'index.d.ts'],
+		[4, 12, 'error', 'Cannot find name \'Window\'.', 'index.test-d.ts'],
 	]);
 });
 
@@ -184,7 +184,7 @@ test('allow omitting `types` property when `main` property is missing but main i
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/no-explicit-types-property/without-main')});
 
 	verify(t, diagnostics, [
-		[6, 0, 'error', 'Expected an error, but found none.']
+		[6, 1, 'error', 'Expected an error, but found none.']
 	]);
 });
 
@@ -192,7 +192,7 @@ test('allow omitting `types` property when `main` property is set to a barrel (`
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/no-explicit-types-property/with-main-barrel')});
 
 	verify(t, diagnostics, [
-		[6, 0, 'error', 'Expected an error, but found none.']
+		[6, 1, 'error', 'Expected an error, but found none.']
 	]);
 });
 
@@ -200,7 +200,7 @@ test('allow omitting `types` property when `main` property is set to non-barrel 
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/no-explicit-types-property/with-main-other')});
 
 	verify(t, diagnostics, [
-		[6, 0, 'error', 'Expected an error, but found none.']
+		[6, 1, 'error', 'Expected an error, but found none.']
 	]);
 });
 
@@ -232,7 +232,7 @@ test('support setting a custom test directory', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/test-directory/custom')});
 
 	verify(t, diagnostics, [
-		[4, 0, 'error', 'Expected an error, but found none.']
+		[4, 1, 'error', 'Expected an error, but found none.']
 	]);
 });
 
@@ -246,7 +246,7 @@ test('expectError for functions', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/functions')});
 
 	verify(t, diagnostics, [
-		[5, 0, 'error', 'Expected an error, but found none.']
+		[5, 1, 'error', 'Expected an error, but found none.']
 	]);
 });
 
@@ -260,10 +260,10 @@ test('expectError should not ignore syntactical errors', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/syntax')});
 
 	verify(t, diagnostics, [
-		[4, 29, 'error', '\')\' expected.'],
-		[5, 22, 'error', '\',\' expected.'],
-		[4, 0, 'error', 'Expected an error, but found none.'],
-		[5, 0, 'error', 'Expected an error, but found none.']
+		[4, 30, 'error', '\')\' expected.'],
+		[5, 23, 'error', '\',\' expected.'],
+		[4, 1, 'error', 'Expected an error, but found none.'],
+		[5, 1, 'error', 'Expected an error, but found none.']
 	]);
 });
 
@@ -271,7 +271,7 @@ test('expectError for values', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/values')});
 
 	verify(t, diagnostics, [
-		[5, 0, 'error', 'Expected an error, but found none.']
+		[5, 1, 'error', 'Expected an error, but found none.']
 	]);
 });
 
@@ -285,7 +285,7 @@ test('missing import', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/missing-import')});
 
 	verify(t, diagnostics, [
-		[3, 18, 'error', 'Cannot find name \'Primitive\'.']
+		[3, 19, 'error', 'Cannot find name \'Primitive\'.']
 	]);
 });
 
@@ -305,18 +305,18 @@ test('loose types', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/strict-types/loose')});
 
 	verify(t, diagnostics, [
-		[5, 0, 'error', 'Parameter type `string` is declared too wide for argument type `"cat"`.'],
-		[7, 0, 'error', 'Parameter type `string | number` is declared too wide for argument type `string`.'],
-		[8, 0, 'error', 'Parameter type `string | number` is declared too wide for argument type `number`.'],
-		[10, 0, 'error', 'Parameter type `string | Date` is declared too wide for argument type `Date`.'],
-		[11, 0, 'error', 'Parameter type `Promise<string | number>` is declared too wide for argument type `Promise<number>`.'],
-		[12, 0, 'error', 'Parameter type `string | Promise<string | number>` is declared too wide for argument type `Promise<string | number>`.'],
-		[14, 0, 'error', 'Parameter type `Promise<string | number>` is declared too wide for argument type `Promise<number>`.'],
-		[16, 0, 'error', 'Parameter type `Observable<string | number>` is declared too wide for argument type `Observable<string>`.'],
-		[20, 0, 'error', 'Parameter type `Observable<string | number> | Observable<string | number | boolean>` is declared too wide for argument type `Observable<string | number> | Observable<string>`.'],
-		[28, 0, 'error', 'Parameter type `Foo<string | Foo<string | number>> | Foo<Date> | Foo<Symbol>` is declared too wide for argument type `Foo<Date> | Foo<Symbol> | Foo<string | Foo<number>>`.'],
-		[32, 0, 'error', 'Parameter type `string | number` is not identical to argument type `any`.'],
-		[34, 0, 'error', 'Parameter type `Observable<string | number> | Observable<any> | Observable<string | number | boolean>` is not identical to argument type `Observable<string | number> | Observable<string> | Observable<string | number | boolean>`.']
+		[5, 1, 'error', 'Parameter type `string` is declared too wide for argument type `"cat"`.'],
+		[7, 1, 'error', 'Parameter type `string | number` is declared too wide for argument type `string`.'],
+		[8, 1, 'error', 'Parameter type `string | number` is declared too wide for argument type `number`.'],
+		[10, 1, 'error', 'Parameter type `string | Date` is declared too wide for argument type `Date`.'],
+		[11, 1, 'error', 'Parameter type `Promise<string | number>` is declared too wide for argument type `Promise<number>`.'],
+		[12, 1, 'error', 'Parameter type `string | Promise<string | number>` is declared too wide for argument type `Promise<string | number>`.'],
+		[14, 1, 'error', 'Parameter type `Promise<string | number>` is declared too wide for argument type `Promise<number>`.'],
+		[16, 1, 'error', 'Parameter type `Observable<string | number>` is declared too wide for argument type `Observable<string>`.'],
+		[20, 1, 'error', 'Parameter type `Observable<string | number> | Observable<string | number | boolean>` is declared too wide for argument type `Observable<string | number> | Observable<string>`.'],
+		[28, 1, 'error', 'Parameter type `Foo<string | Foo<string | number>> | Foo<Date> | Foo<Symbol>` is declared too wide for argument type `Foo<Date> | Foo<Symbol> | Foo<string | Foo<number>>`.'],
+		[32, 1, 'error', 'Parameter type `string | number` is not identical to argument type `any`.'],
+		[34, 1, 'error', 'Parameter type `Observable<string | number> | Observable<any> | Observable<string | number | boolean>` is not identical to argument type `Observable<string | number> | Observable<string> | Observable<string | number | boolean>`.']
 	]);
 });
 
@@ -333,7 +333,7 @@ test('typings in custom directory', async t => {
 	});
 
 	verify(t, diagnostics, [
-		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
+		[5, 20, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
 	]);
 });
 
@@ -346,7 +346,7 @@ test('specify test files manually', async t => {
 	});
 
 	verify(t, diagnostics, [
-		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
+		[5, 20, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.']
 	]);
 });
 
@@ -363,7 +363,7 @@ test('includes extended config files along with found ones', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/ts-config-extends')});
 
 	verify(t, diagnostics, [
-		[6, 64, 'error', 'Not all code paths return a value.'],
+		[6, 65, 'error', 'Not all code paths return a value.'],
 	]);
 });
 
@@ -408,7 +408,7 @@ test('errors in libs from node_modules are not reported', async t => {
 	});
 
 	verify(t, testFileDiagnostics, [
-		[3, 18, 'error', 'Cannot find name \'Bar\'.']
+		[3, 19, 'error', 'Cannot find name \'Bar\'.']
 	]);
 });
 
@@ -422,12 +422,12 @@ test('prints the types of expressions passed to `printType` helper', async t => 
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/print-type')});
 
 	verify(t, diagnostics, [
-		[4, 0, 'warning', 'Type for expression `aboveZero` is: `(foo: number) => number | null`'],
-		[5, 0, 'warning', 'Type for expression `null` is: `null`'],
-		[6, 0, 'warning', 'Type for expression `undefined` is: `undefined`'],
-		[7, 0, 'warning', 'Type for expression `null as any` is: `any`'],
-		[8, 0, 'warning', 'Type for expression `null as never` is: `never`'],
-		[9, 0, 'warning', 'Type for expression `null as unknown` is: `unknown`'],
-		[10, 0, 'warning', 'Type for expression `\'foo\'` is: `"foo"`'],
+		[4, 1, 'warning', 'Type for expression `aboveZero` is: `(foo: number) => number | null`'],
+		[5, 1, 'warning', 'Type for expression `null` is: `null`'],
+		[6, 1, 'warning', 'Type for expression `undefined` is: `undefined`'],
+		[7, 1, 'warning', 'Type for expression `null as any` is: `any`'],
+		[8, 1, 'warning', 'Type for expression `null as never` is: `never`'],
+		[9, 1, 'warning', 'Type for expression `null as unknown` is: `unknown`'],
+		[10, 1, 'warning', 'Type for expression `\'foo\'` is: `"foo"`'],
 	]);
 });

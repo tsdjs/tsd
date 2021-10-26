@@ -13,7 +13,7 @@ test('fail if errors are found', async t => {
 	}));
 
 	t.is(exitCode, 1);
-	t.regex(stderr, /5:19[ ]{2}Argument of type number is not assignable to parameter of type string./);
+	t.regex(stderr, /5:20[ ]{2}Argument of type number is not assignable to parameter of type string./);
 });
 
 test('succeed if no errors are found', async t => {
@@ -30,5 +30,5 @@ test('provide a path', async t => {
 	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('dist/cli.js', [file]));
 
 	t.is(exitCode, 1);
-	t.regex(stderr, /5:19[ ]{2}Argument of type number is not assignable to parameter of type string./);
+	t.regex(stderr, /5:20[ ]{2}Argument of type number is not assignable to parameter of type string./);
 });

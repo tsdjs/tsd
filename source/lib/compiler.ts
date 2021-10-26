@@ -126,7 +126,7 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 			message: flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
 			severity: 'error',
 			line: position.line + 1,
-			column: position.character
+			column: position.character + 1
 		});
 	}
 

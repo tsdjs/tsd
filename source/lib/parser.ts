@@ -75,7 +75,7 @@ export const parseErrorAssertionToLocation = (
 		expectedErrors.set(location, {
 			fileName: location.fileName,
 			line: pos.line + 1,
-			column: pos.character
+			column: pos.character + 1
 		});
 	}
 
