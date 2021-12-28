@@ -1,5 +1,5 @@
 import {expectError} from '../../../..';
-import {default as one, atLeastOne, foo, getFoo, HasKey, hasProperty, MyClass, Options} from '.';
+import {default as one, atLeastOne, foo, getFoo, HasKey, hasProperty, MyClass, Options, triggerSuggestion} from '.';
 
 expectError<string>(1);
 expectError<string>('fo');
@@ -33,3 +33,7 @@ expectError(MyClass());
 
 // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.
 expectError(new hasProperty({name: 'foo'}));
+
+expectError(() => {
+	triggerSuggestion.fooOrBar = 'fooo';
+})
