@@ -18,3 +18,9 @@ export function atLeastOne(...expected: [unknown, ...Array<unknown>]): void;
 export interface Options<T> {}
 
 export class MyClass {}
+
+export const triggerSuggestion: {
+	// fooOrBar must be of union type to trigger TS2820, otherwise TypeScript will
+	// emit a regular TS2322 error without the "Did you mean..." suggestion.
+	fooOrBar: 'foo' | 'bar';
+};
