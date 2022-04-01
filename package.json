@@ -1,6 +1,6 @@
 {
 	"name": "tsd",
-	"version": "0.19.1",
+	"version": "0.20.0",
 	"description": "Check TypeScript type definitions",
 	"license": "MIT",
 	"repository": "SamVerschueren/tsd",
