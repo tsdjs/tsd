@@ -39,7 +39,7 @@
 		"typedefinitions"
 	],
 	"dependencies": {
-		"@tsd/typescript": "~4.6.3",
+		"@tsd/typescript": "~4.7.3",
 		"eslint-formatter-pretty": "^4.1.0",
 		"globby": "^11.0.1",
 		"meow": "^9.0.0",
