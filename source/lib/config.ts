@@ -45,9 +45,9 @@ export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 			target: ScriptTarget.ES2017,
 			esModuleInterop: true,
 			...combinedCompilerOptions,
-			moduleResolution: combinedCompilerOptions.module === ModuleKind.NodeNext ?
+			moduleResolution: module === ModuleKind.NodeNext ?
 				ModuleResolutionKind.NodeNext :
-				combinedCompilerOptions.module === ModuleKind.Node16 ?
+				module === ModuleKind.Node16 ?
 					ModuleResolutionKind.Node16 :
 					ModuleResolutionKind.NodeJs,
 			skipLibCheck: false
