@@ -27,6 +27,11 @@ export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 		cwd
 	);
 
+	const combinedCompilerOptions = {
+		...tsConfigCompilerOptions,
+		...packageJsonCompilerOptions,
+	};
+
 	return {
 		directory: 'test-d',
 		...pkgConfig,
@@ -37,9 +42,14 @@ export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 			module: ModuleKind.CommonJS,
 			target: ScriptTarget.ES2017,
 			esModuleInterop: true,
-			...tsConfigCompilerOptions,
-			...packageJsonCompilerOptions,
-			moduleResolution: ModuleResolutionKind.NodeJs,
+			...combinedCompilerOptions,
+			moduleResolution: combinedCompilerOptions.module === undefined ?
+				ModuleResolutionKind.NodeJs :
+				combinedCompilerOptions.module === ModuleKind.NodeNext ?
+					ModuleResolutionKind.NodeNext :
+					combinedCompilerOptions.module === ModuleKind.Node16 ?
+						ModuleResolutionKind.Node16 :
+						ModuleResolutionKind.NodeJs,
 			skipLibCheck: false
 		}
 	};

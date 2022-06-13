@@ -1,0 +1,9 @@
+{
+	"name": "foo",
+	"exports": "./index.js",
+	"tsd": {
+		"compilerOptions": {
+			"module": "nodenext"
+		}
+	}
+}
