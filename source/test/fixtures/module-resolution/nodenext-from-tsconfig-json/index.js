@@ -1,1 +1,1 @@
-module.exports.default = "foo";
+module.exports.default = 'foo';
