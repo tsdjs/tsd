@@ -2,20 +2,17 @@
 
 > Check TypeScript type definitions
 
-
 ## Install
 
+```sh
+npm install tsd
 ```
-$ npm install tsd
-```
-
 
 ## Overview
 
 This tool lets you write tests for your type definitions (i.e. your `.d.ts` files) by creating files with the `.test-d.ts` extension.
 
 These `.test-d.ts` files will not be executed, and not even compiled in the standard way. Instead, these files will be parsed for special constructs such as `expectError<Foo>(bar)` and then statically analyzed against your type definitions.
-
 
 ## Usage
 
@@ -132,8 +129,12 @@ By default, `tsd` applies the following configuration:
 {
 	"strict": true,
 	"jsx": "react",
-	"target": "es2017",
-	"lib": ["es2017"],
+	"target": "es2020",
+	"lib": [
+		"es2020",
+		"dom",
+		"dom.iterable"
+	],
 	"module": "commonjs",
 	// The following option is set and is not overridable.
 	// It is set to `nodenext` if `module` is `nodenext`, `node16` if `module` is `node16` or `node` otherwise.
@@ -154,7 +155,7 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 }
 ```
 
-*Default options will apply if you don't override them explicitly.* You can't override the `moduleResolution` option. 
+*Default options will apply if you don't override them explicitly.* You can't override the `moduleResolution` option.
 
 ## Assertions
 
@@ -196,7 +197,6 @@ Print the type of `value` as a warning.
 
 Useful if you don't know the exact type of the expression passed to `printType()` or the type is too complex to write out by hand.
 
-
 ## Programmatic API
 
 You can use the programmatic API to retrieve the diagnostics and do something with them. This can be useful to run the tests with AVA, Jest or any other testing framework.
@@ -204,15 +204,13 @@ You can use the programmatic API to retrieve the diagnostics and do something wi
 ```ts
 import tsd from 'tsd';
 
-(async () => {
-	const diagnostics = await tsd();
+const diagnostics = await tsd();
 
-	console.log(diagnostics.length);
-	//=> 2
-})();
+console.log(diagnostics.length);
+//=> 2
 ```
 
-### tsd([options])
+### tsd(options?)
 
 Retrieve the type definition diagnostics of the project.
 
@@ -222,25 +220,21 @@ Type: `object`
 
 ##### cwd
 
-Type: `string`<br>
+Type: `string`\
 Default: `process.cwd()`
 
 Current working directory of the project to retrieve the diagnostics for.
 
 ##### typingsFile
 
-Type: `string`<br>
+Type: `string`\
 Default: The `types` property in `package.json`.
 
 Path to the type definition file you want to test. This can be useful when using a test runner to test specific type definitions per test.
 
 ##### testFiles
 
-Type: `string[]`<br>
+Type: `string[]`\
 Default: Finds files with `.test-d.ts` or `.test-d.tsx` extension.
 
 An array of test files with their path. Uses [globby](https://github.com/sindresorhus/globby) under the hood so that you can fine tune test file discovery.
-
-## License
-
-MIT © [Sam Verschueren](https://github.com/SamVerschueren)

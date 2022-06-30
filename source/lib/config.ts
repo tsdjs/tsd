@@ -40,9 +40,9 @@ export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 		compilerOptions: {
 			strict: true,
 			jsx: JsxEmit.React,
-			lib: parseRawLibs(['es2017', 'dom', 'dom.iterable'], cwd),
+			lib: parseRawLibs(['es2020', 'dom', 'dom.iterable'], cwd),
 			module,
-			target: ScriptTarget.ES2017,
+			target: ScriptTarget.ES2020,
 			esModuleInterop: true,
 			...combinedCompilerOptions,
 			moduleResolution: module === ModuleKind.NodeNext ?
