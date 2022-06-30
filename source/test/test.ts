@@ -138,6 +138,30 @@ test('allow specifying a lib in tsconfig.json', async t => {
 	verify(t, diagnostics, []);
 });
 
+test('use moduleResolution `nodenext` when module is `nodenext` in tsconfig.json', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/module-resolution/nodenext-from-tsconfig-json')});
+
+	verify(t, diagnostics, []);
+});
+
+test('use moduleResolution `nodenext` when module is `nodenext` in package.json', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/module-resolution/nodenext-from-package-json')});
+
+	verify(t, diagnostics, []);
+});
+
+test('use moduleResolution `node16` when module is `node16` in tsconfig.json', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/module-resolution/node16-from-tsconfig-json')});
+
+	verify(t, diagnostics, []);
+});
+
+test('use moduleResolution `node16` when module is `node16` in package.json', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/module-resolution/node16-from-package-json')});
+
+	verify(t, diagnostics, []);
+});
+
 test('add support for esm with esModuleInterop', async t => {
 	const diagnostics = await tsd({
 		cwd: path.join(__dirname, 'fixtures/esm')

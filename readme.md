@@ -135,8 +135,9 @@ By default, `tsd` applies the following configuration:
 	"target": "es2017",
 	"lib": ["es2017"],
 	"module": "commonjs",
-	// The following option is set and is not overridable:
-	"moduleResolution": "node"
+	// The following option is set and is not overridable.
+	// It is set to `nodenext` if `module` is `nodenext`, `node16` if `module` is `node16` or `node` otherwise.
+	"moduleResolution": "node" | "node16" | "nodenext"
 }
 ```
 
@@ -153,7 +154,7 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 }
 ```
 
-*Default options will apply if you don't override them explicitly.* You can't override the `moduleResolution` option.
+*Default options will apply if you don't override them explicitly.* You can't override the `moduleResolution` option. 
 
 ## Assertions
 
