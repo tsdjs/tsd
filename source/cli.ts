@@ -26,8 +26,15 @@ const cli = meow(`
 			throw new Error(formatter(diagnostics));
 		}
 	} catch (error: unknown) {
-		if (error && typeof (error as Error).message === 'string') {
-			console.error((error as Error).message);
+		const potentialError = error as Error | undefined | null;
+		const errorMessage =
+			typeof potentialError?.stack === 'string' ?
+				potentialError.stack :
+				typeof potentialError?.message === 'string' ?
+					potentialError?.message :
+					undefined;
+		if (errorMessage) {
+			console.error(`Error running tsd: ${errorMessage}`);
 		}
 
 		process.exit(1);
