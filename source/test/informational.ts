@@ -16,3 +16,14 @@ test('print type', async t => {
 		[10, 0, 'warning', 'Type for expression `\'foo\'` is: `"foo"`'],
 	]);
 });
+
+test('expect doc comment', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/informational/expect-doc-comment')});
+
+	verify(t, diagnostics, [
+        [5, 0, 'error', 'Documentation comment for expression \`noDocComment\` not found.'],
+		[10, 0, 'error', 'Expected documentation comment for expression \`foo\` not specified.'],
+        [11, 0, 'error', 'Expected documentation comment for expression \`foo\` should be a string literal.'],
+        [12, 0, 'error', 'Expected documentation comment \`BarFoo\` for expression \`foo\` does not match \`FooBar\`.'],
+	]);
+});
