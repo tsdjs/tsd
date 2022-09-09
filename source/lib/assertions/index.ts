@@ -7,7 +7,7 @@ import {
 	isNotAssignable,
 	expectDeprecated,
 	expectNotDeprecated,
-	prinTypeWarning,
+	printTypeWarning,
 } from './handlers';
 
 export enum Assertion {
@@ -28,7 +28,7 @@ const assertionHandlers = new Map<Assertion, Handler>([
 	[Assertion.EXPECT_NOT_ASSIGNABLE, isNotAssignable],
 	[Assertion.EXPECT_DEPRECATED, expectDeprecated],
 	[Assertion.EXPECT_NOT_DEPRECATED, expectNotDeprecated],
-	[Assertion.PRINT_TYPE, prinTypeWarning]
+	[Assertion.PRINT_TYPE, printTypeWarning]
 ]);
 
 /**

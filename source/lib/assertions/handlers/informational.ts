@@ -3,13 +3,13 @@ import {Diagnostic} from '../../interfaces';
 import {makeDiagnostic} from '../../utils';
 
 /**
- * Emits a warning diagnostic for every call experession encountered containing the type of the first argument.
+ * Emits a warning diagnostic for every call expression encountered containing the type of the first argument.
  *
  * @param checker - The TypeScript type checker.
  * @param nodes - The `printType` AST nodes.
  * @return List of warning diagnostics containing the type of the first argument.
  */
-export const prinTypeWarning = (checker: TypeChecker, nodes: Set<CallExpression>): Diagnostic[] => {
+export const printTypeWarning = (checker: TypeChecker, nodes: Set<CallExpression>): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
 	if (!nodes) {
