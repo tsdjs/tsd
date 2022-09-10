@@ -461,3 +461,9 @@ test('assertions should be identified if imported as an aliased module', async t
 
 	verify(t, diagnostics, []);
 });
+
+test('assertions should be identified if aliased', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased-import/aliased-assertion')});
+
+	verify(t, diagnostics, []);
+});
