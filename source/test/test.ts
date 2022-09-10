@@ -455,3 +455,9 @@ test('prints the types of expressions passed to `printType` helper', async t => 
 		[10, 0, 'warning', 'Type for expression `\'foo\'` is: `"foo"`'],
 	]);
 });
+
+test('assertions should be identified if imported as an aliased module', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased-import/aliased-module')});
+
+	verify(t, diagnostics, []);
+});

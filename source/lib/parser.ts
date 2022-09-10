@@ -1,4 +1,4 @@
-import {Program, Node, CallExpression, forEachChild, isCallExpression, Identifier} from '@tsd/typescript';
+import {Program, Node, CallExpression, forEachChild, isCallExpression, Identifier, isPropertyAccessExpression} from '@tsd/typescript';
 import {Assertion} from './assertions';
 import {Location, Diagnostic} from './interfaces';
 
@@ -17,7 +17,11 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	 */
 	function walkNodes(node: Node) {
 		if (isCallExpression(node)) {
-			const identifier = (node.expression as Identifier).getText();
+			const expression = isPropertyAccessExpression(node.expression) ?
+				node.expression.name :
+				node.expression;
+
+			const identifier = (expression as Identifier).getText();
 
 			// Check if the call type is a valid assertion
 			if (assertionFnNames.has(identifier)) {
