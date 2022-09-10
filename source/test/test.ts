@@ -457,13 +457,19 @@ test('prints the types of expressions passed to `printType` helper', async t => 
 });
 
 test('assertions should be identified if imported as an aliased module', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased-import/aliased-module')});
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased/aliased-module')});
+
+	verify(t, diagnostics, []);
+});
+
+test('assertions should be identified if imported as an alias', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased/aliased-assertion')});
 
 	verify(t, diagnostics, []);
 });
 
 test('assertions should be identified if aliased', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased-import/aliased-assertion')});
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased/aliased-const')});
 
 	verify(t, diagnostics, []);
 });
