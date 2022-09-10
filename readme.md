@@ -197,6 +197,10 @@ Print the type of `value` as a warning.
 
 Useful if you don't know the exact type of the expression passed to `printType()` or the type is too complex to write out by hand.
 
+### expectDocCommentIncludes&lt;T&gt;(value)
+
+Check that the documentation comment of `value` includes the provided string literal `T`.
+
 ## Programmatic API
 
 You can use the programmatic API to retrieve the diagnostics and do something with them. This can be useful to run the tests with AVA, Jest or any other testing framework.
