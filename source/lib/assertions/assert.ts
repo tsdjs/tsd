@@ -83,12 +83,12 @@ export const printType = (expression: any) => {
 };
 
 /**
- * Assert that the documentation comment of `expression` is
- * the same as the given string literal in type `T`.
- * 
- * @param expression - Expression whose documentation comment should match the given string literal type `T`.
+ * Assert that the documentation comment of `expression` includes
+ * the given string literal in type `T`.
+ *
+ * @param expression - Expression whose documentation comment should include the given string literal type `T`.
  */
 // @ts-expect-error
-export const expectDocComment = <T>(expression: any) => {
+export const expectDocCommentIncludes = <T>(expression: any) => {
 	// Do nothing, the TypeScript compiler handles this for us
 };

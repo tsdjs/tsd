@@ -1,13 +1,15 @@
-import {expectDocComment} from '../../../..';
+import {expectDocCommentIncludes} from '../../../..';
 
 const noDocComment = 'no doc comment';
 
-expectDocComment<'no doc comment'>(noDocComment);
+expectDocCommentIncludes<'no doc comment'>(noDocComment);
 
 /** FooBar */
 const foo = 'bar';
 
-expectDocComment(foo);
-expectDocComment<boolean>(foo);
-expectDocComment<'BarFoo'>(foo);
-expectDocComment<'FooBar'>(foo);
+expectDocCommentIncludes(foo);
+expectDocCommentIncludes<boolean>(foo);
+expectDocCommentIncludes<'BarFoo'>(foo);
+expectDocCommentIncludes<'FooBar'>(foo);
+expectDocCommentIncludes<'Foo'>(foo);
+expectDocCommentIncludes<'Bar'>(foo);

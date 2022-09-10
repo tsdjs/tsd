@@ -8,7 +8,7 @@ import {
 	expectDeprecated,
 	expectNotDeprecated,
 	printTypeWarning,
-	expectDocComment,
+	expectDocCommentIncludes,
 } from './handlers';
 
 export enum Assertion {
@@ -20,7 +20,7 @@ export enum Assertion {
 	EXPECT_DEPRECATED = 'expectDeprecated',
 	EXPECT_NOT_DEPRECATED = 'expectNotDeprecated',
 	PRINT_TYPE = 'printType',
-	EXPECT_DOC_COMMENT = 'expectDocComment',
+	EXPECT_DOC_COMMENT_INCLUDES = 'expectDocCommentIncludes',
 }
 
 // List of diagnostic handlers attached to the assertion
@@ -31,7 +31,7 @@ const assertionHandlers = new Map<Assertion, Handler>([
 	[Assertion.EXPECT_DEPRECATED, expectDeprecated],
 	[Assertion.EXPECT_NOT_DEPRECATED, expectNotDeprecated],
 	[Assertion.PRINT_TYPE, printTypeWarning],
-	[Assertion.EXPECT_DOC_COMMENT, expectDocComment],
+	[Assertion.EXPECT_DOC_COMMENT_INCLUDES, expectDocCommentIncludes],
 ]);
 
 /**

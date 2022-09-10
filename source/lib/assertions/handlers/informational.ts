@@ -28,13 +28,13 @@ export const printTypeWarning = (checker: TypeChecker, nodes: Set<CallExpression
 
 /**
  * Verifies that the documentation comment for the argument of the assertion
- * matches the string literal generic type of the assertion.
+ * includes the string literal generic type of the assertion.
  *
  * @param checker - The TypeScript type checker.
- * @param nodes - The `expectDocComment` AST nodes.
+ * @param nodes - The `expectDocCommentIncludes` AST nodes.
  * @return List of diagnostics.
  */
-export const expectDocComment = (checker: TypeChecker, nodes: Set<CallExpression>): Diagnostic[] => {
+export const expectDocCommentIncludes = (checker: TypeChecker, nodes: Set<CallExpression>): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
 	if (!nodes) {
@@ -64,9 +64,12 @@ export const expectDocComment = (checker: TypeChecker, nodes: Set<CallExpression
 			continue;
 		}
 
-		if (docComment !== expectedDocComment) {
-			diagnostics.push(makeDiagnostic(node, `Expected documentation comment \`${expectedDocComment}\` for expression \`${expression}\` does not match \`${docComment}\`.`));
+		if (docComment.includes(expectedDocComment)) {
+			// Do nothing
+			continue;
 		}
+
+		diagnostics.push(makeDiagnostic(node, `Documentation comment \`${docComment}\` for expression \`${expression}\` does not include expected \`${expectedDocComment}\`.`));
 	}
 
 	return diagnostics;
