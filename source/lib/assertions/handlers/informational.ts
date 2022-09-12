@@ -3,7 +3,7 @@ import {Diagnostic} from '../../interfaces';
 import {makeDiagnostic} from '../../utils';
 
 /**
- * Emits a warning diagnostic for every call experession encountered containing the type of the first argument.
+ * Prints the type of the argument of the assertion as a warning.
  *
  * @param checker - The TypeScript type checker.
  * @param nodes - The `printType` AST nodes.
