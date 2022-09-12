@@ -197,9 +197,9 @@ Print the type of `value` as a warning.
 
 Useful if you don't know the exact type of the expression passed to `printType()` or the type is too complex to write out by hand.
 
-### expectDocCommentIncludes&lt;T&gt;(value)
+### expectDocCommentIncludes&lt;T&gt;(expression: any)
 
-Check that the documentation comment of `value` includes the provided string literal `T`.
+Asserts that the documentation comment of `expression` includes string literal type `T`.
 
 ## Programmatic API
 

@@ -83,10 +83,9 @@ export const printType = (expression: any) => {
 };
 
 /**
- * Assert that the documentation comment of `expression` includes
- * the given string literal in type `T`.
+ * Assert that the documentation comment of `expression` includes string literal type `T`.
  *
- * @param expression - Expression whose documentation comment should include the given string literal type `T`.
+ * @param expression - Expression whose documentation comment should include string literal type `T`.
  */
 // @ts-expect-error
 export const expectDocCommentIncludes = <T>(expression: any) => {

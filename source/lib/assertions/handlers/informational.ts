@@ -27,7 +27,7 @@ export const printTypeWarning = (checker: TypeChecker, nodes: Set<CallExpression
 };
 
 /**
- * Verifies that the documentation comment for the argument of the assertion
+ * Asserts that the documentation comment for the argument of the assertion
  * includes the string literal generic type of the assertion.
  *
  * @param checker - The TypeScript type checker.
