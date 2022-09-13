@@ -33,9 +33,9 @@ const cli = meow(`
 			alias: 't',
 		},
 		files: {
-			isMultiple: true,
 			type: 'string',
 			alias: 'f',
+			isMultiple: true,
 		},
 	},
 });
