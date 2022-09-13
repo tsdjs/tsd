@@ -50,7 +50,7 @@ const cli = meow(`
 	}
 
 	try {
-		const cwd = cli.input.at(0) ?? process.cwd();
+		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
 		const typingsFile = cli.flags.typings;
 		const testFiles = cli.flags.files;
 
