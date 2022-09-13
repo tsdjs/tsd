@@ -75,6 +75,8 @@ export const expectNotDeprecated = (expression: any) => {
 /**
  * Asserts that the type and return type of `expression` is `never`.
  *
+ * Useful for checking that all branches are covered.
+ *
  * @param expression - Expression that should be `never`.
  */
 export const expectNever = (expression: never): never => {
