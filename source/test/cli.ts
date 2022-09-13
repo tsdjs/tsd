@@ -35,28 +35,18 @@ test('provide a path', async t => {
 });
 
 test('cli help flag', async t => {
-	const runTest = (arg: '--help' | '-h') => {
-		const {exitCode} = execa.commandSync(`dist/cli.js ${arg}`);
+	const {exitCode} = await execa('dist/cli.js', ['--help']);
 
-		t.is(exitCode, 0);
-	};
-
-	runTest('--help');
-	runTest('-h');
+	t.is(exitCode, 0);
 });
 
 test('cli version flag', async t => {
 	const pkg = readPkgUp.sync({normalize: false})?.packageJson ?? {};
 
-	const runTest = (arg: '--version' | '-v') => {
-		const {exitCode, stdout} = execa.commandSync(`dist/cli.js ${arg}`);
+	const {exitCode, stdout} = await execa('dist/cli.js', ['--version']);
 
-		t.is(exitCode, 0);
-		t.is(stdout, pkg.version);
-	};
-
-	runTest('--version');
-	runTest('-v');
+	t.is(exitCode, 0);
+	t.is(stdout, pkg.version);
 });
 
 test('cli typings flag', async t => {

@@ -10,12 +10,12 @@ const cli = meow(`
 	  The given directory must contain a package.json and a typings file.
 
 	Info
-	  --help,    -h  Display help text
-	  --version, -v  Display version info
+	  --help,        Display help text
+	  --version,     Display version info
 
 	Options
 	  --typings, -t  Type definition file to test  [Default: "types" property in package.json]
-	  --files,   -f  Glob of files to test         [Default: /path/test-d/**/*.test-d.ts or .tsx]
+	  --files,   -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
 
 	Examples
 	  $ tsd /path/to/project
@@ -41,14 +41,6 @@ const cli = meow(`
 });
 
 (async () => {
-	if (cli.flags.h) {
-		cli.showHelp(0);
-	}
-
-	if (cli.flags.v) {
-		cli.showVersion();
-	}
-
 	try {
 		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
 		const typingsFile = cli.flags.typings;
