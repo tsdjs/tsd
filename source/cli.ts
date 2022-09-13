@@ -7,6 +7,10 @@ const cli = meow(`
 	Usage
 	  $ tsd [path]
 
+	Options
+	  --help,    -h  Display help text
+	  --version, -v  Display version info
+
 	Examples
 	  $ tsd /path/to/project
 
@@ -17,6 +21,14 @@ const cli = meow(`
 `);
 
 (async () => {
+	if (cli.flags.h) {
+		cli.showHelp(0);
+	}
+
+	if (cli.flags.v) {
+		cli.showVersion();
+	}
+
 	try {
 		const options = cli.input.length > 0 ? {cwd: cli.input[0]} : undefined;
 
