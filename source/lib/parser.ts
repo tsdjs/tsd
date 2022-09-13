@@ -1,4 +1,4 @@
-import {Program, Node, CallExpression, forEachChild, isCallExpression, Identifier} from '@tsd/typescript';
+import {Program, Node, CallExpression, forEachChild, isCallExpression, isPropertyAccessExpression, SymbolFlags} from '@tsd/typescript';
 import {Assertion} from './assertions';
 import {Location, Diagnostic} from './interfaces';
 
@@ -11,13 +11,24 @@ const assertionFnNames = new Set<string>(Object.values(Assertion));
  */
 export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpression>> => {
 	const assertions = new Map<Assertion, Set<CallExpression>>();
+	const checker = program.getTypeChecker();
 
 	/**
 	 * Recursively loop over all the nodes and extract all the assertions out of the source files.
 	 */
 	function walkNodes(node: Node) {
 		if (isCallExpression(node)) {
-			const identifier = (node.expression as Identifier).getText();
+			const expression = isPropertyAccessExpression(node.expression) ?
+				node.expression.name :
+				node.expression;
+
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const maybeAlias = checker.getSymbolAtLocation(expression)!;
+			const symbol = maybeAlias.flags & SymbolFlags.Alias ?
+				checker.getAliasedSymbol(maybeAlias) :
+				maybeAlias;
+
+			const identifier = symbol.getName();
 
 			// Check if the call type is a valid assertion
 			if (assertionFnNames.has(identifier)) {

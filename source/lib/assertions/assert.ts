@@ -1,59 +1,59 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
- * Check that the type of `value` is identical to type `T`.
+ * Asserts that the type of `expression` is identical to type `T`.
  *
- * @param value - Value that should be identical to type `T`.
+ * @param expression - Expression that should be identical to type `T`.
  */
 // @ts-expect-error
-export const expectType = <T>(value: T) => {
+export const expectType = <T>(expression: T) => {
 	// Do nothing, the TypeScript compiler handles this for us
 };
 
 /**
- * Check that the type of `value` is not identical to type `T`.
+ * Asserts that the type of `expression` is not identical to type `T`.
  *
- * @param value - Value that should be identical to type `T`.
+ * @param expression - Expression that should not be identical to type `T`.
  */
 // @ts-expect-error
-export const expectNotType = <T>(value: any) => {
+export const expectNotType = <T>(expression: any) => {
 	// eslint-disable-next-line no-warning-comments
 	// TODO Use a `not T` type when possible https://github.com/microsoft/TypeScript/pull/29317
 	// Do nothing, the TypeScript compiler handles this for us
 };
 
 /**
- * Check that the type of `value` is assignable to type `T`.
+ * Asserts that the type of `expression` is assignable to type `T`.
  *
- * @param value - Value that should be assignable to type `T`.
+ * @param expression - Expression that should be assignable to type `T`.
  */
 // @ts-expect-error
-export const expectAssignable = <T>(value: T) => {
+export const expectAssignable = <T>(expression: T) => {
 	// Do nothing, the TypeScript compiler handles this for us
 };
 
 /**
- * Check that the type of `value` is not assignable to type `T`.
+ * Asserts that the type of `expression` is not assignable to type `T`.
  *
- * @param value - Value that should not be assignable to type `T`.
+ * @param expression - Expression that should not be assignable to type `T`.
  */
 // @ts-expect-error
-export const expectNotAssignable = <T>(value: any) => {
+export const expectNotAssignable = <T>(expression: any) => {
 	// Do nothing, the TypeScript compiler handles this for us
 };
 
 /**
- * Assert the value to throw an argument error.
+ * Asserts that `expression` throws an error.
  *
- * @param value - Value that should be checked.
+ * @param expression - Expression that should throw an error.
  */
 // @ts-expect-error
-export const expectError = <T = any>(value: T) => {
+export const expectError = <T = any>(expression: T) => {
 	// Do nothing, the TypeScript compiler handles this for us
 };
 
 /**
- * Assert that the `expression` provided is marked as `@deprecated`.
+ * Asserts that `expression` is marked as `@deprecated`.
  *
  * @param expression - Expression that should be marked as `@deprecated`.
  */
@@ -63,7 +63,7 @@ export const expectDeprecated = (expression: any) => {
 };
 
 /**
- * Assert that the `expression` provided is not marked as `@deprecated`.
+ * Asserts that `expression` is not marked as `@deprecated`.
  *
  * @param expression - Expression that should not be marked as `@deprecated`.
  */
@@ -73,7 +73,18 @@ export const expectNotDeprecated = (expression: any) => {
 };
 
 /**
- * Will print a warning with the type of the expression passed as argument.
+ * Asserts that the type and return type of `expression` is `never`.
+ *
+ * Useful for checking that all branches are covered.
+ *
+ * @param expression - Expression that should be `never`.
+ */
+export const expectNever = (expression: never): never => {
+	return expression;
+};
+
+/**
+ * Prints the type of `expression` as a warning.
  *
  * @param expression - Expression whose type should be printed as a warning.
  */

@@ -456,3 +456,21 @@ test('prints the types of expressions passed to `printType` helper', async t => 
 		[11, 0, 'warning', 'Type for expression `bigType` is: `{ prop1: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop2: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop3: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop4: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop5: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop6: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop7: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop8: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop9: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; }`']
 	]);
 });
+
+test('assertions should be identified if imported as an aliased module', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased/aliased-module')});
+
+	verify(t, diagnostics, []);
+});
+
+test('assertions should be identified if imported as an alias', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased/aliased-assertion')});
+
+	verify(t, diagnostics, []);
+});
+
+test('assertions should be identified if aliased', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/aliased/aliased-const')});
+
+	verify(t, diagnostics, []);
+});

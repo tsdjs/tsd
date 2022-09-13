@@ -4,3 +4,5 @@ declare const concat: {
 };
 
 export default concat;
+
+export const returnsNever: () => never;
