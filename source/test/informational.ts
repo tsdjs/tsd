@@ -18,7 +18,7 @@ test('print type', async t => {
 	]);
 });
 
-test('expect doc comment', async t => {
+test('expect doc comment includes', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/informational/expect-doc-comment')});
 
 	verify(t, diagnostics, [

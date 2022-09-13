@@ -94,7 +94,7 @@ export const printType = (expression: any) => {
 };
 
 /**
- * Assert that the documentation comment of `expression` includes string literal type `T`.
+ * Asserts that the documentation comment of `expression` includes string literal type `T`.
  *
  * @param expression - Expression whose documentation comment should include string literal type `T`.
  */
