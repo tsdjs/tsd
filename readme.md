@@ -159,41 +159,37 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 
 ## Assertions
 
-### expectType&lt;T&gt;(value)
+### expectType&lt;T&gt;(expression: T)
 
-Check that the type of `value` is identical to type `T`.
+Asserts that the type of `expression` is identical to type `T`.
 
-### expectNotType&lt;T&gt;(value)
+### expectNotType&lt;T&gt;(expression: any)
 
-Check that the type of `value` is not identical to type `T`.
+Asserts that the type of `expression` is not identical to type `T`.
 
-### expectAssignable&lt;T&gt;(value)
+### expectAssignable&lt;T&gt;(expression: T)
 
-Check that the type of `value` is assignable to type `T`.
+Asserts that the type of `expression` is assignable to type `T`.
 
-### expectNotAssignable&lt;T&gt;(value)
+### expectNotAssignable&lt;T&gt;(expression: any)
 
-Check that the type of `value` is not assignable to type `T`.
+Asserts that the type of `expression` is not assignable to type `T`.
 
-### expectError(function)
+### expectError&lt;T = any&gt;(expression: T)
 
-Check if the function call has argument type errors.
+Asserts that `expression` throws an error.
 
-### expectError&lt;T&gt;(value)
+### expectDeprecated(expression: any)
 
-Check if a value is of the provided type `T`.
+Asserts that `expression` is marked as [`@deprecated`](https://jsdoc.app/tags-deprecated.html).
 
-### expectDeprecated(value)
+### expectNotDeprecated(expression: any)
 
-Check that `value` is marked a [`@deprecated`](https://jsdoc.app/tags-deprecated.html).
+Asserts that `expression` is not marked as [`@deprecated`](https://jsdoc.app/tags-deprecated.html).
 
-### expectNotDeprecated(value)
+### printType(expression: any)
 
-Check that `value` is not marked a [`@deprecated`](https://jsdoc.app/tags-deprecated.html).
-
-### printType(value)
-
-Print the type of `value` as a warning.
+Prints the type of `expression` as a warning.
 
 Useful if you don't know the exact type of the expression passed to `printType()` or the type is too complex to write out by hand.
 

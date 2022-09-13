@@ -3,7 +3,7 @@ import {Diagnostic} from '../../interfaces';
 import {makeDiagnostic} from '../../utils';
 
 /**
- * Verifies that the argument of the assertion is identical to the generic type of the assertion.
+ * Asserts that the argument of the assertion is identical to the generic type of the assertion.
  *
  * @param checker - The TypeScript type checker.
  * @param nodes - The `expectType` AST nodes.
@@ -52,7 +52,7 @@ export const isIdentical = (checker: TypeChecker, nodes: Set<CallExpression>): D
 };
 
 /**
- * Verifies that the argument of the assertion is not identical to the generic type of the assertion.
+ * Asserts that the argument of the assertion is not identical to the generic type of the assertion.
  *
  * @param checker - The TypeScript type checker.
  * @param nodes - The `expectNotType` AST nodes.

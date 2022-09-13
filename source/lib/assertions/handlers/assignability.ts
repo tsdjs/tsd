@@ -3,10 +3,10 @@ import {Diagnostic} from '../../interfaces';
 import {makeDiagnostic} from '../../utils';
 
 /**
- * Verifies that the argument of the assertion is not assignable to the generic type of the assertion.
+ * Asserts that the argument of the assertion is not assignable to the generic type of the assertion.
  *
  * @param checker - The TypeScript type checker.
- * @param nodes - The `expectType` AST nodes.
+ * @param nodes - The `expectNotAssignable` AST nodes.
  * @return List of custom diagnostics.
  */
 export const isNotAssignable = (checker: TypeChecker, nodes: Set<CallExpression>): Diagnostic[] => {
