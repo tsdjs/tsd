@@ -7,18 +7,36 @@ const cli = meow(`
 	Usage
 	  $ tsd [path]
 
-	Options
+	Info
 	  --help,    -h  Display help text
 	  --version, -v  Display version info
 
+	Options
+	  --typings, -t  Type definition file to test  [Default: "types" property in package.json]
+	  --files,   -f  Glob of files to test         [Default: /**/*.test-d.ts(x)]
+
 	Examples
-	  $ tsd /path/to/project
+	  $ tsd /path/to/project/with/typings/file
+
+	  $ tsd --files /test/some/folder/*.ts --files /test/other/folder/*.ts
 
 	  $ tsd
 
 	    index.test-d.ts
 	    ✖  10:20  Argument of type string is not assignable to parameter of type number.
-`);
+`, {
+	flags: {
+		typings: {
+			type: 'string',
+			alias: 't',
+		},
+		files: {
+			isMultiple: true,
+			type: 'string',
+			alias: 'f',
+		},
+	},
+});
 
 (async () => {
 	if (cli.flags.h) {
@@ -30,7 +48,11 @@ const cli = meow(`
 	}
 
 	try {
-		const options = cli.input.length > 0 ? {cwd: cli.input[0]} : undefined;
+		const cwd = cli.input.at(0) ?? process.cwd();
+		const typingsFile = cli.flags.typings;
+		const testFiles = cli.flags.files;
+
+		const options = {cwd, typingsFile, testFiles};
 
 		const diagnostics = await tsd(options);
 

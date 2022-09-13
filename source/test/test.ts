@@ -365,7 +365,8 @@ test('specify test files manually', async t => {
 	const diagnostics = await tsd({
 		cwd: path.join(__dirname, 'fixtures/specify-test-files'),
 		testFiles: [
-			'unknown.test.ts'
+			'unknown.test.ts',
+			'second.test.ts'
 		]
 	});
 

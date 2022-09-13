@@ -58,3 +58,50 @@ test('cli version flag', async t => {
 	runTest('--version');
 	runTest('-v');
 });
+
+test('cli typings flag', async t => {
+	const runTest = async (arg: '--typings' | '-t') => {
+		const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', [arg, 'utils/index.d.ts'], {
+			cwd: path.join(__dirname, 'fixtures/typings-custom-dir')
+		}));
+
+		t.is(exitCode, 1);
+		t.true(stderr.includes('✖  5:19  Argument of type number is not assignable to parameter of type string.'));
+	};
+
+	await runTest('--typings');
+	await runTest('-t');
+});
+
+test('cli files flag', async t => {
+	const runTest = async (arg: '--files' | '-f') => {
+		const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', [arg, 'unknown.test.ts'], {
+			cwd: path.join(__dirname, 'fixtures/specify-test-files')
+		}));
+
+		t.is(exitCode, 1);
+		t.true(stderr.includes('✖  5:19  Argument of type number is not assignable to parameter of type string.'));
+	};
+
+	await runTest('--files');
+	await runTest('-f');
+});
+
+test('cli files flag array', async t => {
+	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', ['--files', 'unknown.test.ts', '--files', 'second.test.ts'], {
+		cwd: path.join(__dirname, 'fixtures/specify-test-files')
+	}));
+
+	t.is(exitCode, 1);
+	t.true(stderr.includes('✖  5:19  Argument of type number is not assignable to parameter of type string.'));
+});
+
+test('cli typings and files flags', async t => {
+	const typingsFile = 'dist/test/fixtures/typings-custom-dir/utils/index.d.ts';
+	const testFile = 'dist/test/fixtures/typings-custom-dir/index.test-d.ts';
+
+	const {exitCode, stderr} = t.throws<ExecaError>(() => execa.commandSync(`dist/cli.js -t ${typingsFile} -f ${testFile}`));
+
+	t.is(exitCode, 1);
+	t.true(stderr.includes('✖  5:19  Argument of type number is not assignable to parameter of type string.'));
+});
