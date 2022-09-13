@@ -20,10 +20,12 @@ const findTypingsFile = async (pkg: PackageJsonWithTsdConfig, options: Options):
 		pkg.typings ||
 		(pkg.main && path.parse(pkg.main).name + '.d.ts') ||
 		'index.d.ts';
-	const typingsExist = await pathExists(path.join(options.cwd, typings));
+
+	const typingsPath = path.join(options.cwd, typings);
+	const typingsExist = await pathExists(typingsPath);
 
 	if (!typingsExist) {
-		throw new Error(`The type definition \`${typings}\` does not exist. Create one and try again.`);
+		throw new Error(`The type definition \`${typings}\` does not exist at \`${typingsPath}\`. Is the path correct? Create one and try again.`);
 	}
 
 	return typings;
@@ -41,7 +43,7 @@ const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: str
 	const testFiles = await globby(testFilesPattern, {cwd});
 
 	if (testFiles.length === 0) {
-		throw new Error('Could not find any test files. Create one and try again');
+		throw new Error('Could not find any test files with the given pattern(s). Create one and try again.');
 	}
 
 	return testFiles.map(file => path.join(cwd, file));
@@ -63,7 +65,7 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
 
 	if (testFiles.length === 0 && !testDirExists) {
-		throw new Error(`The test file \`${testFile}\` or \`${tsxTestFile}\` does not exist. Create one and try again.`);
+		throw new Error(`The test file \`${testFile}\` or \`${tsxTestFile}\` does not exist in \`${options.cwd}\`. Create one and try again.`);
 	}
 
 	if (testFiles.length === 0) {
@@ -82,7 +84,7 @@ export default async (options: Options = {cwd: process.cwd()}): Promise<Diagnost
 	const pkgResult = await readPkgUp({cwd: options.cwd});
 
 	if (!pkgResult) {
-		throw new Error('No `package.json` file found. Make sure you are running the command in a Node.js project.');
+		throw new Error(`No \`package.json\` file found in \`${options.cwd}\`. Make sure you are running the command in a Node.js project.`);
 	}
 
 	const pkg = pkgResult.packageJson as PackageJsonWithTsdConfig;
