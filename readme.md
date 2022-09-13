@@ -1,11 +1,11 @@
 # tsd ![CI](https://github.com/SamVerschueren/tsd/workflows/CI/badge.svg)
 
-Check TypeScript type definitions
+> Check TypeScript type definitions
 
 ## Install
 
 ```sh
-npm install tsd --save-dev
+npm install --save-dev tsd
 ```
 
 ## Overview
@@ -17,7 +17,7 @@ These `.test-d.ts` files will not be executed, and not even compiled in the stan
 The `tsd` CLI will search for the main `.d.ts` file in the current or specified directory, and test it with any `.test-d.ts` files in either the same directory or a test sub-directory (default: `test-d`):
 
 ```sh
-$ [npx] tsd [path]
+[npx] tsd [path]
 ```
 
 Use `tsd --help` for usage information. See [Order of Operations](#order-of-operations) for more details on how `tsd` finds and executes tests.
