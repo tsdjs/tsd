@@ -1,4 +1,4 @@
-import {CallExpression, TypeChecker} from '@tsd/typescript';
+import {CallExpression, TypeChecker, TypeFlags} from '@tsd/typescript';
 import {Diagnostic} from '../../interfaces';
 import {makeDiagnostic} from '../../utils';
 
@@ -77,6 +77,31 @@ export const isNotIdentical = (checker: TypeChecker, nodes: Set<CallExpression>)
 
 		if (checker.isTypeIdenticalTo(expectedType, argumentType)) {
 			diagnostics.push(makeDiagnostic(node, `Parameter type \`${checker.typeToString(expectedType)}\` is identical to argument type \`${checker.typeToString(argumentType)}\`.`));
+		}
+	}
+
+	return diagnostics;
+};
+
+/**
+ * Verifies that the argument of the assertion is `never`
+ *
+ * @param checker - The TypeScript type checker.
+ * @param nodes - The `expectNever` AST nodes.
+ * @return List of custom diagnostics.
+ */
+export const isNever = (checker: TypeChecker, nodes: Set<CallExpression>): Diagnostic[] => {
+	const diagnostics: Diagnostic[] = [];
+
+	if (!nodes) {
+		return diagnostics;
+	}
+
+	for (const node of nodes) {
+		const argumentType = checker.getTypeAtLocation(node.arguments[0]);
+
+		if (argumentType.flags !== TypeFlags.Never) {
+			diagnostics.push(makeDiagnostic(node, `Argument of type \`${checker.typeToString(argumentType)}\` is not \`never\`.`));
 		}
 	}
 

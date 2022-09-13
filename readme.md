@@ -193,6 +193,12 @@ Prints the type of `expression` as a warning.
 
 Useful if you don't know the exact type of the expression passed to `printType()` or the type is too complex to write out by hand.
 
+### expectNever(expression: never)
+
+Asserts that the type and return type of `expression` is `never`.
+
+Useful for checking that all branches are covered.
+
 ## Programmatic API
 
 You can use the programmatic API to retrieve the diagnostics and do something with them. This can be useful to run the tests with AVA, Jest or any other testing framework.
