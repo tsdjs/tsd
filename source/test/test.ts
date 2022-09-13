@@ -453,6 +453,7 @@ test('prints the types of expressions passed to `printType` helper', async t => 
 		[8, 0, 'warning', 'Type for expression `null as never` is: `never`'],
 		[9, 0, 'warning', 'Type for expression `null as unknown` is: `unknown`'],
 		[10, 0, 'warning', 'Type for expression `\'foo\'` is: `"foo"`'],
+		[11, 0, 'warning', 'Type for expression `bigType` is: `{ prop1: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop2: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop3: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop4: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop5: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop6: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop7: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop8: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; prop9: SuperTypeWithAnExessiveLongNameThatTakesUpTooMuchSpace; }`']
 	]);
 });
 
