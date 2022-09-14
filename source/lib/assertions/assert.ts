@@ -92,3 +92,13 @@ export const expectNever = (expression: never): never => {
 export const printType = (expression: any) => {
 	// Do nothing, the TypeScript compiler handles this for us
 };
+
+/**
+ * Asserts that the documentation comment of `expression` includes string literal type `T`.
+ *
+ * @param expression - Expression whose documentation comment should include string literal type `T`.
+ */
+// @ts-expect-error
+export const expectDocCommentIncludes = <T>(expression: any) => {
+	// Do nothing, the TypeScript compiler handles this for us
+};

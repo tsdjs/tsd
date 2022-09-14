@@ -172,6 +172,10 @@ Asserts that the type and return type of `expression` is `never`.
 
 Useful for checking that all branches are covered.
 
+### expectDocCommentIncludes&lt;T&gt;(expression: any)
+
+Asserts that the documentation comment of `expression` includes string literal type `T`.
+
 ## Configuration
 
 `tsd` is designed to be used with as little configuration as possible. However, if you need a bit more control, a project's `package.json` and the `tsd` CLI offer a limited set of configurations.
