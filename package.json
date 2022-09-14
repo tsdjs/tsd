@@ -39,7 +39,7 @@
 		"typedefinitions"
 	],
 	"dependencies": {
-		"@tsd/typescript": "^4.8.2",
+		"@tsd/typescript": "~4.8.3",
 		"eslint-formatter-pretty": "^4.1.0",
 		"globby": "^11.0.1",
 		"meow": "^9.0.0",
@@ -61,7 +61,7 @@
 		"execa": "^5.0.0",
 		"react": "^16.9.0",
 		"rxjs": "^6.5.3",
-		"typescript": "^4.8.2"
+		"typescript": "~4.8.3"
 	},
 	"ava": {
 		"timeout": "2m",
