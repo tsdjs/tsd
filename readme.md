@@ -245,8 +245,6 @@ The `tsd` CLI is designed to test a whole project at once, and as such only offe
 
 #### --typings
 
-Asserts that the type of `expression` is identical to type `T`.
-
 Alias: `-t`
 
 Path to the type definition file you want to test. Same as [`typingsFile`](#typingsfile).
