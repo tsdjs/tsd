@@ -5,7 +5,7 @@
 ## Install
 
 ```sh
-npm install tsd
+npm install --save-dev tsd
 ```
 
 ## Overview
@@ -13,6 +13,16 @@ npm install tsd
 This tool lets you write tests for your type definitions (i.e. your `.d.ts` files) by creating files with the `.test-d.ts` extension.
 
 These `.test-d.ts` files will not be executed, and not even compiled in the standard way. Instead, these files will be parsed for special constructs such as `expectError<Foo>(bar)` and then statically analyzed against your type definitions.
+
+The `tsd` CLI will search for the main `.d.ts` file in the current or specified directory, and test it with any `.test-d.ts` files in either the same directory or a test sub-directory (default: `test-d`):
+
+```sh
+[npx] tsd [path]
+```
+
+Use `tsd --help` for usage information. See [Order of Operations](#order-of-operations) for more details on how `tsd` finds and executes tests.
+
+*Note: the CLI is primarily used to test an entire project, not a specific file. For more specific configuration and advanced usage, see [Configuration](#configuration) and [Programmatic API](#programmatic-api).*
 
 ## Usage
 
@@ -106,56 +116,19 @@ expectType<string>(await concat('foo', 'bar'));
 expectError(await concat(true, false));
 ```
 
-### Test directory
+## Order of Operations
 
-When you have spread your tests over multiple files, you can store all those files in a test directory called `test-d`. If you want to use another directory name, you can change it in `package.json`.
+When searching for `.test-d.ts` files and executing them, `tsd` does the following:
 
-```json
-{
-	"name": "my-module",
-	"tsd": {
-		"directory": "my-test-dir"
-	}
-}
-```
+1. Locates the project's `package.json`, which needs to be in the current or specified directory (e.g. `/path/to/project` or `process.cwd()`). Fails if none is found.
 
-Now you can put all your test files in the `my-test-dir` directory.
+2. Finds a `.d.ts` file, checking to see if one was specified manually or in the `types` field of the `package.json`. If neither is found, attempts to find one in the project directory named the same as the `main` field of the `package.json` or `index.d.ts`. Fails if no `.d.ts` file is found.
 
-### Custom TypeScript config
+3. Finds `.test-d.ts` and `.test-d.tsx` files, which can either be in the project's root directory, a [specific folder](#test-directory) (by default `/[project-root]/test-d`), or specified individually [programatically](#testfiles) or via [the CLI](#via-the-cli). Fails if no test files are found.
 
-By default, `tsd` applies the following configuration:
+4. Runs the `.test-d.ts` files through the TypeScript compiler and statically analyzes them for errors.
 
-```json5
-{
-	"strict": true,
-	"jsx": "react",
-	"target": "es2020",
-	"lib": [
-		"es2020",
-		"dom",
-		"dom.iterable"
-	],
-	"module": "commonjs",
-	// The following option is set and is not overridable.
-	// It is set to `nodenext` if `module` is `nodenext`, `node16` if `module` is `node16` or `node` otherwise.
-	"moduleResolution": "node" | "node16" | "nodenext"
-}
-```
-
-These options will be overridden if a `tsconfig.json` file is found in your project. You also have the possibility to provide a custom config by specifying it in `package.json`:
-
-```json
-{
-	"name": "my-module",
-	"tsd": {
-		"compilerOptions": {
-			"strict": false
-		}
-	}
-}
-```
-
-*Default options will apply if you don't override them explicitly.* You can't override the `moduleResolution` option.
+5. Checks the errors against [assertions](#assertions) and reports any mismatches.
 
 ## Assertions
 
@@ -202,6 +175,85 @@ Useful for checking that all branches are covered.
 ### expectDocCommentIncludes&lt;T&gt;(expression: any)
 
 Asserts that the documentation comment of `expression` includes string literal type `T`.
+
+## Configuration
+
+`tsd` is designed to be used with as little configuration as possible. However, if you need a bit more control, a project's `package.json` and the `tsd` CLI offer a limited set of configurations.
+
+For more advanced use cases (such as integrating `tsd` with testing frameworks), see [Programmatic API](#programmatic-api).
+
+### Via `package.json`
+
+`tsd` uses a project's `package.json` to find types and test files as well as for some configuration. It must exist in the path given to `tsd`.
+
+For more information on how `tsd` finds a `package.json`, see [Order of Operations](#order-of-operations).
+
+#### Test Directory
+
+When you have spread your tests over multiple files, you can store all those files in a test directory called `test-d`. If you want to use another directory name, you can change it in your project's `package.json`:
+
+```json
+{
+	"name": "my-module",
+	"tsd": {
+		"directory": "my-test-dir"
+	}
+}
+```
+
+Now you can put all your test files in the `my-test-dir` directory.
+
+#### Custom TypeScript Config
+
+By default, `tsd` applies the following configuration:
+
+```json5
+{
+	"strict": true,
+	"jsx": "react",
+	"target": "es2020",
+	"lib": [
+		"es2020",
+		"dom",
+		"dom.iterable"
+	],
+	"module": "commonjs",
+	// The following option is set and is not overridable.
+	// It is set to `nodenext` if `module` is `nodenext`, `node16` if `module` is `node16` or `node` otherwise.
+	"moduleResolution": "node" | "node16" | "nodenext"
+}
+```
+
+These options will be overridden if a `tsconfig.json` file is found in your project. You also have the possibility to provide a custom config by specifying it in `package.json`:
+
+```json
+{
+	"name": "my-module",
+	"tsd": {
+		"compilerOptions": {
+			"strict": false
+		}
+	}
+}
+```
+
+*Default options will apply if you don't override them explicitly.* You can't override the `moduleResolution` option.
+
+### Via the CLI
+
+The `tsd` CLI is designed to test a whole project at once, and as such only offers a couple of flags for configuration.
+
+Asserts that the type of `expression` is identical to type `T`.
+
+Alias: `-t`
+
+Path to the type definition file you want to test. Same as [`typingsFile`](#typingsfile).
+
+#### --files
+
+Alias: `-f`
+
+An array of test files with their path. Same as [`testFiles`](#testfiles).
 
 ## Programmatic API
 

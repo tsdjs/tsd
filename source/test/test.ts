@@ -5,11 +5,15 @@ import tsd from '..';
 import {Diagnostic} from '../lib/interfaces';
 
 test('throw if no type definition was found', async t => {
-	await t.throwsAsync(tsd({cwd: path.join(__dirname, 'fixtures/no-tsd')}), {message: 'The type definition `index.d.ts` does not exist. Create one and try again.'});
+	const cwd = path.join(__dirname, 'fixtures/no-tsd');
+	const index = path.join(cwd, 'index.d.ts');
+
+	await t.throwsAsync(tsd({cwd}), {message: `The type definition \`index.d.ts\` does not exist at \`${index}\`. Is the path correct? Create one and try again.`});
 });
 
 test('throw if no test is found', async t => {
-	await t.throwsAsync(tsd({cwd: path.join(__dirname, 'fixtures/no-test')}), {message: 'The test file `index.test-d.ts` or `index.test-d.tsx` does not exist. Create one and try again.'});
+	const cwd = path.join(__dirname, 'fixtures/no-test');
+	await t.throwsAsync(tsd({cwd}), {message: `The test file \`index.test-d.ts\` or \`index.test-d.tsx\` does not exist in \`${cwd}\`. Create one and try again.`});
 });
 
 test('return diagnostics', async t => {
@@ -365,7 +369,8 @@ test('specify test files manually', async t => {
 	const diagnostics = await tsd({
 		cwd: path.join(__dirname, 'fixtures/specify-test-files'),
 		testFiles: [
-			'unknown.test.ts'
+			'unknown.test.ts',
+			'second.test.ts'
 		]
 	});
 
@@ -375,12 +380,14 @@ test('specify test files manually', async t => {
 });
 
 test('fails if typings file is not found in the specified path', async t => {
+	const cwd = path.join(__dirname, 'fixtures/typings-custom-dir');
+
 	const error = await t.throwsAsync(tsd({
-		cwd: path.join(__dirname, 'fixtures/typings-custom-dir'),
+		cwd,
 		typingsFile: 'unknown.d.ts'
 	}));
 
-	t.is(error.message, 'The type definition `unknown.d.ts` does not exist. Create one and try again.');
+	t.is(error.message, `The type definition \`unknown.d.ts\` does not exist at \`${path.join(cwd, 'unknown.d.ts')}\`. Is the path correct? Create one and try again.`);
 });
 
 test('includes extended config files along with found ones', async t => {
