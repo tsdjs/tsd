@@ -1,4 +1,4 @@
-import {printType} from '../../..';
+import {printType} from '../../../..';
 import {aboveZero, bigType} from '.';
 
 printType(aboveZero);

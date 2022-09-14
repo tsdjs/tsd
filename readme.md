@@ -199,6 +199,10 @@ Asserts that the type and return type of `expression` is `never`.
 
 Useful for checking that all branches are covered.
 
+### expectDocCommentIncludes&lt;T&gt;(expression: any)
+
+Asserts that the documentation comment of `expression` includes string literal type `T`.
+
 ## Programmatic API
 
 You can use the programmatic API to retrieve the diagnostics and do something with them. This can be useful to run the tests with AVA, Jest or any other testing framework.
