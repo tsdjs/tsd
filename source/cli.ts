@@ -10,12 +10,12 @@ const cli = meow(`
 	  The given directory must contain a package.json and a typings file.
 
 	Info
-	  --help,        Display help text
-	  --version,     Display version info
+	  --help         Display help text
+	  --version      Display version info
 
 	Options
-	  --typings, -t  Type definition file to test  [Default: "types" property in package.json]
-	  --files,   -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
+	  --typings  -t  Type definition file to test  [Default: "types" property in package.json]
+	  --files    -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
 
 	Examples
 	  $ tsd /path/to/project
