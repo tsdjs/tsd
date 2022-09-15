@@ -24,11 +24,11 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const maybeAlias = checker.getSymbolAtLocation(expression)!;
-			const symbol = maybeAlias.flags & SymbolFlags.Alias ?
+			const symbol = maybeAlias?.flags & SymbolFlags.Alias ?
 				checker.getAliasedSymbol(maybeAlias) :
 				maybeAlias;
 
-			const identifier = symbol.getName();
+			const identifier = symbol?.getName();
 
 			// Check if the call type is a valid assertion
 			if (assertionFnNames.has(identifier)) {
