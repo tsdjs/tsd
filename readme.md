@@ -243,7 +243,7 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 
 The `tsd` CLI is designed to test a whole project at once, and as such only offers a couple of flags for configuration.
 
-Asserts that the type of `expression` is identical to type `T`.
+#### --typings
 
 Alias: `-t`
 
