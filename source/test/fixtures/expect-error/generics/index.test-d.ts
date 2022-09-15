@@ -7,6 +7,6 @@ expectError(one<number>(1, 2));
 
 expectError(two<number, string>(1, 'bar'));
 
-expectError(expectType<number>(inferrable<true>()));
+// expectError(expectType<number>(inferrable<true>()));
 
-expectError(expectType<number>(inferrable()));
+// expectError(expectType<number>(inferrable()));
