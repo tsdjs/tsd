@@ -14,7 +14,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	const checker = program.getTypeChecker();
 
 	/**
-	 * Checks if the given node is an assertion.
+	 * Checks if the given node is semantically valid and is an assertion.
 	 */
 	function handleNode(node: CallExpression) {
 		const expression = isPropertyAccessExpression(node.expression) ?
@@ -24,7 +24,9 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 		const maybeSymbol = checker.getSymbolAtLocation(expression);
 
 		if (!maybeSymbol) {
-			// Fix for #160 - https://github.com/SamVerschueren/tsd/pull/161#issuecomment-1248205264
+			// Bail out if a Symbol doesn't exist for this Node
+			// Means that the expression is syntactically valid,
+			// but not semantically
 			return;
 		}
 

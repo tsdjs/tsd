@@ -10,7 +10,7 @@ const tag = (strings: TemplateStringsArray, ...args: any[]) => {
 		if (Array.isArray(args[i])) {
 			// PROBLEM: Identifiers `map` and `join` have no Symbols
 			// TS should infer `args[i]` as `Array<any>`, but doesn't
-			// `checker.getSymbolAtLocation(joinExpression)` is undefined
+			// `checker.getSymbolAtLocation(expression)` is undefined
 			s = args[i].map((x: any) => `${x}`).join(' ');
 		} else {
 			s = `${args[i]} `;
