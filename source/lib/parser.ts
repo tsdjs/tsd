@@ -24,7 +24,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 		const maybeSymbol = checker.getSymbolAtLocation(expression);
 
 		if (!maybeSymbol) {
-			// Fix for #160
+			// Fix for #160 - https://github.com/SamVerschueren/tsd/pull/161#issuecomment-1248205264
 			return;
 		}
 

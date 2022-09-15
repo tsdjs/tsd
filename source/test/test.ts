@@ -466,3 +466,9 @@ test('assertions should be identified if aliased', async t => {
 
 	verify(t, diagnostics, []);
 });
+
+test('parser alias regression', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/undefined-symbol')});
+
+	verify(t, diagnostics, []);
+});
