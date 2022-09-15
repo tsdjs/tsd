@@ -24,21 +24,23 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const maybeAlias = checker.getSymbolAtLocation(expression)!;
-			const symbol = maybeAlias?.flags & SymbolFlags.Alias ?
-				checker.getAliasedSymbol(maybeAlias) :
-				maybeAlias;
+			if (maybeAlias) {
+				const symbol = maybeAlias.flags & SymbolFlags.Alias ?
+					checker.getAliasedSymbol(maybeAlias) :
+					maybeAlias;
 
-			const identifier = symbol?.getName();
+				const identifier = symbol.getName();
 
-			// Check if the call type is a valid assertion
-			if (assertionFnNames.has(identifier)) {
-				const assertion = identifier as Assertion;
+				// Check if the call type is a valid assertion
+				if (assertionFnNames.has(identifier)) {
+					const assertion = identifier as Assertion;
 
-				const nodes = assertions.get(assertion) ?? new Set<CallExpression>();
+					const nodes = assertions.get(assertion) ?? new Set<CallExpression>();
 
-				nodes.add(node);
+					nodes.add(node);
 
-				assertions.set(assertion, nodes);
+					assertions.set(assertion, nodes);
+				}
 			}
 		}
 
