@@ -22,8 +22,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 				node.expression.name :
 				node.expression;
 
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const maybeAlias = checker.getSymbolAtLocation(expression)!;
+			const maybeAlias = checker.getSymbolAtLocation(expression);
 			if (maybeAlias) {
 				const symbol = maybeAlias.flags & SymbolFlags.Alias ?
 					checker.getAliasedSymbol(maybeAlias) :
