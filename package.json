@@ -21,8 +21,8 @@
 		"test": "npm run lint && ava",
 		"build": "npm run clean && tsc --project tsconfig.tsd.json && chmod +x dist/cli.js",
 		"clean": "del-cli dist",
-		"lint": "eslint 'source/**/*'",
-		"lint:fix": "eslint --fix 'source/**/*'"
+		"lint": "eslint \"source/**/*\"",
+		"lint:fix": "eslint --fix \"source/**/*\""
 	},
 	"files": [
 		"dist/**/*.js",
