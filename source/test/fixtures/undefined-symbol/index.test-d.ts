@@ -22,4 +22,5 @@ const tag = (strings: TemplateStringsArray, ...args: any[]) => {
 	return value;
 };
 
+// fails with `Cannot read properties of undefined (reading 'flags')` in 0.24.0
 expectType<string>(tag`foo`);
