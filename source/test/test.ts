@@ -467,7 +467,7 @@ test('assertions should be identified if aliased', async t => {
 	verify(t, diagnostics, []);
 });
 
-test('parser undefined symbol should not fail', async t => {
+test('parsing undefined symbol should not fail', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/undefined-symbol')});
 
 	verify(t, diagnostics, []);
