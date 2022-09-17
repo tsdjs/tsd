@@ -25,9 +25,9 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 
 		if (!maybeSymbol) {
 			// Bail out if a Symbol doesn't exist for this Node
-			// Either means that a symbol could not be resolved
+			// This either means a symbol could not be resolved
 			// for an identifier, or that the expression is
-			// syntactically valid, but not semantically
+			// syntactically valid, but not semantically valid.
 			return;
 		}
 
