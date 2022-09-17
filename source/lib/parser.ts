@@ -14,33 +14,47 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	const checker = program.getTypeChecker();
 
 	/**
+	 * Checks if the given node is semantically valid and is an assertion.
+	 */
+	function handleNode(node: CallExpression) {
+		const expression = isPropertyAccessExpression(node.expression) ?
+			node.expression.name :
+			node.expression;
+
+		const maybeSymbol = checker.getSymbolAtLocation(expression);
+
+		if (!maybeSymbol) {
+			// Bail out if a Symbol doesn't exist for this Node
+			// This either means a symbol could not be resolved
+			// for an identifier, or that the expression is
+			// syntactically valid, but not semantically valid.
+			return;
+		}
+
+		const symbol = maybeSymbol.flags & SymbolFlags.Alias ?
+			checker.getAliasedSymbol(maybeSymbol) :
+			maybeSymbol;
+
+		const identifier = symbol.getName();
+
+		// Check if the call type is a valid assertion
+		if (assertionFnNames.has(identifier)) {
+			const assertion = identifier as Assertion;
+
+			const nodes = assertions.get(assertion) ?? new Set<CallExpression>();
+
+			nodes.add(node);
+
+			assertions.set(assertion, nodes);
+		}
+	}
+
+	/**
 	 * Recursively loop over all the nodes and extract all the assertions out of the source files.
 	 */
 	function walkNodes(node: Node) {
 		if (isCallExpression(node)) {
-			const expression = isPropertyAccessExpression(node.expression) ?
-				node.expression.name :
-				node.expression;
-
-			const maybeAlias = checker.getSymbolAtLocation(expression);
-			if (maybeAlias) {
-				const symbol = maybeAlias.flags & SymbolFlags.Alias ?
-					checker.getAliasedSymbol(maybeAlias) :
-					maybeAlias;
-
-				const identifier = symbol.getName();
-
-				// Check if the call type is a valid assertion
-				if (assertionFnNames.has(identifier)) {
-					const assertion = identifier as Assertion;
-
-					const nodes = assertions.get(assertion) ?? new Set<CallExpression>();
-
-					nodes.add(node);
-
-					assertions.set(assertion, nodes);
-				}
-			}
+			handleNode(node);
 		}
 
 		forEachChild(node, walkNodes);
