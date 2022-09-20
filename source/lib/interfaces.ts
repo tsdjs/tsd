@@ -55,6 +55,10 @@ export interface Diagnostic {
 	severity: 'error' | 'warning';
 	line?: number;
 	column?: number;
+	diff?: {
+		expected: string;
+		received: string;
+	};
 }
 
 export interface Location {

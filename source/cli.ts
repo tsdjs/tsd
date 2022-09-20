@@ -37,6 +37,9 @@ const cli = meow(`
 			alias: 'f',
 			isMultiple: true,
 		},
+		showDiff: {
+			type: 'boolean',
+		},
 	},
 });
 
@@ -45,13 +48,14 @@ const cli = meow(`
 		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
 		const typingsFile = cli.flags.typings;
 		const testFiles = cli.flags.files;
+		const {showDiff} = cli.flags;
 
 		const options = {cwd, typingsFile, testFiles};
 
 		const diagnostics = await tsd(options);
 
 		if (diagnostics.length > 0) {
-			throw new Error(formatter(diagnostics));
+			throw new Error(formatter(diagnostics, showDiff));
 		}
 	} catch (error: unknown) {
 		if (error && typeof (error as Error).message === 'string') {
