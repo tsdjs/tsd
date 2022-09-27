@@ -30,7 +30,7 @@ test('diff', async t => {
 test('diff cli', async t => {
 	const file = path.join(__dirname, 'fixtures/diff');
 
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('dist/cli.js', [file, '--showDiff']));
+	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('dist/cli.js', [file, '--show-diff']));
 	const expectedLines = stderr.trim().split('\n').slice(1).map(line => line.trim());
 
 	t.is(exitCode, 1);
