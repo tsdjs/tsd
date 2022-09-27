@@ -23,6 +23,14 @@ test('diff', async t => {
 		[11, 0, 'error', 'Parameter type `Partial<FooInterface>` is declared too wide for argument type `Required<FooInterface>`.', {
 			expected: '{ [x: string]: unknown; readonly protected?: boolean | undefined; fooType?: FooType | undefined; id?: \'foo-interface\' | undefined; }',
 			received: '{ [x: string]: unknown; readonly protected: boolean; fooType: FooType; id: \'foo-interface\'; }',
+		}],
+		[13, 0, 'error', 'Argument of type `{ life: number; }` is assignable to parameter of type `{ life?: number | undefined; }`.', {
+			expected: '{ life?: number | undefined; }',
+			received: '{ life: number; }',
+		}],
+		[18, 0, 'error', 'Documentation comment `This is a comment.` for expression `commented` does not include expected `This is not the same comment!`.', {
+			expected: 'This is not the same comment!',
+			received: 'This is a comment.',
 		}]
 	]);
 });
@@ -52,7 +60,15 @@ test('diff cli', async t => {
 		'',
 		'- { [x: string]: unknown; readonly protected?: boolean | undefined; fooType?: FooType | undefined; id?: \'foo-interface\' | undefined; }',
 		'+ { [x: string]: unknown; readonly protected: boolean; fooType: FooType; id: \'foo-interface\'; }',
+		'✖  13:0  Argument of type { life: number; } is assignable to parameter of type { life?: number | undefined; }.',
 		'',
-		'4 errors',
+		'- { life?: number | undefined; }',
+		'+ { life: number; }',
+		'✖  18:0  Documentation comment This is a comment. for expression commented does not include expected This is not the same comment!.',
+		'',
+		'- This is not the same comment!',
+		'+ This is a comment.',
+		'',
+		'6 errors'
 	]);
 });

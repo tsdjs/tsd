@@ -5,8 +5,8 @@ interface DiagnosticWithDiffOptions {
 	checker: TypeChecker;
 	node: Node;
 	message: string;
-	expectedType: Type;
-	receivedType: Type;
+	expectedType: Type | string;
+	receivedType: Type | string;
 	severity?: Diagnostic['severity'];
 }
 
@@ -43,8 +43,8 @@ export default (options: DiagnosticWithDiffOptions): Diagnostic => {
 	const {checker, node, expectedType, receivedType} = options;
 	const position = node.getSourceFile().getLineAndCharacterOfPosition(node.getStart());
 	const message = options.message
-		.replace('{expectedType}', checker.typeToString(expectedType))
-		.replace('{receivedType}', checker.typeToString(receivedType));
+		.replace('{expectedType}', typeof expectedType === 'string' ? expectedType : checker.typeToString(expectedType))
+		.replace('{receivedType}', typeof receivedType === 'string' ? receivedType : checker.typeToString(receivedType));
 
 	return {
 		fileName: node.getSourceFile().fileName,
@@ -53,8 +53,8 @@ export default (options: DiagnosticWithDiffOptions): Diagnostic => {
 		line: position.line + 1,
 		column: position.character,
 		diff: {
-			expected: checker.typeToString(expectedType, node, typeToStringFormatFlags),
-			received: checker.typeToString(receivedType, node, typeToStringFormatFlags)
+			expected: typeof expectedType === 'string' ? expectedType : checker.typeToString(expectedType, node, typeToStringFormatFlags),
+			received: typeof receivedType === 'string' ? receivedType : checker.typeToString(receivedType, node, typeToStringFormatFlags)
 		}
 	};
 };

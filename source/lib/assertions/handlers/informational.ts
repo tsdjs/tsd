@@ -1,6 +1,6 @@
 import {CallExpression, TypeChecker, TypeFormatFlags} from '@tsd/typescript';
 import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic, tsutils} from '../../utils';
+import {makeDiagnostic, makeDiagnosticWithDiff, tsutils} from '../../utils';
 
 /**
  * Default formatting flags set by TS plus the {@link TypeFormatFlags.NoTruncation NoTruncation} flag.
@@ -80,7 +80,13 @@ export const expectDocCommentIncludes = (checker: TypeChecker, nodes: Set<CallEx
 			continue;
 		}
 
-		diagnostics.push(makeDiagnostic(node, `Documentation comment \`${docComment}\` for expression \`${expression}\` does not include expected \`${expectedDocComment}\`.`));
+		diagnostics.push(makeDiagnosticWithDiff({
+			message: `Documentation comment \`{receivedType}\` for expression \`${expression}\` does not include expected \`{expectedType}\`.`,
+			expectedType: expectedDocComment,
+			receivedType: docComment,
+			checker,
+			node,
+		}));
 	}
 
 	return diagnostics;
