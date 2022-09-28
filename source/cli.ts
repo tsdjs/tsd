@@ -16,7 +16,7 @@ const cli = meow(`
 	Options
 	  --typings    -t  Type definition file to test  [Default: "types" property in package.json]
 	  --files      -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
-		--show-diff      Show type error diffs         [Default: don't show]
+	  --show-diff      Show type error diffs         [Default: don't show]
 
 	Examples
 	  $ tsd /path/to/project
