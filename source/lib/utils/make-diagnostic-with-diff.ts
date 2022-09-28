@@ -40,7 +40,7 @@ const typeToStringFormatFlags =
  * @param options - Options for creating the diagnostic.
  * @returns Diagnostic with diffs
  */
- export default (options: DiagnosticWithDiffOptions): Diagnostic => {
+export default (options: DiagnosticWithDiffOptions): Diagnostic => {
 	const {checker, node, expectedType, receivedType} = options;
 	const position = node.getSourceFile().getLineAndCharacterOfPosition(node.getStart());
 	const message = options.message
