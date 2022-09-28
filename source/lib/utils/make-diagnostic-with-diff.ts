@@ -35,11 +35,12 @@ const typeToStringFormatFlags =
 	// TypeFormatFlags.NodeBuilderFlagsMask |;
 
 /**
- * ...
+ * Create a diagnostic with type error diffs from the given `options`, see {@link DiagnosticWithDiffOptions}.
  *
- * @param options - ...
+ * @param options - Options for creating the diagnostic.
+ * @returns Diagnostic with diffs
  */
-export default (options: DiagnosticWithDiffOptions): Diagnostic => {
+ export default (options: DiagnosticWithDiffOptions): Diagnostic => {
 	const {checker, node, expectedType, receivedType} = options;
 	const position = node.getSourceFile().getLineAndCharacterOfPosition(node.getStart());
 	const message = options.message
