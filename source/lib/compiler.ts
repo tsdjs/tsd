@@ -5,7 +5,7 @@ import {
 } from '@tsd/typescript';
 import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
-import {handle} from './assertions';
+import {handle} from './assertions/tsd';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([

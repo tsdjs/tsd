@@ -1,5 +1,5 @@
 import {Program, Node, CallExpression, forEachChild, isCallExpression, isPropertyAccessExpression, SymbolFlags} from '@tsd/typescript';
-import {Assertion} from './assertions';
+import {Assertion} from './assertions/tsd';
 import {Location, Diagnostic} from './interfaces';
 
 const assertionFnNames = new Set<string>(Object.values(Assertion));

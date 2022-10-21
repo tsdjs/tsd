@@ -1,6 +1,6 @@
 import {CallExpression, TypeChecker, TypeFormatFlags} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic, tsutils} from '../../utils';
+import {Diagnostic} from '../../../interfaces';
+import {makeDiagnostic, tsutils} from '../../../utils';
 
 /**
  * Default formatting flags set by TS plus the {@link TypeFormatFlags.NoTruncation NoTruncation} flag.

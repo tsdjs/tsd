@@ -1,7 +1,7 @@
 import {JSDocTagInfo} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
+import {Diagnostic} from '../../../interfaces';
 import {Handler} from './handler';
-import {makeDiagnostic, tsutils} from '../../utils';
+import {makeDiagnostic, tsutils} from '../../../utils';
 
 interface Options {
 	filter(tags: Map<string, JSDocTagInfo>): boolean;

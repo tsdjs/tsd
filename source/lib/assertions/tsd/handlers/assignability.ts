@@ -1,6 +1,6 @@
 import {CallExpression, TypeChecker} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic} from '../../utils';
+import {Diagnostic} from '../../../interfaces';
+import {makeDiagnostic} from '../../../utils';
 
 /**
  * Asserts that the argument of the assertion is not assignable to the generic type of the assertion.
