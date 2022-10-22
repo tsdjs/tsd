@@ -1,6 +1,11 @@
 import {CallExpression, TypeChecker} from '@tsd/typescript';
 import {Diagnostic} from '../../interfaces';
-import {isIdentical, isNotIdentical} from '../jest-like/handlers';
+import {
+	isAssignable,
+	isIdentical,
+	isNotAssignable,
+	isNotIdentical
+} from '../jest-like/handlers';
 
 export type JestLikeAssertionNodes = Set<[CallExpression, CallExpression]>;
 
@@ -18,13 +23,19 @@ export type JestLikeAssertionHandlers = Map<JestLikeAssertion, JestLikeHandler>;
 export type JestLikeAssertions = Map<JestLikeAssertion, JestLikeAssertionNodes>;
 
 export enum JestLikeAssertion {
+	ASSIGNABLE_TO = 'assignableTo',
 	IDENTICAL_TO = 'identicalTo',
+
+	NOT_ASSIGNABLE_TO = 'notAssignableTo',
 	NOT_IDENTICAL_TO = 'notIdenticalTo',
 }
 
 // List of diagnostic handlers attached to the assertion
 const assertionHandlers: JestLikeAssertionHandlers = new Map([
+	[JestLikeAssertion.ASSIGNABLE_TO, isAssignable],
 	[JestLikeAssertion.IDENTICAL_TO, isIdentical],
+
+	[JestLikeAssertion.NOT_ASSIGNABLE_TO, isNotAssignable],
 	[JestLikeAssertion.NOT_IDENTICAL_TO, isNotIdentical],
 ]);
 
