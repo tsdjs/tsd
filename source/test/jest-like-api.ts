@@ -22,23 +22,30 @@ test('jest like API parser error', async t => {
 	]);
 });
 
-test('jest like API identicality', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/identicality')});
+test('identical-to', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/identical-to')});
 
 	verify(t, diagnostics, [
-		[18, 0, 'error', 'Parameter type `string` is not identical to argument type `number`.'],
-		[19, 0, 'error', 'Parameter type `number` is not identical to argument type `string`.'],
-		[20, 0, 'error', 'Parameter type `string` is not identical to argument type `number`.'],
-		[21, 0, 'error', 'Parameter type `string` is not identical to argument type `number`.'],
-		[23, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
-		[24, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
-		[25, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
-		[26, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
+		[13, 0, 'error', 'Parameter type `string` is not identical to argument type `number`.'],
+		[14, 0, 'error', 'Parameter type `number` is not identical to argument type `string`.'],
+		[15, 0, 'error', 'Parameter type `string` is not identical to argument type `number`.'],
+		[16, 0, 'error', 'Parameter type `string` is not identical to argument type `number`.'],
 	]);
 });
 
-// Debug
+test('not-identical-to', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/not-identical-to')});
+
+	verify(t, diagnostics, [
+		[13, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
+		[14, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
+		[15, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
+		[16, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
+	]);
+});
+
+// // Debug
 // test('debug', async () => {
-// 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api')});
+// 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/identicality')});
 // 	console.log(diagnostics);
 // });
