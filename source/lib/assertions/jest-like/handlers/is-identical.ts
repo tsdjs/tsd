@@ -4,13 +4,6 @@ import {makeDiagnostic} from '../../../utils';
 import {JestLikeAssertionNodes} from '..';
 import {getTypes} from '../util';
 
-/**
- * Asserts that the argument of the assertion is not identical to the generic type of the assertion.
- *
- * @param checker - The TypeScript type checker.
- * @param nodes - The `expectType` AST nodes.
- * @return List of custom diagnostics.
- */
 export const isIdentical = (checker: TypeChecker, nodes: JestLikeAssertionNodes): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
@@ -36,7 +29,7 @@ export const isIdentical = (checker: TypeChecker, nodes: JestLikeAssertionNodes)
 		}
 
 		if (!checker.isTypeIdenticalTo(expected.type, target.type)) {
-			diagnostics.push(makeDiagnostic(expectedNode, `Parameter type \`${checker.typeToString(expected.type)}\` is not identical to argument type \`${checker.typeToString(target.type)}\`.`));
+			diagnostics.push(makeDiagnostic(expectedNode, `Expected type \`${checker.typeToString(expected.type)}\` is not identical to type \`${checker.typeToString(target.type)}\`.`));
 		}
 	}
 
