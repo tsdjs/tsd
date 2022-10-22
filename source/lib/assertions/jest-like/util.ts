@@ -6,7 +6,7 @@ type Types =
 	| {type: Type; argument: Node; diagnostic?: never}
 	| {diagnostic: Diagnostic; type?: never; argument?: never};
 
-export function getTypes(node: CallExpression, typeChecker: TypeChecker): Types {
+export function getTypes(node: CallExpression, checker: TypeChecker): Types {
 	let type: Type | undefined;
 	let value: Type | undefined;
 
@@ -14,11 +14,11 @@ export function getTypes(node: CallExpression, typeChecker: TypeChecker): Types 
 	const valueArgument = node.arguments[0];
 
 	if (typeArgument) {
-		type = typeChecker.getTypeFromTypeNode(typeArgument);
+		type = checker.getTypeFromTypeNode(typeArgument);
 	}
 
 	if (valueArgument) {
-		value = typeChecker.getTypeAtLocation(valueArgument);
+		value = checker.getTypeAtLocation(valueArgument);
 	}
 
 	if (type && value) {
