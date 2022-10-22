@@ -1,5 +1,5 @@
 import {identicalTo} from './identical-to';
-import {notIdenticalTo} from './no-identical-to';
+import {notIdenticalTo} from './not-identical-to';
 
 export const api = {
 	identicalTo,
