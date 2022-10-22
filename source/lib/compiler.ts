@@ -6,6 +6,7 @@ import {
 import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 import {handle} from './assertions/tsd';
+import {jestLikeHandle} from './assertions/jest-like';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([
@@ -96,9 +97,11 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 
 	const assertions = extractAssertions(program);
 
-	diagnostics.push(...handle(program.getTypeChecker(), assertions));
+	diagnostics.push(...assertions.diagnostics);
+	diagnostics.push(...handle(program.getTypeChecker(), assertions.assertions));
+	diagnostics.push(...jestLikeHandle(program.getTypeChecker(), assertions.jestLikeAssertions));
 
-	const expectedErrors = parseErrorAssertionToLocation(assertions);
+	const expectedErrors = parseErrorAssertionToLocation(assertions.assertions);
 	const expectedErrorsLocationsWithFoundDiagnostics: Location[] = [];
 
 	for (const diagnostic of tsDiagnostics) {
