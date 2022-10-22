@@ -1,8 +1,8 @@
-import {CallExpression, PropertyAccessExpression, TypeChecker} from '@tsd/typescript';
+import {CallExpression, TypeChecker} from '@tsd/typescript';
 import {Diagnostic} from '../../interfaces';
 import {isIdentical, isNotIdentical} from '../jest-like/handlers';
 
-export type JestLikeAssertionNodes = Set<[CallExpression, PropertyAccessExpression]>;
+export type JestLikeAssertionNodes = Set<[CallExpression, CallExpression]>;
 
 /**
  * A handler is a method which accepts the TypeScript type checker together with a set of assertion nodes. The type checker

@@ -85,7 +85,7 @@ export const extractAssertions = (program: Program): Assertions => {
 		if (assertMethodName !== 'not') {
 			const nodes = jestLikeAssertions.get(assertMethodName as JestLikeAssertion) ?? new Set();
 
-			nodes.add([expectedNode, targetNode]);
+			nodes.add([expectedNode, targetNode.parent as CallExpression]);
 
 			jestLikeAssertions.set(assertMethodName as JestLikeAssertion, nodes);
 			return;
@@ -103,7 +103,7 @@ export const extractAssertions = (program: Program): Assertions => {
 
 		const nodes = jestLikeAssertions.get(maybeTargetName) ?? new Set();
 
-		nodes.add([expectedNode, maybeTargetNode]);
+		nodes.add([expectedNode, maybeTargetNode.parent as CallExpression]);
 
 		jestLikeAssertions.set(maybeTargetName, nodes);
 	}
