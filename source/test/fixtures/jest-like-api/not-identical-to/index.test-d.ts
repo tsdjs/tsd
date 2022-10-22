@@ -15,6 +15,12 @@ assertType<string>().not.identicalTo(fooString);
 assertType(fooString).not.identicalTo<string>();
 assertType(fooString).not.identicalTo(fooString);
 
+// Should pass with assignable type
+assertType<'foo'>().not.identicalTo<string>();
+assertType<'foo'>().not.identicalTo(fooString);
+assertType('foo').not.identicalTo<string>();
+assertType('foo').not.identicalTo(fooString);
+
 // Should handle generic, see https://github.com/SamVerschueren/tsd/issues/142
 declare const inferrable: <T = 'foo'>() => T;
 

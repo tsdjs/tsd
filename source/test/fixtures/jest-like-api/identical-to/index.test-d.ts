@@ -15,6 +15,12 @@ assertType<number>().identicalTo(fooString);
 assertType(fooString).identicalTo<number>();
 assertType(fooString).identicalTo(fooNumber);
 
+// Should fail with assignable type
+assertType<'foo'>().identicalTo<string>();
+assertType<'foo'>().identicalTo(fooString);
+assertType('foo').identicalTo<string>();
+assertType('foo').identicalTo(fooString);
+
 // Should handle generic, see https://github.com/SamVerschueren/tsd/issues/142
 declare const inferrable: <T = 'foo'>() => T;
 
