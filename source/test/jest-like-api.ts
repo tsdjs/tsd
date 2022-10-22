@@ -30,6 +30,8 @@ test('identical-to', async t => {
 		[14, 0, 'error', 'Parameter type `number` is not identical to argument type `string`.'],
 		[15, 0, 'error', 'Parameter type `string` is not identical to argument type `number`.'],
 		[16, 0, 'error', 'Parameter type `string` is not identical to argument type `number`.'],
+		[26, 0, 'error', 'Parameter type `string` is not identical to argument type `"foo"`.'],
+		[27, 0, 'error', 'Parameter type `"foo"` is not identical to argument type `string`.'],
 	]);
 });
 
@@ -41,6 +43,8 @@ test('not-identical-to', async t => {
 		[14, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
 		[15, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
 		[16, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],
+		[26, 0, 'error', 'Parameter type `"foo"` is identical to argument type `"foo"`.'],
+		[27, 0, 'error', 'Parameter type `"foo"` is identical to argument type `"foo"`.'],
 	]);
 });
 
