@@ -1,7 +1,7 @@
-export {isAssignable} from './is-assignable';
-export {isIdentical} from './is-identical';
-export {isSubtype} from './is-subtype';
+export {assignableTo} from './assignable-to';
+export {identicalTo} from './identical-to';
+export {subtypeOf} from './subtype-of';
 
-export {isNotAssignable} from './is-not-assignable';
-export {isNotIdentical} from './is-not-identical';
-export {isNotSubtype} from './is-not-subtype';
+export {notAssignableTo} from './not-assignable-to';
+export {notIdenticalTo} from './not-identical-to';
+export {notSubtypeOf} from './not-subtype-of';

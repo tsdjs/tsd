@@ -4,7 +4,7 @@ import {makeDiagnostic} from '../../../utils';
 import {JestLikeAssertionNodes} from '..';
 import {getTypes} from '../util';
 
-export const isIdentical = (checker: TypeChecker, nodes: JestLikeAssertionNodes): Diagnostic[] => {
+export const identicalTo = (checker: TypeChecker, nodes: JestLikeAssertionNodes): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
 	if (!nodes) {

@@ -4,7 +4,7 @@ import {makeDiagnostic} from '../../../utils';
 import {JestLikeAssertionNodes} from '..';
 import {getTypes} from '../util';
 
-export const isAssignable = (checker: TypeChecker, nodes: JestLikeAssertionNodes): Diagnostic[] => {
+export const notAssignableTo = (checker: TypeChecker, nodes: JestLikeAssertionNodes): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
 	if (!nodes) {
@@ -28,8 +28,8 @@ export const isAssignable = (checker: TypeChecker, nodes: JestLikeAssertionNodes
 			continue;
 		}
 
-		if (!checker.isTypeAssignableTo(expected.type, target.type)) {
-			diagnostics.push(makeDiagnostic(expectedNode, `Expected type \`${checker.typeToString(expected.type)}\` is not assignable to type \`${checker.typeToString(target.type)}\`.`));
+		if (checker.isTypeAssignableTo(expected.type, target.type)) {
+			diagnostics.push(makeDiagnostic(expectedNode, `Expected type \`${checker.typeToString(expected.type)}\` is assignable to type \`${checker.typeToString(target.type)}\`.`));
 		}
 	}
 
