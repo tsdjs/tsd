@@ -26,16 +26,16 @@ test('identical-to', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/identical-to')});
 
 	verify(t, diagnostics, [
-		[13, 0, 'error', 'Expected type `string` is not identical to type `number`.'],
-		[14, 0, 'error', 'Expected type `number` is not identical to type `string`.'],
-		[15, 0, 'error', 'Expected type `string` is not identical to type `number`.'],
-		[16, 0, 'error', 'Expected type `string` is not identical to type `number`.'],
-		[19, 0, 'error', 'Expected type `"foo"` is not identical to type `string`.'],
-		[20, 0, 'error', 'Expected type `"foo"` is not identical to type `string`.'],
-		[21, 0, 'error', 'Expected type `"foo"` is not identical to type `string`.'],
-		[22, 0, 'error', 'Expected type `"foo"` is not identical to type `string`.'],
-		[32, 0, 'error', 'Expected type `string` is not identical to type `"foo"`.'],
-		[33, 0, 'error', 'Expected type `"foo"` is not identical to type `string`.'],
+		[13, 0, 'error', 'Expected type `string` is declared too wide for type `number`.'],
+		[14, 0, 'error', 'Expected type `number` is declared too wide for type `string`.'],
+		[15, 0, 'error', 'Expected type `string` is declared too wide for type `number`.'],
+		[16, 0, 'error', 'Expected type `string` is declared too wide for type `number`.'],
+		[19, 0, 'error', 'Expected type `"foo"` is declared too short for type `string`.'],
+		[20, 0, 'error', 'Expected type `"foo"` is declared too short for type `string`.'],
+		[21, 0, 'error', 'Expected type `"foo"` is declared too short for type `string`.'],
+		[22, 0, 'error', 'Expected type `"foo"` is declared too short for type `string`.'],
+		[32, 0, 'error', 'Expected type `string` is declared too wide for type `"foo"`.'],
+		[33, 0, 'error', 'Expected type `"foo"` is declared too short for type `string`.'],
 	]);
 });
 

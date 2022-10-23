@@ -28,6 +28,16 @@ export const isIdentical = (checker: TypeChecker, nodes: JestLikeAssertionNodes)
 			continue;
 		}
 
+		if (!checker.isTypeAssignableTo(expected.type, target.type)) {
+			diagnostics.push(makeDiagnostic(expectedNode, `Expected type \`${checker.typeToString(expected.type)}\` is declared too wide for type \`${checker.typeToString(target.type)}\`.`));
+			continue;
+		}
+
+		if (!checker.isTypeAssignableTo(target.type, expected.type)) {
+			diagnostics.push(makeDiagnostic(expectedNode, `Expected type \`${checker.typeToString(expected.type)}\` is declared too short for type \`${checker.typeToString(target.type)}\`.`));
+			continue;
+		}
+
 		if (!checker.isTypeIdenticalTo(expected.type, target.type)) {
 			diagnostics.push(makeDiagnostic(expectedNode, `Expected type \`${checker.typeToString(expected.type)}\` is not identical to type \`${checker.typeToString(target.type)}\`.`));
 		}
