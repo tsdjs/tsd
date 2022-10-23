@@ -11,10 +11,10 @@ export function assertType<ExpectedType>(): AssertTypeAPI;
 /**
  * Create a type assertion holder from the type provided in the first argument.
  *
- * @param expectedValue - The expected value whose type will be compared with another type.
+ * @param expression - The expected expression whose type will be compared with another type.
  */
-export function assertType<ExpectedValueType>(expectedValue: ExpectedValueType): AssertTypeAPI;
+export function assertType<ExpressionType>(expression: ExpressionType): AssertTypeAPI;
 
-export function assertType(): AssertTypeAPI {
+export function assertType() {
 	return api;
 }

@@ -2,17 +2,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
- * Test that the type provided in the first generic parameter is not identical to expected type.
+ * Test that the expected type is not identical to the type provided in the first generic parameter.
  *
- * @template TargetType - The expected type that will be compared with another type.
+ * @template TargetType - The target type that will be compared with expected type.
  */
 export function notIdenticalTo<TargetType>(): void;
 
 /**
- * Test that the type provided in the first argument is not identical to expected type.
+ * Test that the expected type is not identical to the type of the expression provided in the first argument.
  *
- * @param targetValue - The expected value whose type will be compared with another type.
+ * @param expression - An expression whose type will be compared with expected type.
  */
-export function notIdenticalTo<TargetValueType>(targetValue: TargetValueType): void;
+export function notIdenticalTo<ExpressionType>(expression: ExpressionType): void;
 
 export function notIdenticalTo(): void { }
