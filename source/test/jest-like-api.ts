@@ -83,6 +83,12 @@ test('not-assignable-to', async t => {
 		[28, 0, 'error', 'Expected type `"foo"` is assignable to type `string`.'],
 		[38, 0, 'error', 'Expected type `"foo"` is assignable to type `"foo"`.'],
 		[39, 0, 'error', 'Expected type `"foo"` is assignable to type `"foo"`.'],
+		[58, 0, 'error', 'Expected type `string` is assignable to type `any`.'],
+		[59, 0, 'error', 'Expected type `Bar` is assignable to type `number`.'],
+		[60, 0, 'error', 'Expected type `{ id: number; name: string; }` is assignable to type `Foo`.'],
+		[63, 0, 'error', 'Expected type `any` is assignable to type `string`.'],
+		[64, 0, 'error', 'Expected type `number` is assignable to type `Bar`.'],
+		[65, 0, 'error', 'Expected type `Baz` is assignable to type `Foo`.'],
 	]);
 });
 
