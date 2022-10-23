@@ -86,6 +86,46 @@ test('not-assignable-to', async t => {
 	]);
 });
 
+test('subtype-of', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/subtype-of')});
+
+	verify(t, diagnostics, [
+		[13, 0, 'error', 'Expected type `string` is not a subtype of `number`.'],
+		[14, 0, 'error', 'Expected type `number` is not a subtype of `string`.'],
+		[15, 0, 'error', 'Expected type `string` is not a subtype of `number`.'],
+		[16, 0, 'error', 'Expected type `string` is not a subtype of `number`.'],
+		[25, 0, 'error', 'Expected type `string` is not a subtype of `"foo"`.'],
+		[26, 0, 'error', 'Expected type `string` is not a subtype of `"foo"`.'],
+		[27, 0, 'error', 'Expected type `string` is not a subtype of `"foo"`.'],
+		[28, 0, 'error', 'Expected type `string` is not a subtype of `"foo"`.'],
+		[38, 0, 'error', 'Expected type `string` is not a subtype of `"foo"`.'],
+		[39, 0, 'error', 'Expected type `"foo"` is not a subtype of `number`.'],
+		[63, 0, 'error', 'Expected type `any` is not a subtype of `string`.'],
+		[64, 0, 'error', 'Expected type `number` is not a subtype of `Bar`.'],
+		[65, 0, 'error', 'Expected type `Baz` is not a subtype of `Foo`.'],
+	]);
+});
+
+test('not-subtype-of', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/not-subtype-of')});
+
+	verify(t, diagnostics, [
+		[13, 0, 'error', 'Expected type `string` is a subtype of `string`.'],
+		[14, 0, 'error', 'Expected type `string` is a subtype of `string`.'],
+		[15, 0, 'error', 'Expected type `string` is a subtype of `string`.'],
+		[16, 0, 'error', 'Expected type `string` is a subtype of `string`.'],
+		[25, 0, 'error', 'Expected type `"foo"` is a subtype of `string`.'],
+		[26, 0, 'error', 'Expected type `"foo"` is a subtype of `string`.'],
+		[27, 0, 'error', 'Expected type `"foo"` is a subtype of `string`.'],
+		[28, 0, 'error', 'Expected type `"foo"` is a subtype of `string`.'],
+		[38, 0, 'error', 'Expected type `"foo"` is a subtype of `"foo"`.'],
+		[39, 0, 'error', 'Expected type `"foo"` is a subtype of `"foo"`.'],
+		[63, 0, 'error', 'Expected type `string` is a subtype of `any`.'],
+		[64, 0, 'error', 'Expected type `Bar` is a subtype of `number`.'],
+		[65, 0, 'error', 'Expected type `{ id: number; name: string; }` is a subtype of `Foo`.'],
+	]);
+});
+
 // // Debug
 // test('debug', async () => {
 // 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/identicality')});

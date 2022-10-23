@@ -4,7 +4,9 @@ import {
 	isAssignable,
 	isIdentical,
 	isNotAssignable,
-	isNotIdentical
+	isNotIdentical,
+	isNotSubtype,
+	isSubtype
 } from '../jest-like/handlers';
 
 export type JestLikeAssertionNodes = Set<[CallExpression, CallExpression]>;
@@ -25,18 +27,22 @@ export type JestLikeAssertions = Map<JestLikeAssertion, JestLikeAssertionNodes>;
 export enum JestLikeAssertion {
 	ASSIGNABLE_TO = 'assignableTo',
 	IDENTICAL_TO = 'identicalTo',
+	SUBTYPE_OF = 'subtypeOf',
 
 	NOT_ASSIGNABLE_TO = 'notAssignableTo',
 	NOT_IDENTICAL_TO = 'notIdenticalTo',
+	NOT_SUBTYPE_OF = 'notSubtypeOf',
 }
 
 // List of diagnostic handlers attached to the assertion
 const assertionHandlers: JestLikeAssertionHandlers = new Map([
 	[JestLikeAssertion.ASSIGNABLE_TO, isAssignable],
 	[JestLikeAssertion.IDENTICAL_TO, isIdentical],
+	[JestLikeAssertion.SUBTYPE_OF, isSubtype],
 
 	[JestLikeAssertion.NOT_ASSIGNABLE_TO, isNotAssignable],
 	[JestLikeAssertion.NOT_IDENTICAL_TO, isNotIdentical],
+	[JestLikeAssertion.NOT_SUBTYPE_OF, isNotSubtype],
 ]);
 
 /**
