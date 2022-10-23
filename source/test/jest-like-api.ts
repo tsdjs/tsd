@@ -132,6 +132,17 @@ test('not-subtype-of', async t => {
 	]);
 });
 
+test('to-throw-error', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/to-throw-error')});
+
+	verify(t, diagnostics, [
+		[13, 16, 'error', 'Expected error with code \'2244\' but received error with code \'2344\'.'],
+		[14, 16, 'error', 'Expected error message to includes \'poes not satisfy the constraint\' but received error with message \'Type \'string\' does not satisfy the constraint \'number\'.\'.'],
+		[15, 16, 'error', 'Expected error message to match \'Type \'string\'$\' but received error with message \'Type \'string\' does not satisfy the constraint \'number\'.\'.'],
+		[12, 11, 'error', 'Expected an error, but found none.'],
+	]);
+});
+
 // // Debug
 // test('debug', async () => {
 // 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/jest-like-api/identicality')});

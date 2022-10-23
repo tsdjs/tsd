@@ -6,10 +6,13 @@ import {notAssignableTo} from './not-assignable-to';
 import {notIdenticalTo} from './not-identical-to';
 import {notSubtypeOf} from './not-subtype-of';
 
+import {toThrowError} from './to-throw-error';
+
 export const api = {
 	assignableTo,
 	identicalTo,
 	subtypeOf,
+	toThrowError,
 	not: {
 		assignableTo: notAssignableTo,
 		identicalTo: notIdenticalTo,

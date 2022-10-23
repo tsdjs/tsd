@@ -6,7 +6,8 @@ import {
 import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 import {handle} from './assertions/tsd';
-import {jestLikeHandle} from './assertions/jest-like';
+import {JestLikeContext, JestLikeErrorLocation, JestLikeExpectedError, jestLikeHandle} from './assertions/jest-like';
+import {makeDiagnostic} from './utils';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([
@@ -96,10 +97,17 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		.concat(program.getSyntacticDiagnostics());
 
 	const assertions = extractAssertions(program);
+	const typeChecker = program.getTypeChecker();
+
+	const jestLikeContext: JestLikeContext = {
+		typeChecker,
+		expectedErrors: new Map(),
+		assertions: assertions.jestLikeAssertions
+	};
 
 	diagnostics.push(...assertions.diagnostics);
-	diagnostics.push(...handle(program.getTypeChecker(), assertions.assertions));
-	diagnostics.push(...jestLikeHandle(program.getTypeChecker(), assertions.jestLikeAssertions));
+	diagnostics.push(...jestLikeHandle(jestLikeContext));
+	diagnostics.push(...handle(typeChecker, assertions.assertions));
 
 	const expectedErrors = parseErrorAssertionToLocation(assertions.assertions);
 	const expectedErrorsLocationsWithFoundDiagnostics: Location[] = [];
@@ -122,16 +130,37 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 			continue;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+		const {fileName} = diagnostic.file;
+		const start = Number(diagnostic.start);
+		const position = diagnostic.file.getLineAndCharacterOfPosition(start);
+		const jestLikeError = findJestLikeErrorAtPosition(jestLikeContext.expectedErrors, start);
 
-		diagnostics.push({
-			fileName: diagnostic.file.fileName,
-			message: flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
+		const pushDiagnostic = (message: string) => diagnostics.push({
+			message,
+			fileName,
 			severity: 'error',
 			line: position.line + 1,
 			column: position.character
 		});
+
+		if (jestLikeError) {
+			const [location, error] = jestLikeError;
+			const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+
+			jestLikeContext.expectedErrors.delete(location);
+
+			if (error.code && error.code !== diagnostic.code) {
+				pushDiagnostic(`Expected error with code '${error.code}' but received error with code '${diagnostic.code}'.`);
+			} else if (error.message && !message.includes(error.message)) {
+				pushDiagnostic(`Expected error message to includes '${error.message}' but received error with message '${message}'.`);
+			} else if (error.regexp && !error.regexp.test(message)) {
+				pushDiagnostic(`Expected error message to match '${error.regexp.source}' but received error with message '${message}'.`);
+			}
+
+			continue;
+		}
+
+		pushDiagnostic(flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
 	}
 
 	for (const errorLocationToRemove of expectedErrorsLocationsWithFoundDiagnostics) {
@@ -146,5 +175,19 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 		});
 	}
 
+	for (const [, error] of jestLikeContext.expectedErrors) {
+		diagnostics.push(makeDiagnostic(error.node, 'Expected an error, but found none.'));
+	}
+
 	return diagnostics;
 };
+
+function findJestLikeErrorAtPosition(expectedErrors: JestLikeContext['expectedErrors'], start: number): [JestLikeErrorLocation, JestLikeExpectedError] | undefined {
+	for (const [location, error] of expectedErrors) {
+		if (location.start <= start && start <= location.end) {
+			return [location, error];
+		}
+	}
+
+	return undefined;
+}

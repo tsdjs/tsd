@@ -1,4 +1,4 @@
-import {CallExpression, TypeChecker} from '@tsd/typescript';
+import {CallExpression, Node, TypeChecker} from '@tsd/typescript';
 import {Diagnostic} from '../../interfaces';
 
 import * as handlers from '../jest-like/handlers';
@@ -9,17 +9,25 @@ export type JestLikeHandler = (typeChecker: TypeChecker, nodes: JestLikeAssertio
 export type JestLikeAssertionHandlers = Map<JestLikeAssertion, JestLikeHandler>;
 export type JestLikeAssertions = Map<JestLikeAssertion, JestLikeAssertionNodes>;
 
+export type JestLikeErrorLocation = {start: number; end: number};
+export type JestLikeExpectedError = {node: Node; code?: number; message?: string; regexp?: RegExp};
+
+export type JestLikeContext = {
+	typeChecker: TypeChecker;
+	assertions: JestLikeAssertions;
+	expectedErrors: Map<JestLikeErrorLocation, JestLikeExpectedError>;
+};
+
 /**
  * Returns a list of diagnostics based on the assertions provided.
  *
- * @param typeChecker - The TypeScript type checker.
- * @param assertions - Assertion map with the key being the assertion, and the value the list of all those assertion nodes.
+ * @param context - See {@link JestLikeContext}
  * @returns List of diagnostics.
  */
-export const jestLikeHandle = (typeChecker: TypeChecker, assertions: JestLikeAssertions): Diagnostic[] => {
+export const jestLikeHandle = (context: JestLikeContext): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
-	for (const [assertion, nodes] of assertions) {
+	for (const [assertion, nodes] of context.assertions) {
 		const handler = handlers[assertion];
 
 		if (!handler) {
@@ -27,7 +35,7 @@ export const jestLikeHandle = (typeChecker: TypeChecker, assertions: JestLikeAss
 			continue;
 		}
 
-		diagnostics.push(...handler(typeChecker, nodes));
+		diagnostics.push(...handler(context, nodes));
 	}
 
 	return diagnostics;

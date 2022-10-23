@@ -2,11 +2,11 @@ import {CallExpression, Node, Type, TypeChecker} from '@tsd/typescript';
 import {Diagnostic} from '../../interfaces';
 import {makeDiagnostic} from '../../utils';
 
-type Types =
-	| {type: Type; argument: Node; diagnostic?: never}
+type MaybeTypes =
+	| {type: Type | undefined; argument: Node; diagnostic?: never}
 	| {diagnostic: Diagnostic; type?: never; argument?: never};
 
-export function getTypes(node: CallExpression, checker: TypeChecker): Types {
+export function tryToGetTypes(node: CallExpression, checker: TypeChecker): MaybeTypes {
 	let type: Type | undefined;
 	let value: Type | undefined;
 
@@ -29,9 +29,23 @@ export function getTypes(node: CallExpression, checker: TypeChecker): Types {
 		return {type, argument: typeArgument};
 	}
 
-	if (value && valueArgument) {
-		return {type: value, argument: valueArgument};
+	return {type: value, argument: valueArgument};
+}
+
+type Types =
+	| {type: Type; argument: Node; diagnostic?: never}
+	| {diagnostic: Diagnostic; type?: never; argument?: never};
+
+export function getTypes(node: CallExpression, checker: TypeChecker): Types {
+	const {type, argument, diagnostic} = tryToGetTypes(node, checker);
+
+	if (diagnostic) {
+		return {diagnostic};
 	}
 
-	return {diagnostic: makeDiagnostic(node, 'A generic type or an argument value is required.')};
+	if (!type) {
+		return {diagnostic: makeDiagnostic(node, 'A generic type or an argument value is required.')};
+	}
+
+	return {type, argument};
 }

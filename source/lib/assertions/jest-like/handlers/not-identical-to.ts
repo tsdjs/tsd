@@ -1,10 +1,9 @@
-import {TypeChecker} from '@tsd/typescript';
 import {Diagnostic} from '../../../interfaces';
 import {makeDiagnostic} from '../../../utils';
-import {JestLikeAssertionNodes} from '..';
+import {JestLikeAssertionNodes, JestLikeContext} from '..';
 import {getTypes} from '../util';
 
-export const notIdenticalTo = (checker: TypeChecker, nodes: JestLikeAssertionNodes): Diagnostic[] => {
+export const notIdenticalTo = ({typeChecker}: JestLikeContext, nodes: JestLikeAssertionNodes): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
 	if (!nodes) {
@@ -14,22 +13,22 @@ export const notIdenticalTo = (checker: TypeChecker, nodes: JestLikeAssertionNod
 	for (const node of nodes) {
 		const [expectedNode, targetNode] = node;
 
-		const expected = getTypes(expectedNode, checker);
+		const expected = getTypes(expectedNode, typeChecker);
 
 		if (expected.diagnostic) {
 			diagnostics.push(expected.diagnostic);
 			continue;
 		}
 
-		const target = getTypes(targetNode, checker);
+		const target = getTypes(targetNode, typeChecker);
 
 		if (target.diagnostic) {
 			diagnostics.push(target.diagnostic);
 			continue;
 		}
 
-		if (checker.isTypeIdenticalTo(expected.type, target.type)) {
-			diagnostics.push(makeDiagnostic(expectedNode, `Expected type \`${checker.typeToString(expected.type)}\` is identical to type \`${checker.typeToString(target.type)}\`.`));
+		if (typeChecker.isTypeIdenticalTo(expected.type, target.type)) {
+			diagnostics.push(makeDiagnostic(expectedNode, `Expected type \`${typeChecker.typeToString(expected.type)}\` is identical to type \`${typeChecker.typeToString(target.type)}\`.`));
 		}
 	}
 
