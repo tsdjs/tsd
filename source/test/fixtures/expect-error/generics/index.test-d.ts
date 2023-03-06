@@ -1,4 +1,4 @@
-import {expectError, expectType} from '../../../..';
+import {expectError} from '../../../..';
 import one, {two, type Three} from '.';
 
 expectError(one(true, true));
