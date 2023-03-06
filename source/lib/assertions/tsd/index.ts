@@ -1,5 +1,5 @@
 import {CallExpression, TypeChecker} from '@tsd/typescript';
-import {Diagnostic} from '../interfaces';
+import {Diagnostic} from '../../interfaces';
 import {
 	Handler,
 	isIdentical,

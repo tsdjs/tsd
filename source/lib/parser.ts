@@ -1,17 +1,27 @@
 import {Program, Node, CallExpression, forEachChild, isCallExpression, isPropertyAccessExpression, SymbolFlags} from '@tsd/typescript';
-import {Assertion} from './assertions';
+import {JestLikeAssertion, JestLikeAssertions} from './assertions/jest-like';
+import {Assertion} from './assertions/tsd';
 import {Location, Diagnostic} from './interfaces';
+import {makeDiagnostic} from './utils';
 
 const assertionFnNames = new Set<string>(Object.values(Assertion));
+
+type Assertions = {
+	assertions: Map<Assertion, Set<CallExpression>>;
+	jestLikeAssertions: JestLikeAssertions;
+	diagnostics: Diagnostic[];
+};
 
 /**
  * Extract all assertions.
  *
  * @param program - TypeScript program.
  */
-export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpression>> => {
+export const extractAssertions = (program: Program): Assertions => {
+	const jestLikeAssertions: JestLikeAssertions = new Map();
 	const assertions = new Map<Assertion, Set<CallExpression>>();
 	const checker = program.getTypeChecker();
+	const diagnostics: Diagnostic[] = [];
 
 	/**
 	 * Checks if the given node is semantically valid and is an assertion.
@@ -47,6 +57,55 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 
 			assertions.set(assertion, nodes);
 		}
+
+		// Check for jest-like assertion
+		if (identifier === 'assertType') {
+			assertTypeHandler(node);
+		}
+	}
+
+	function assertTypeHandler(expectedNode: CallExpression) {
+		// Try to find the right side assignement
+		const targetNode = expectedNode.parent.parent.getChildren().find(isPropertyAccessExpression);
+
+		if (!targetNode) {
+			diagnostics.push(makeDiagnostic(expectedNode, 'Missing right side method, expected something like `assertType(\'hello\').assignableTo<string>()`.'));
+			return;
+		}
+
+		const assertMethodSymbol = checker.getSymbolAtLocation(targetNode);
+
+		if (!assertMethodSymbol) {
+			diagnostics.push(makeDiagnostic(targetNode, 'Missing right side method, expected something like `assertType(\'hello\').assignableTo<string>()`.'));
+			return;
+		}
+
+		const assertMethodName = assertMethodSymbol.getName();
+
+		if (assertMethodName !== 'not') {
+			const nodes = jestLikeAssertions.get(assertMethodName as JestLikeAssertion) ?? new Set();
+
+			nodes.add([expectedNode, targetNode.parent as CallExpression]);
+
+			jestLikeAssertions.set(assertMethodName as JestLikeAssertion, nodes);
+			return;
+		}
+
+		const maybeTargetNode = targetNode.parent;
+
+		if (!isPropertyAccessExpression(maybeTargetNode)) {
+			diagnostics.push(makeDiagnostic(maybeTargetNode, 'Missing right side method, expected something like `assertType(\'hello\').not.assignableTo<string>()`.'));
+			return;
+		}
+
+		const maybeTargetType = checker.getTypeAtLocation(maybeTargetNode.name);
+		const maybeTargetName = maybeTargetType.symbol.getName() as JestLikeAssertion;
+
+		const nodes = jestLikeAssertions.get(maybeTargetName) ?? new Set();
+
+		nodes.add([expectedNode, maybeTargetNode.parent as CallExpression]);
+
+		jestLikeAssertions.set(maybeTargetName, nodes);
 	}
 
 	/**
@@ -64,7 +123,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 		walkNodes(sourceFile);
 	}
 
-	return assertions;
+	return {assertions, jestLikeAssertions, diagnostics};
 };
 
 export type ExpectedError = Pick<Diagnostic, 'fileName' | 'line' | 'column'>;

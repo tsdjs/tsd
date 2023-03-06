@@ -430,6 +430,7 @@ test('errors in libs from node_modules are not reported', async t => {
 	const alloweOtherFileFailures = [
 		/[/\\]lib[/\\]index.d.ts$/,
 		/[/\\]lib[/\\]interfaces.d.ts$/,
+		/[/\\]lib[/\\]assertions[/\\]jest-like[/\\]api[/\\]to-throw-error.d.ts$/,
 	];
 	otherDiagnostics.forEach(diagnostic => {
 		t.true(
