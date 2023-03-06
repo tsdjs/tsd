@@ -54,13 +54,9 @@ const cli = meow(`
 			throw new Error(formatter(diagnostics));
 		}
 	} catch (error: unknown) {
-		const potentialError = error as Error | undefined | null;
-		const errorMessage =
-			typeof potentialError?.stack === 'string' ?
-				potentialError.stack :
-				typeof potentialError?.message === 'string' ?
-					potentialError?.message :
-					undefined;
+		const potentialError = error as Error | undefined;
+		const errorMessage = potentialError?.stack ?? potentialError?.message;
+
 		if (errorMessage) {
 			console.error(`Error running tsd: ${errorMessage}`);
 		}
