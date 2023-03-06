@@ -26,6 +26,7 @@ export enum DiagnosticCode {
 	AwaitExpressionOnlyAllowedWithinAsyncFunction = 1308,
 	TopLevelAwaitOnlyAllowedWhenModuleESNextOrSystem = 1378,
 	GenericTypeRequiresTypeArguments = 2314,
+	GenericTypeRequiresBetweenXAndYTypeArugments = 2707,
 	TypeIsNotAssignableToOtherType = 2322,
 	TypeDoesNotSatisfyTheConstraint = 2344,
 	PropertyDoesNotExistOnType = 2339,
