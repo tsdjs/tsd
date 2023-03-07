@@ -34,6 +34,7 @@ const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.ValueOfTypeNotCallable,
 	DiagnosticCode.ExpressionNotCallable,
 	DiagnosticCode.TypeIsNotAssignableWithExactOptionalPropertyTypesEnabled,
+	DiagnosticCode.TypeIsNotAssignableToParameterWithExactOptionalPropertyTypesEnabled,
 	DiagnosticCode.OnlyVoidFunctionIsNewCallable,
 	DiagnosticCode.ExpressionNotConstructable,
 	DiagnosticCode.NewExpressionTargetLackingConstructSignatureHasAnyType,
