@@ -36,4 +36,4 @@ expectError(new hasProperty({name: 'foo'}));
 
 expectError(() => {
 	triggerSuggestion.fooOrBar = 'fooo';
-})
+});
