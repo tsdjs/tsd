@@ -11,5 +11,6 @@ expectError(() => {
 
 expectError(setWithOptionalProperty({
 	requiredProp: 'required',
+	// ts2379
 	optionalProp: undefined,
 }));
