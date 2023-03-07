@@ -95,3 +95,13 @@ test('cli typings and files flags', async t => {
 	t.is(exitCode, 1);
 	t.true(stderr.includes('✖  5:19  Argument of type number is not assignable to parameter of type string.'));
 });
+
+test('tsd logs stacktrace on failure', async t => {
+	const {exitCode, stderr, stack} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', {
+		cwd: path.join(__dirname, 'fixtures/empty-package-json')
+	}));
+
+	t.is(exitCode, 1);
+	t.true(stderr.includes('Error running tsd: JSONError: Unexpected end of JSON input while parsing empty string'));
+	t.truthy(stack);
+});
