@@ -39,6 +39,7 @@ export enum DiagnosticCode {
 	ExpressionNotCallable = 2349,
 	OnlyVoidFunctionIsNewCallable = 2350,
 	ExpressionNotConstructable = 2351,
+	TypeIsNotAssignableWithExactOptionalPropertyTypesEnabled = 2375,
 	NoOverloadExpectsCountOfArguments = 2575,
 	ThisContextOfTypeNotAssignableToMethodOfThisType = 2684,
 	PropertyMissingInType1ButRequiredInType2 = 2741,

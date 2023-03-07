@@ -33,6 +33,7 @@ const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.ThisContextOfTypeNotAssignableToMethodOfThisType,
 	DiagnosticCode.ValueOfTypeNotCallable,
 	DiagnosticCode.ExpressionNotCallable,
+	DiagnosticCode.TypeIsNotAssignableWithExactOptionalPropertyTypesEnabled,
 	DiagnosticCode.OnlyVoidFunctionIsNewCallable,
 	DiagnosticCode.ExpressionNotConstructable,
 	DiagnosticCode.NewExpressionTargetLackingConstructSignatureHasAnyType,
