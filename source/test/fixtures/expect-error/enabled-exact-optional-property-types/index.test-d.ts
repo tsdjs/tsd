@@ -14,3 +14,8 @@ expectError(setWithOptionalProperty({
 	// ts2379
 	optionalProp: undefined,
 }));
+
+const obj: OptionalProperty = { requiredProp: 'required' };
+
+// ts2412
+expectError(obj.optionalProp = undefined);
