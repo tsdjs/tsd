@@ -310,7 +310,7 @@ test('expectError for values (noImplicitAny disabled)', async t => {
 });
 
 test('expectError for values (exactOptionalPropertyTypes enabled)', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/values-enabled-exact-optional-property-types')});
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/enabled-exact-optional-property-types')});
 
 	verify(t, diagnostics, []);
 });
