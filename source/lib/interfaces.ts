@@ -42,6 +42,7 @@ export enum DiagnosticCode {
 	TypeNotAssignableWithExactOptionalPropertyTypes = 2375,
 	TypeNotAssignableToParameterWithExactOptionalPropertyTypes = 2379,
 	TypeNotAssignableTypeOfTargetWithExactOptionalPropertyTypes = 2412,
+	IndexSignatureOnlyPermitsReading = 2542,
 	NoOverloadExpectsCountOfArguments = 2575,
 	ThisContextOfTypeNotAssignableToMethodOfThisType = 2684,
 	PropertyMissingInType1ButRequiredInType2 = 2741,
