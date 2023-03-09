@@ -29,8 +29,6 @@ test('expectError should not ignore syntactical errors', async t => {
 	verify(t, diagnostics, [
 		[4, 29, 'error', '\')\' expected.'],
 		[5, 22, 'error', '\',\' expected.'],
-		[4, 0, 'error', 'Expected an error, but found none.'],
-		[5, 0, 'error', 'Expected an error, but found none.']
 	]);
 });
 
@@ -52,4 +50,14 @@ test('expectError for values (exactOptionalPropertyTypes enabled)', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/enabled-exact-optional-property-types')});
 
 	verify(t, diagnostics, []);
+});
+
+test('expectError should report missing diagnostic codes', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/missing-diagnostic-code')});
+
+	verify(t, diagnostics, [
+		[8, 12, 'error', 'Cannot find name \'undeclared\'.'],
+		[5, 0, 'error', 'Expected an error, but found none.'],
+		[8, 0, 'error', 'Found an error that tsd does not currently support (`ts2304`), consider creating an issue on GitHub.'],
+	]);
 });

@@ -67,7 +67,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	return assertions;
 };
 
-export type ExpectedError = Pick<Diagnostic, 'fileName' | 'line' | 'column'>;
+export type ExpectedError = Pick<Diagnostic, 'fileName' | 'line' | 'column'> & {code?: number};
 
 /**
  * Loop over all the error assertion nodes and convert them to a location map.
@@ -91,7 +91,7 @@ export const parseErrorAssertionToLocation = (
 		const location = {
 			fileName: node.getSourceFile().fileName,
 			start: node.getStart(),
-			end: node.getEnd()
+			end: node.getEnd() + 1
 		};
 
 		const pos = node
