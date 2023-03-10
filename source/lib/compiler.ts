@@ -15,7 +15,7 @@ const ignoredDiagnostics = new Set<number>([
 ]);
 
 // List of diagnostic codes which should be ignored inside `expectError` statements
-const expectErrordiagnosticCodesToIgnore = new Set<DiagnosticCode>([
+const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.ArgumentTypeIsNotAssignableToParameterType,
 	DiagnosticCode.PropertyDoesNotExistOnType,
 	DiagnosticCode.CannotAssignToReadOnlyProperty,
@@ -65,18 +65,27 @@ const ignoreDiagnostic = (
 		return 'ignore';
 	}
 
-	if (!expectErrordiagnosticCodesToIgnore.has(diagnostic.code)) {
-		return 'preserve';
-	}
-
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const diagnosticFileName = diagnostic.file!.fileName;
 
-	for (const [location] of expectedErrors) {
+	for (const [location, error] of expectedErrors) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const start = diagnostic.start!;
 
+		// Diagnostic is inside of `expectError` clause
 		if (diagnosticFileName === location.fileName && start > location.start && start < location.end) {
+			// Ignore syntactical errors
+			if (diagnostic.code < 2000) {
+				expectedErrors.delete(location);
+				return 'preserve';
+			}
+
+			// Set diagnostic code on `ExpectedError` to log
+			if (!expectErrorDiagnosticCodesToIgnore.has(diagnostic.code)) {
+				error.code = diagnostic.code;
+				return 'preserve';
+			}
+
 			return location;
 		}
 	}
@@ -141,9 +150,13 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 	}
 
 	for (const [, diagnostic] of expectedErrors) {
+		const message = diagnostic.code ?
+			`Found an error that tsd does not currently support (\`ts${diagnostic.code}\`), consider creating an issue on GitHub.` :
+			'Expected an error, but found none.';
+
 		diagnostics.push({
 			...diagnostic,
-			message: 'Expected an error, but found none.',
+			message,
 			severity: 'error'
 		});
 	}

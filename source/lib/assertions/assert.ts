@@ -43,7 +43,7 @@ export const expectNotAssignable = <T>(expression: any) => {
 };
 
 /**
- * Asserts that `expression` throws an error.
+ * Asserts that `expression` throws an error. Will not ignore syntax errors.
  *
  * @param expression - Expression that should throw an error.
  */
