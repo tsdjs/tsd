@@ -150,7 +150,7 @@ Asserts that the type of `expression` is not assignable to type `T`.
 
 ### expectError&lt;T = any&gt;(expression: T)
 
-Asserts that `expression` throws an error.
+Asserts that `expression` throws an error. Will not ignore syntax errors.
 
 ### expectDeprecated(expression: any)
 
