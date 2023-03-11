@@ -39,8 +39,8 @@ export default (diagnostics: Diagnostic[], showDiff = false): string => {
 
 		if (showDiff && diagnostic.diff) {
 			let difference = diffStringsUnified(
-				diagnostic.diff.expected.replace(/'/g, '\'\''),
-				diagnostic.diff.received.replace(/'/g, '\'\''),
+				diagnostic.diff.expected,
+				diagnostic.diff.received,
 				{omitAnnotationLines: true}
 			);
 

@@ -22,7 +22,7 @@ const typeToStringFormatFlags =
 	// TypeFormatFlags.UseTypeOfFunction |
 	// TypeFormatFlags.OmitParameterModifiers |
 	TypeFormatFlags.UseAliasDefinedOutsideCurrentScope |
-	TypeFormatFlags.UseSingleQuotesForStringLiteralType |
+	// TypeFormatFlags.UseSingleQuotesForStringLiteralType |
 	TypeFormatFlags.NoTypeReduction |
 	// TypeFormatFlags.OmitThisParameter |
 	TypeFormatFlags.AllowUniqueESSymbolType |
