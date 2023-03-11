@@ -17,6 +17,7 @@ interface FileWithDiagnostics {
  * Format the TypeScript diagnostics to a human readable output.
  *
  * @param diagnostics - List of TypeScript diagnostics.
+ * @param showDiff - Display difference between expected and received types.
  * @returns Beautiful diagnostics output
  */
 export default (diagnostics: Diagnostic[], showDiff = false): string => {
