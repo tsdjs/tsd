@@ -14,25 +14,13 @@ const typeToStringFormatFlags =
 	TypeFormatFlags.NoTruncation |
 	TypeFormatFlags.WriteArrayAsGenericType |
 	TypeFormatFlags.UseStructuralFallback |
-	// TypeFormatFlags.WriteTypeArgumentsOfSignature |
-	// TypeFormatFlags.UseFullyQualifiedType |
-	// TypeFormatFlags.SuppressAnyReturnType |
-	// TypeFormatFlags.MultilineObjectLiterals |
-	// TypeFormatFlags.WriteClassExpressionAsTypeLiteral |
-	// TypeFormatFlags.UseTypeOfFunction |
-	// TypeFormatFlags.OmitParameterModifiers |
 	TypeFormatFlags.UseAliasDefinedOutsideCurrentScope |
-	// TypeFormatFlags.UseSingleQuotesForStringLiteralType |
 	TypeFormatFlags.NoTypeReduction |
-	// TypeFormatFlags.OmitThisParameter |
 	TypeFormatFlags.AllowUniqueESSymbolType |
-	// TypeFormatFlags.AddUndefined |
-	// TypeFormatFlags.WriteArrowStyleSignature |
 	TypeFormatFlags.InArrayType |
 	TypeFormatFlags.InElementType |
 	TypeFormatFlags.InFirstTypeArgument |
 	TypeFormatFlags.InTypeAlias;
-	// TypeFormatFlags.NodeBuilderFlagsMask |;
 
 /**
  * Create a diagnostic with type error diffs from the given `options`, see {@link DiagnosticWithDiffOptions}.
