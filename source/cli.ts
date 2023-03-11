@@ -47,9 +47,7 @@ const cli = meow(`
 (async () => {
 	try {
 		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
-		const typingsFile = cli.flags.typings;
-		const testFiles = cli.flags.files;
-		const {showDiff} = cli.flags;
+		const {typings: typingsFile, files: testFiles, showDiff} = cli.flags;
 
 		const options = {cwd, typingsFile, testFiles};
 
