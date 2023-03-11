@@ -2,6 +2,7 @@ import path from 'path';
 import test from 'ava';
 import execa from 'execa';
 import readPkgUp from 'read-pkg-up';
+import tsd, {formatter} from '..';
 
 interface ExecaError extends Error {
 	readonly exitCode: number;
@@ -104,4 +105,19 @@ test('tsd logs stacktrace on failure', async t => {
 	t.is(exitCode, 1);
 	t.true(stderr.includes('Error running tsd: JSONError: Unexpected end of JSON input while parsing empty string'));
 	t.truthy(stack);
+});
+
+test('exported formatter matches tsd results', async t => {
+	const options = {
+		cwd: path.join(__dirname, 'fixtures/failure'),
+	};
+
+	const {stderr: cliResults} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', options));
+
+	t.true(cliResults.includes('✖  5:19  Argument of type number is not assignable to parameter of type string.'));
+
+	const tsdResults = await tsd(options);
+	const formattedResults = formatter(tsdResults);
+
+	t.true(formattedResults.includes('✖  5:19  Argument of type number is not assignable to parameter of type string.'));
 });
