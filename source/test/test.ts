@@ -427,3 +427,14 @@ test('parsing undefined symbol should not fail', async t => {
 
 	verify(t, diagnostics, []);
 });
+
+test('test js files', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/files-js'),
+		testFiles: ['index.test-d.js']
+	});
+
+	verify(t, diagnostics, [
+		[17, 12, 'error', '\')\' expected.']
+	]);
+});
