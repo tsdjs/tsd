@@ -37,9 +37,6 @@ export default (diagnostics: Diagnostic[], showDiff = false): string => {
 			fileMap.set(diagnostic.fileName, entry);
 		}
 
-		entry.errorCount++;
-		entry.messages.push(diagnostic);
-
 		if (showDiff && diagnostic.diff) {
 			let difference = diffStringsUnified(
 				diagnostic.diff.expected.replace(/'/g, '\'\''),
@@ -52,6 +49,9 @@ export default (diagnostics: Diagnostic[], showDiff = false): string => {
 				diagnostic.message = `${diagnostic.message}\n\n${difference}`;
 			}
 		}
+
+		entry.errorCount++;
+		entry.messages.push(diagnostic);
 	}
 
 	return String(formatter([...fileMap.values()]));
