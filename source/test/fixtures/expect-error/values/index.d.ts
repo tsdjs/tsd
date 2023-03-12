@@ -24,3 +24,7 @@ export const triggerSuggestion: {
 	// emit a regular TS2322 error without the "Did you mean..." suggestion.
 	fooOrBar: 'foo' | 'bar';
 };
+
+export type ReadonlyKeys = {
+	readonly [type: string]: any;
+}
