@@ -4,7 +4,7 @@ import {verify} from './fixtures/utils';
 import {FIXTURES_PATH} from './fixtures/constants';
 import tsd from '../dist';
 
-test('identical', async () => {
+test.concurrent('identical', async () => {
 	const diagnostics = await tsd({cwd: path.join(FIXTURES_PATH, 'identicality/identical')});
 
 	verify(diagnostics, [
@@ -18,7 +18,7 @@ test('identical', async () => {
 	]);
 });
 
-test('not identical', async () => {
+test.concurrent('not identical', async () => {
 	const diagnostics = await tsd({cwd: path.join(FIXTURES_PATH, 'identicality/not-identical')});
 
 	verify(diagnostics, [
