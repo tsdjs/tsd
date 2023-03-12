@@ -17,19 +17,18 @@
 	},
 	"scripts": {
 		"prepublishOnly": "npm run build",
-		"pretest": "npm run build && cpy \"./**/**\" \"../../../dist/test/fixtures/\" --parents --cwd=source/test/fixtures",
-		"test": "npm run lint && ava",
-		"build": "npm run clean && tsc --project tsconfig.tsd.json && chmod +x dist/cli.js",
+		"test": "npm run build && npm run lint && npm run vitest:run",
+		"build": "npm run clean && tsc --project tsconfig.tsd.json",
 		"clean": "del-cli dist",
-		"lint": "eslint \"source/**/*\"",
+		"lint:source": "eslint \"source/**/*\"",
 		"lint:test": "eslint -c test.eslintrc \"test/**/*\"",
+		"lint": "npm run lint:source && npm run lint:test",
 		"vitest:run": "vitest run",
 		"vitest:watch": "vitest"
 	},
 	"files": [
 		"dist/**/*.js",
-		"dist/**/*.d.ts",
-		"!dist/test/**/*"
+		"dist/**/*.d.ts"
 	],
 	"keywords": [
 		"typescript",
@@ -49,14 +48,11 @@
 		"read-pkg-up": "^7.0.0"
 	},
 	"devDependencies": {
-		"@ava/typescript": "^1.1.1",
 		"@types/node": "^14.18.21",
 		"@types/react": "^16.9.2",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
 		"@vitest/coverage-c8": "^0.29.2",
-		"ava": "^3.8.2",
-		"cpy-cli": "^3.0.0",
 		"del-cli": "^3.0.0",
 		"eslint": "^7.27.0",
 		"eslint-config-xo": "^0.36.0",
@@ -66,17 +62,5 @@
 		"rxjs": "^6.5.3",
 		"typescript": "~4.9.5",
 		"vitest": "^0.29.2"
-	},
-	"ava": {
-		"timeout": "2m",
-		"files": [
-			"source/test/**/*",
-			"!source/test/fixtures/**/*"
-		],
-		"typescript": {
-			"rewritePaths": {
-				"source/": "dist/"
-			}
-		}
 	}
 }
