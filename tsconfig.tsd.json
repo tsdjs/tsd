@@ -19,11 +19,14 @@
 		"noFallthroughCasesInSwitch": true,
 		"noEmitOnError": true,
 		"forceConsistentCasingInFileNames": true,
-		"esModuleInterop": true,
+		"esModuleInterop": true
 	},
 	"exclude": [
 		"node_modules",
 		"dist",
 		"source/test/fixtures",
+		"test",
+		"coverage",
+		"vitest.config.ts"
 	]
 }

@@ -22,7 +22,9 @@
 		"build": "npm run clean && tsc --project tsconfig.tsd.json && chmod +x dist/cli.js",
 		"clean": "del-cli dist",
 		"lint": "eslint \"source/**/*\"",
-		"lint:fix": "eslint --fix \"source/**/*\""
+		"lint:fix": "eslint --fix \"source/**/*\"",
+		"vitest:run": "vitest run",
+		"vitest:watch": "vitest"
 	},
 	"files": [
 		"dist/**/*.js",
@@ -52,6 +54,7 @@
 		"@types/react": "^16.9.2",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
+		"@vitest/coverage-c8": "^0.29.2",
 		"ava": "^3.8.2",
 		"cpy-cli": "^3.0.0",
 		"del-cli": "^3.0.0",
@@ -61,7 +64,8 @@
 		"execa": "^5.0.0",
 		"react": "^16.9.0",
 		"rxjs": "^6.5.3",
-		"typescript": "~4.9.5"
+		"typescript": "~4.9.5",
+		"vitest": "^0.29.2"
 	},
 	"ava": {
 		"timeout": "2m",
