@@ -18,7 +18,7 @@
 	"scripts": {
 		"prepublishOnly": "npm run build",
 		"test": "npm run build && npm run lint && npm run vitest:run",
-		"build": "npm run clean && tsc --project tsconfig.tsd.json",
+		"build": "npm run clean && tsc --project tsconfig.tsd.json && chmod +x dist/cli.js",
 		"clean": "del-cli dist",
 		"lint:source": "eslint \"source/**/*\"",
 		"lint:test": "eslint -c test.eslintrc \"test/**/*\"",
