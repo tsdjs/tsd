@@ -1,0 +1,10 @@
+{
+	"name": "foo",
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"dependencies": {
+		"react": "*"
+	}
+}
