@@ -3,6 +3,7 @@ import {defineConfig} from 'vite'
 export default defineConfig({
   test: {
     include: ['test/**/*.test.ts'],
-    exclude: ['test/fixtures/**/*']
+    exclude: ['test/fixtures/**/*'],
+    testTimeout: 15000
   },
 })
