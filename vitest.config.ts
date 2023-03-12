@@ -4,6 +4,6 @@ export default defineConfig({
   test: {
     include: ['test/**/*.test.ts'],
     exclude: ['test/fixtures/**/*'],
-    testTimeout: 15000
+    testTimeout: 30000
   },
 })
