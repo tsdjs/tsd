@@ -39,11 +39,10 @@ test('diff cli', async t => {
 	const file = path.join(__dirname, 'fixtures/diff');
 
 	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('dist/cli.js', [file, '--show-diff']));
-	const expectedLines = stderr.trim().split('\n').slice(2).map(line => line.trim());
 
 	t.is(exitCode, 1);
 
-	t.deepEqual(expectedLines, [
+	const expectedLines = [
 		'✖   8:0  Parameter type { life?: number | undefined; } is declared too wide for argument type { life: number; }.',
 		'',
 		'- { life?: number | undefined; }',
@@ -70,5 +69,13 @@ test('diff cli', async t => {
 		'+ This is a comment.',
 		'',
 		'6 errors'
-	]);
+	];
+
+	// NOTE: If lines are added to the output in the future startLine and endLine should be adjusted.
+	const startLine = 2; // Skip tsd error message and file location.
+	const endLine = startLine + expectedLines.length; // Grab diff output only and skip stack trace.
+
+	const receivedLines = stderr.trim().split('\n').slice(startLine, endLine).map(line => line.trim());
+
+	t.deepEqual(receivedLines, expectedLines);
 });
