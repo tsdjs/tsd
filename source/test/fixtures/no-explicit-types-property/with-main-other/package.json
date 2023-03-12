@@ -1,7 +1,0 @@
-{
-	"name": "foo",
-	"main": "foo.js",
-	"files": [
-		"foo.d.ts"
-	]
-}

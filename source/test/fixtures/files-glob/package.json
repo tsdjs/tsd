@@ -1,8 +1,0 @@
-{
-	"name": "foo",
-	"files": [
-		"out/**/*.d.ts",
-		"out/**/*.js"
-	],
-	"types": "out/index.d.ts"
-}
