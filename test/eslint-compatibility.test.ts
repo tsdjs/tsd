@@ -1,8 +1,8 @@
 import path from 'path';
 import {expect, test} from 'vitest';
-import execa, { type ExecaError } from 'execa';
-import { throwsAsync } from './fixtures/throws-async';
-import { FIXTURES_PATH, NODE_MODULES_PATH } from './fixtures/constants';
+import execa, {type ExecaError} from 'execa';
+import {throwsAsync} from './fixtures/throws-async';
+import {FIXTURES_PATH, NODE_MODULES_PATH} from './fixtures/constants';
 
 test('`expectType` is compatible with eslint @typescript-eslint/no-unsafe-call rule', async () => {
 	const cwd = path.join(FIXTURES_PATH, 'eslint-compatibility');

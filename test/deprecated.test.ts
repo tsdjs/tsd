@@ -1,10 +1,10 @@
 import path from 'path';
 import {test} from 'vitest';
 import {verify} from './fixtures/utils';
-import { FIXTURES_PATH } from './fixtures/constants';
+import {FIXTURES_PATH} from './fixtures/constants';
 import tsd from '../dist';
 
-test.concurrent('deprecated', async t => {
+test.concurrent('deprecated', async () => {
 	const diagnostics = await tsd({cwd: path.join(FIXTURES_PATH, 'deprecated/expect-deprecated')});
 
 	verify(diagnostics, [
@@ -15,7 +15,7 @@ test.concurrent('deprecated', async t => {
 	]);
 });
 
-test.concurrent('not deprecated', async t => {
+test.concurrent('not deprecated', async () => {
 	const diagnostics = await tsd({cwd: path.join(FIXTURES_PATH, 'deprecated/expect-not-deprecated')});
 
 	verify(diagnostics, [

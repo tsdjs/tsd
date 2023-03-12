@@ -1,9 +1,9 @@
 import path from 'path';
 import {expect, test} from 'vitest';
 import readPkgUp from 'read-pkg-up';
-import execa, { type ExecaError } from 'execa';
-import { throwsAsync } from './fixtures/throws-async';
-import { CLI_PATH, FIXTURES_PATH } from './fixtures/constants';
+import execa, {type ExecaError} from 'execa';
+import {throwsAsync} from './fixtures/throws-async';
+import {CLI_PATH, FIXTURES_PATH} from './fixtures/constants';
 
 test.concurrent('fail if errors are found', async () => {
 	const {exitCode, stderr} = await throwsAsync<ExecaError>(execa(CLI_PATH, {
