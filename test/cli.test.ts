@@ -84,10 +84,12 @@ test.concurrent('cli files flag array', async () => {
 });
 
 test.concurrent('cli typings and files flags', async () => {
-	const typingsFile = 'dist/test/fixtures/typings-custom-dir/utils/index.d.ts';
-	const testFile = 'dist/test/fixtures/typings-custom-dir/index.test-d.ts';
+	const typingsFile = 'utils/index.d.ts';
+	const testFile = 'index.test-d.ts';
 
-	const {exitCode, stderr} = await throwsAsync<ExecaError>(execa.command(`${CLI_PATH} -t ${typingsFile} -f ${testFile}`));
+	const {exitCode, stderr} = await throwsAsync<ExecaError>(execa(CLI_PATH, ['-t', typingsFile, '-f', testFile], {
+		cwd: path.join(FIXTURES_PATH, 'typings-custom-dir')
+	}));
 
 	expect(exitCode).toBe(1);
 	expect(stderr).toMatch('✖  5:19  Argument of type number is not assignable to parameter of type string.');
