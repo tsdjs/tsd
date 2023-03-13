@@ -2,15 +2,16 @@ import path from 'path';
 import readPkgUp from 'read-pkg-up';
 import pathExists from 'path-exists';
 import globby from 'globby';
-import {getDiagnostics as getTSDiagnostics} from './compiler';
+import {getAllDiagnostics as getTSDiagnostics} from './compiler';
 import loadConfig from './config';
 import getCustomDiagnostics from './rules';
-import {Context, Config, Diagnostic, PackageJsonWithTsdConfig} from './interfaces';
+import {Context, Config, Diagnostic, PackageJsonWithTsdConfig, TestFiles} from './interfaces';
+import {getGlobTestFiles, getTextTestFiles} from './utils/filter-test-files';
 
 export interface Options {
 	cwd: string;
 	typingsFile?: string;
-	testFiles?: readonly string[];
+	testFiles?: TestFiles;
 }
 
 const findTypingsFile = async (pkg: PackageJsonWithTsdConfig, options: Options): Promise<string> => {
@@ -39,14 +40,19 @@ const normalizeTypingsFilePath = (typingsFilePath: string, options: Options) => 
 	return typingsFilePath;
 };
 
-const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: string) => {
-	const testFiles = await globby(testFilesPattern, {cwd});
+const findCustomTestFiles = async (testFilesPattern: TestFiles, cwd: string) => {
+	const globFiles = (await globby(getGlobTestFiles(testFilesPattern), {cwd})).map(file => path.join(cwd, file));
+	const textFiles = getTextTestFiles(testFilesPattern);
 
-	if (testFiles.length === 0) {
-		throw new Error('Could not find any test files with the given pattern(s). Create one and try again.');
+	if (textFiles.length === 0) {
+		if (globFiles.length === 0) {
+			throw new Error('Could not find any test files with the given pattern(s). Create one and try again.');
+		}
+
+		return {globs: globFiles};
 	}
 
-	return testFiles.map(file => path.join(cwd, file));
+	return {globs: globFiles, sourceFiles: textFiles};
 };
 
 const findTestFiles = async (typingsFilePath: string, options: Options & {config: Config}) => {
@@ -72,7 +78,7 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
 		testFiles = await globby([`${testDir}/**/*.ts`, `${testDir}/**/*.tsx`], {cwd: options.cwd});
 	}
 
-	return testFiles.map(fileName => path.join(options.cwd, fileName));
+	return {globs: testFiles.map(fileName => path.join(options.cwd, fileName))};
 };
 
 /**

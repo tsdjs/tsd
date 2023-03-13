@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import test from 'ava';
 import execa from 'execa';
@@ -110,4 +111,41 @@ test('tsd logs stacktrace on failure', async t => {
 	t.is(exitCode, 1);
 	t.true(stderr.includes('Error running tsd: JSONError: Unexpected end of JSON input while parsing empty string'));
 	t.truthy(stack);
+});
+
+test('pass string files', async t => {
+	const source = await fs.promises.readFile(path.join(__dirname, 'fixtures/specify-test-files/syntax.test.ts'), 'utf8');
+	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(
+		execa('../../../cli.js', ['--files', `syntax.test.ts:${source}`], {
+			cwd: path.join(__dirname, 'fixtures/specify-test-files')
+		})
+	);
+
+	t.is(exitCode, 1);
+	t.true(stderr.includes('✖  1:6  Type string is not assignable to type number.'));
+});
+
+test('pass string files with globs', async t => {
+	const source = await fs.promises.readFile(path.join(__dirname, 'fixtures/specify-test-files/syntax.test.ts'), 'utf8');
+	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(
+		execa('../../../cli.js', ['--files', 'unknown.test.ts', '--files', 'second.test.ts', '--files', `syntax.test.ts:${source}`], {
+			cwd: path.join(__dirname, 'fixtures/specify-test-files')
+		})
+	);
+
+	const expectedLines = [
+		'unknown.test.ts:5:19',
+		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+		'',
+		'syntax.test.ts:1:6',
+		'✖  1:6   Type string is not assignable to type number.',
+		'',
+		'2 errors',
+	];
+
+	// Grab output only and skip stack trace
+	const receivedLines = stderr.trim().split('\n').slice(1, 1 + expectedLines.length).map(line => line.trim());
+
+	t.is(exitCode, 1);
+	t.deepEqual(receivedLines, expectedLines);
 });

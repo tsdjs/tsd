@@ -1,4 +1,17 @@
-import {TypeChecker, Expression, isCallLikeExpression, JSDocTagInfo, displayPartsToString} from '@tsd/typescript';
+import {
+	TypeChecker,
+	Expression,
+	isCallLikeExpression,
+	JSDocTagInfo,
+	displayPartsToString,
+	createProgram,
+	createSourceFile,
+	ScriptTarget,
+	createCompilerHost,
+	CompilerOptions,
+	CompilerHost
+} from '@tsd/typescript';
+import {SourceFiles} from '../interfaces';
 
 const resolveCommentHelper = <R extends 'JSDoc' | 'DocComment'>(resolve: R) => {
 	type ConditionalResolveReturn = (R extends 'JSDoc' ? Map<string, JSDocTagInfo> : string) | undefined;
@@ -68,4 +81,34 @@ export const expressionToString = (checker: TypeChecker, expression: Expression)
 	}
 
 	return checker.symbolToString(symbol, expression);
+};
+
+export const createTsProgram = (testFiles: SourceFiles, options: CompilerOptions) => {
+	const sourceFiles = testFiles?.map(({name, text}) => createSourceFile(name, text, ScriptTarget.Latest));
+
+	const defaultCompilerHost = createCompilerHost({});
+
+	const customCompilerHost: CompilerHost = {
+		getSourceFile: (name, languageVersion) => {
+			for (const sourceFile of sourceFiles) {
+				if (sourceFile.fileName === name) {
+					return sourceFile;
+				}
+			}
+
+			return defaultCompilerHost.getSourceFile(name, languageVersion);
+		},
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		writeFile: (_filename, _data) => {},
+		getDefaultLibFileName: () => 'lib.d.ts',
+		useCaseSensitiveFileNames: () => false,
+		getCanonicalFileName: filename => filename,
+		getCurrentDirectory: () => '',
+		getNewLine: () => '\n',
+		getDirectories: () => [],
+		fileExists: () => true,
+		readFile: () => ''
+	};
+
+	return createProgram(testFiles.map(file => file.name), options, customCompilerHost);
 };

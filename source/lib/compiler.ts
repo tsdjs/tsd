@@ -1,11 +1,13 @@
 import {
 	flattenDiagnosticMessageText,
 	createProgram,
+	Program,
 	Diagnostic as TSDiagnostic
 } from '@tsd/typescript';
 import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
 import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
 import {handle} from './assertions';
+import {createTsProgram} from './utils/typescript';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([
@@ -94,15 +96,13 @@ const ignoreDiagnostic = (
 };
 
 /**
- * Get a list of TypeScript diagnostics within the current context.
+ * Get a list of TypeScript diagnostics for a given program.
  *
- * @param context - The context object.
+ * @param program - A TypeScript program.
  * @returns List of diagnostics
  */
-export const getDiagnostics = (context: Context): Diagnostic[] => {
+const getDiagnostics = (program: Program): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
-
-	const program = createProgram(context.testFiles, context.config.compilerOptions);
 
 	const tsDiagnostics = program
 		.getSemanticDiagnostics()
@@ -162,4 +162,26 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 	}
 
 	return diagnostics;
+};
+
+/**
+ * Get a list of TypeScript diagnostics within the current context.
+ *
+ * @param context - The context object.
+ * @returns List of diagnostics
+ */
+export const getAllDiagnostics = (context: Context): Diagnostic[] => {
+	const globProgram = createProgram(context.testFiles.globs, context.config.compilerOptions);
+	const globDiagnostics = getDiagnostics(globProgram);
+
+	if (context.testFiles.sourceFiles === undefined) {
+		return globDiagnostics;
+	}
+
+	const customProgram = createTsProgram(context.testFiles.sourceFiles, context.config.compilerOptions);
+
+	return [
+		...globDiagnostics,
+		...getDiagnostics(customProgram),
+	];
 };

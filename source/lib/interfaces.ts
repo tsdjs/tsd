@@ -14,11 +14,23 @@ export type PackageJsonWithTsdConfig = NormalizedPackageJson & {
 	tsd?: RawConfig;
 };
 
+export type TestFiles = ReadonlyArray<(
+	| string
+	| {name: string; text: string}
+)>;
+
+export type SourceFiles = ReadonlyArray<{name: string; text: string}>;
+
+export type ParsedTestFiles = {
+	globs: readonly string[];
+	sourceFiles?: SourceFiles;
+};
+
 export interface Context {
 	cwd: string;
 	pkg: PackageJsonWithTsdConfig;
 	typingsFile: string;
-	testFiles: string[];
+	testFiles: ParsedTestFiles;
 	config: Config;
 }
 

@@ -15,12 +15,14 @@ const cli = meow(`
 
 	Options
 	  --typings  -t  Type definition file to test  [Default: "types" property in package.json]
-	  --files    -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
+	  --files    -f  Glob or source files to test  [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
 
 	Examples
 	  $ tsd /path/to/project
 
 	  $ tsd --files /test/some/folder/*.ts --files /test/other/folder/*.tsx
+
+	  $ tsc foo.ts --module 'none' --outFile '/dev/stdout' | xargs -I{} tsd --files "foo.js:{}"
 
 	  $ tsd
 
@@ -43,12 +45,9 @@ const cli = meow(`
 (async () => {
 	try {
 		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
-		const typingsFile = cli.flags.typings;
-		const testFiles = cli.flags.files;
+		const {typings: typingsFile, files: testFiles} = cli.flags;
 
-		const options = {cwd, typingsFile, testFiles};
-
-		const diagnostics = await tsd(options);
+		const diagnostics = await tsd({cwd, typingsFile, testFiles});
 
 		if (diagnostics.length > 0) {
 			throw new Error(formatter(diagnostics));
