@@ -1,6 +1,6 @@
 import {CallExpression, TypeChecker, TypeFlags} from '@tsd/typescript';
 import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic} from '../../utils';
+import {makeDiagnostic, makeDiagnosticWithDiff} from '../../utils';
 
 /**
  * Asserts that the argument of the assertion is identical to the generic type of the assertion.
@@ -26,25 +26,37 @@ export const isIdentical = (checker: TypeChecker, nodes: Set<CallExpression>): D
 		const expectedType = checker.getTypeFromTypeNode(node.typeArguments[0]);
 
 		// Retrieve the argument type. This is the type to be checked.
-		const argumentType = checker.getTypeAtLocation(node.arguments[0]);
+		const receivedType = checker.getTypeAtLocation(node.arguments[0]);
 
-		if (!checker.isTypeAssignableTo(argumentType, expectedType)) {
+		if (!checker.isTypeAssignableTo(receivedType, expectedType)) {
 			// The argument type is not assignable to the expected type. TypeScript will catch this for us.
 			continue;
 		}
 
-		if (!checker.isTypeAssignableTo(expectedType, argumentType)) {
+		if (!checker.isTypeAssignableTo(expectedType, receivedType)) {
 			/**
 			 * The expected type is not assignable to the argument type, but the argument type is
 			 * assignable to the expected type. This means our type is too wide.
 			 */
-			diagnostics.push(makeDiagnostic(node, `Parameter type \`${checker.typeToString(expectedType)}\` is declared too wide for argument type \`${checker.typeToString(argumentType)}\`.`));
-		} else if (!checker.isTypeIdenticalTo(expectedType, argumentType)) {
+			diagnostics.push(makeDiagnosticWithDiff({
+				message: 'Parameter type `{expectedType}` is declared too wide for argument type `{receivedType}`.',
+				expectedType,
+				receivedType,
+				checker,
+				node,
+			}));
+		} else if (!checker.isTypeIdenticalTo(expectedType, receivedType)) {
 			/**
 			 * The expected type and argument type are assignable in both directions. We still have to check
 			 * if the types are identical. See https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md#3.11.2.
 			 */
-			diagnostics.push(makeDiagnostic(node, `Parameter type \`${checker.typeToString(expectedType)}\` is not identical to argument type \`${checker.typeToString(argumentType)}\`.`));
+			diagnostics.push(makeDiagnosticWithDiff({
+				message: 'Parameter type `{expectedType}` is not identical to argument type `{receivedType}`.',
+				expectedType,
+				receivedType,
+				checker,
+				node,
+			}));
 		}
 	}
 

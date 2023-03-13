@@ -1,6 +1,6 @@
 import {CallExpression, TypeChecker} from '@tsd/typescript';
 import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic} from '../../utils';
+import {makeDiagnosticWithDiff} from '../../utils';
 
 /**
  * Asserts that the argument of the assertion is not assignable to the generic type of the assertion.
@@ -24,13 +24,19 @@ export const isNotAssignable = (checker: TypeChecker, nodes: Set<CallExpression>
 
 		// Retrieve the type to be expected. This is the type inside the generic.
 		const expectedType = checker.getTypeFromTypeNode(node.typeArguments[0]);
-		const argumentType = checker.getTypeAtLocation(node.arguments[0]);
+		const receivedType = checker.getTypeAtLocation(node.arguments[0]);
 
-		if (checker.isTypeAssignableTo(argumentType, expectedType)) {
+		if (checker.isTypeAssignableTo(receivedType, expectedType)) {
 			/**
 			 * The argument type is assignable to the expected type, we don't want this so add a diagnostic.
 			 */
-			diagnostics.push(makeDiagnostic(node, `Argument of type \`${checker.typeToString(argumentType)}\` is assignable to parameter of type \`${checker.typeToString(expectedType)}\`.`));
+			diagnostics.push(makeDiagnosticWithDiff({
+				message: 'Argument of type `{receivedType}` is assignable to parameter of type `{expectedType}`.',
+				expectedType,
+				receivedType,
+				checker,
+				node,
+			}));
 		}
 	}
 

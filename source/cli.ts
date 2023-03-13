@@ -10,12 +10,13 @@ const cli = meow(`
 	  The given directory must contain a package.json and a typings file.
 
 	Info
-	  --help         Display help text
-	  --version      Display version info
+	  --help           Display help text
+	  --version        Display version info
 
 	Options
-	  --typings  -t  Type definition file to test  [Default: "types" property in package.json]
-	  --files    -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
+	  --typings    -t  Type definition file to test  [Default: "types" property in package.json]
+	  --files      -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
+	  --show-diff      Show type error diffs         [Default: don't show]
 
 	Examples
 	  $ tsd /path/to/project
@@ -37,21 +38,23 @@ const cli = meow(`
 			alias: 'f',
 			isMultiple: true,
 		},
+		showDiff: {
+			type: 'boolean',
+		},
 	},
 });
 
 (async () => {
 	try {
 		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
-		const typingsFile = cli.flags.typings;
-		const testFiles = cli.flags.files;
+		const {typings: typingsFile, files: testFiles, showDiff} = cli.flags;
 
 		const options = {cwd, typingsFile, testFiles};
 
 		const diagnostics = await tsd(options);
 
 		if (diagnostics.length > 0) {
-			throw new Error(formatter(diagnostics));
+			throw new Error(formatter(diagnostics, showDiff));
 		}
 	} catch (error: unknown) {
 		const potentialError = error as Error | undefined;
