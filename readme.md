@@ -268,6 +268,14 @@ console.log(diagnostics.length);
 //=> 2
 ```
 
+You can also make use of the CLI's formatter to generate the same formatting output when running `tsd` programmatically.
+
+```ts
+import tsd, {formatter} from 'tsd';
+
+const formattedDiagnostics = formatter(await tsd());
+```
+
 ### tsd(options?)
 
 Retrieve the type definition diagnostics of the project.
