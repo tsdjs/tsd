@@ -107,7 +107,7 @@ test('tsd logs stacktrace on failure', async t => {
 	t.truthy(stack);
 });
 
-test('exported formatter matches tsd results', async t => {
+test('exported formatter matches cli results', async t => {
 	const options = {
 		cwd: path.join(__dirname, 'fixtures/failure'),
 	};
