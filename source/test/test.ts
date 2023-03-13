@@ -1,4 +1,5 @@
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import test from 'ava';
 import {verify, verifyWithFileName} from './fixtures/utils';
 import tsd from '..';
@@ -426,4 +427,50 @@ test('parsing undefined symbol should not fail', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/undefined-symbol')});
 
 	verify(t, diagnostics, []);
+});
+
+test('test js files', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/files-js'),
+		testFiles: ['index.test-d.js']
+	});
+
+	verify(t, diagnostics, [
+		[17, 12, 'error', '\')\' expected.']
+	]);
+});
+
+test('test string files', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/specify-test-files'),
+		testFiles: [
+			{
+				name: 'syntax.test.ts',
+				text: await fs.promises.readFile(path.join(__dirname, 'fixtures/specify-test-files/syntax.test.ts'), 'utf8'),
+			},
+		],
+	});
+
+	verify(t, diagnostics, [
+		[1, 6, 'error', 'Type \'string\' is not assignable to type \'number\'.']
+	]);
+});
+
+test('test string files with glob files', async t => {
+	const diagnostics = await tsd({
+		cwd: path.join(__dirname, 'fixtures/specify-test-files'),
+		testFiles: [
+			'unknown.test.ts',
+			'second.test.ts',
+			{
+				name: 'syntax.test.ts',
+				text: await fs.promises.readFile(path.join(__dirname, 'fixtures/specify-test-files/syntax.test.ts'), 'utf8'),
+			},
+		],
+	});
+
+	verify(t, diagnostics, [
+		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.'],
+		[1, 6, 'error', 'Type \'string\' is not assignable to type \'number\'.']
+	]);
 });
