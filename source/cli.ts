@@ -45,6 +45,7 @@ const cli = meow(`
 });
 
 (async () => {
+	let success = false;
 	try {
 		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
 		const {typings: typingsFile, files: testFiles, showDiff} = cli.flags;
@@ -54,15 +55,14 @@ const cli = meow(`
 		const diagnostics = await tsd(options);
 
 		if (diagnostics.length > 0) {
-			throw new Error(formatter(diagnostics, showDiff), {cause: 'tsd found diagnostics'});
+			success = true;
+			throw new Error(formatter(diagnostics, showDiff));
 		}
 	} catch (error: unknown) {
 		const potentialError = error as Error | undefined;
 
-		if (potentialError?.cause === 'tsd found diagnostics') {
-			if (potentialError?.message) {
-				console.error(potentialError?.message);
-			}
+		if (success && potentialError?.message) {
+			console.error(potentialError?.message);
 		} else if (potentialError?.stack) {
 			console.error(`Error running tsd:\n${potentialError?.stack}`);
 		}
