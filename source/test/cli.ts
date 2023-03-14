@@ -132,9 +132,8 @@ test('tsd logs stacktrace on failure', async t => {
 	verifyCli(t, stderr, [
 		'Error running tsd:',
 		'JSONError: Unexpected end of JSON input while parsing empty string',
-		'at parseJson (/Users/tommymitchell/src/_open-source/tsd/node_modules/parse-json/index.js:29:21)',
-		'at module.exports (/Users/tommymitchell/src/_open-source/tsd/node_modules/read-pkg/index.js:17:15)',
-		'at async module.exports (/Users/tommymitchell/src/_open-source/tsd/node_modules/read-pkg-up/index.js:14:16)',
+		// TODO: check that stack matches without checking for exact filepath
+		// would have to match in CI and locally
 	], {startLine: 0});
 });
 
