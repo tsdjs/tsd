@@ -132,10 +132,7 @@ export const verifyCli = (
 	expectedLines: string[],
 	{startLine}: {startLine: number} = {startLine: 1} // Skip file location.
 ) => {
-	// NOTE: If lines are added to the output in the future `startLine` and `endLine` should be adjusted.
-	const endLine = startLine + expectedLines.length; // Grab diff output only and skip stack trace.
-
-	const receivedLines = diagnostics.trim().split('\n').slice(startLine, endLine).map(line => line.trim());
+	const receivedLines = diagnostics.trim().split('\n').slice(startLine).map(line => line.trim());
 
 	t.deepEqual(receivedLines, expectedLines, 'Received diagnostics that are different from expectations!');
 };

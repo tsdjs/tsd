@@ -127,13 +127,15 @@ test('tsd logs stacktrace on failure', async t => {
 		cwd: path.join(__dirname, 'fixtures/empty-package-json')
 	}));
 
-	t.is(exitCode, 1);
+	const nodeModulesPath = path.resolve('node_modules');
 
+	t.is(exitCode, 1);
 	verifyCli(t, stderr, [
 		'Error running tsd:',
 		'JSONError: Unexpected end of JSON input while parsing empty string',
-		// TODO: check that stack matches without checking for exact filepath
-		// would have to match in CI and locally
+		`at parseJson (${nodeModulesPath}/parse-json/index.js:29:21)`,
+		`at module.exports (${nodeModulesPath}/read-pkg/index.js:17:15)`,
+		`at async module.exports (${nodeModulesPath}/read-pkg-up/index.js:14:16)`,
 	], {startLine: 0});
 });
 
@@ -153,5 +155,9 @@ test('exported formatter matches cli results', async t => {
 	const tsdResults = await tsd(options);
 	const formattedResults = formatter(tsdResults);
 
-	t.true(formattedResults.includes('✖  5:19  Argument of type number is not assignable to parameter of type string.'));
+	verifyCli(t, formattedResults, [
+		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+		'',
+		'1 error',
+	]);
 });
