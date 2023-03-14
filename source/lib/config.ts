@@ -44,6 +44,7 @@ export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 			module,
 			target: ScriptTarget.ES2020,
 			esModuleInterop: true,
+			noUnusedLocals: false,
 			...combinedCompilerOptions,
 			moduleResolution: module === ModuleKind.NodeNext ?
 				ModuleResolutionKind.NodeNext :

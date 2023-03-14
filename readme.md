@@ -219,6 +219,7 @@ By default, `tsd` applies the following configuration:
 	],
 	"module": "commonjs",
 	"esModuleInterop": true,
+	"noUnusedLocals": false,
 	// The following options are set and are not overridable.
 	// Set to `nodenext` if `module` is `nodenext`, `node16` if `module` is `node16` or `node` otherwise.
 	"moduleResolution": "node" | "node16" | "nodenext",
