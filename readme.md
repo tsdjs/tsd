@@ -218,9 +218,11 @@ By default, `tsd` applies the following configuration:
 		"dom.iterable"
 	],
 	"module": "commonjs",
-	// The following option is set and is not overridable.
-	// It is set to `nodenext` if `module` is `nodenext`, `node16` if `module` is `node16` or `node` otherwise.
-	"moduleResolution": "node" | "node16" | "nodenext"
+	"esModuleInterop": true,
+	// The following options are set and are not overridable.
+	// Set to `nodenext` if `module` is `nodenext`, `node16` if `module` is `node16` or `node` otherwise.
+	"moduleResolution": "node" | "node16" | "nodenext",
+	"skipLibCheck": false
 }
 ```
 
@@ -237,7 +239,7 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 }
 ```
 
-*Default options will apply if you don't override them explicitly.* You can't override the `moduleResolution` option.
+*Default options will apply if you don't override them explicitly. You can't override the `moduleResolution` or `skipLibCheck` options.*
 
 ### Via the CLI
 
