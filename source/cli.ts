@@ -64,7 +64,7 @@ const cli = meow(`
 				console.error(potentialError?.message);
 			}
 		} else if (potentialError?.stack) {
-			console.error(`Error running tsd: ${potentialError?.stack}`);
+			console.error(`Error running tsd:\n${potentialError?.stack}`);
 		}
 
 		process.exit(1);
