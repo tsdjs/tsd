@@ -4,6 +4,7 @@ import execa from 'execa';
 import readPkgUp from 'read-pkg-up';
 import tsd, {formatter} from '..';
 import {verifyCli} from './fixtures/utils';
+import resolveFrom from 'resolve-from';
 
 interface ExecaError extends Error {
 	readonly exitCode: number;
@@ -128,12 +129,13 @@ test('tsd logs stacktrace on failure', async t => {
 	}));
 
 	const nodeModulesPath = path.resolve('node_modules');
+	const parseJsonPath = resolveFrom.silent(`${nodeModulesPath}/read-pkg`, 'parse-json') ?? `${nodeModulesPath}/index.js`;
 
 	t.is(exitCode, 1);
 	verifyCli(t, stderr, [
 		'Error running tsd:',
 		'JSONError: Unexpected end of JSON input while parsing empty string',
-		`at parseJson (${nodeModulesPath}/parse-json/index.js:29:21)`,
+		`at parseJson (${parseJsonPath}:29:21)`,
 		`at module.exports (${nodeModulesPath}/read-pkg/index.js:17:15)`,
 		`at async module.exports (${nodeModulesPath}/read-pkg-up/index.js:14:16)`,
 	], {startLine: 0});
