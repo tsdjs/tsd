@@ -163,3 +163,31 @@ test('exported formatter matches cli results', async t => {
 		'1 error',
 	]);
 });
+
+test('warnings are reported correctly and do not fail', async t => {
+	const {exitCode, stdout} = await execa('../../../../cli.js', {
+		cwd: path.join(__dirname, 'fixtures/warnings/only-warnings'),
+	});
+
+	t.is(exitCode, 0);
+	verifyCli(t, stdout, [
+		'⚠  4:0  Type for expression one(1, 1) is: number',
+		'',
+		'1 warning',
+	]);
+});
+
+test('warnings are reported with errors', async t => {
+	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../../cli.js', {
+		cwd: path.join(__dirname, 'fixtures/warnings/with-errors'),
+	}));
+
+	t.is(exitCode, 1);
+	verifyCli(t, stderr, [
+		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+		'⚠  4:0   Type for expression one(1, 1) is: number',
+		'',
+		'1 warning',
+		'1 error',
+	]);
+});
