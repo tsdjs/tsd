@@ -51,7 +51,7 @@
 		"@types/react": "^16.9.2",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
-		"ava": "^3.8.2",
+		"ava": "^5.2.0",
 		"cpy-cli": "^3.0.0",
 		"del-cli": "^3.0.0",
 		"eslint": "^7.27.0",
