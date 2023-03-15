@@ -2,10 +2,10 @@ import path from 'path';
 import readPkgUp from 'read-pkg-up';
 import pathExists from 'path-exists';
 import globby from 'globby';
-import {getDiagnostics as getTSDiagnostics} from './compiler';
-import loadConfig from './config';
-import getCustomDiagnostics from './rules';
-import {Context, Config, Diagnostic, PackageJsonWithTsdConfig} from './interfaces';
+import {getDiagnostics as getTSDiagnostics} from './compiler.js';
+import loadConfig from './config.js';
+import getCustomDiagnostics from './rules/index.js';
+import {Context, Config, Diagnostic, PackageJsonWithTsdConfig} from './interfaces.js';
 
 export interface Options {
 	cwd: string;

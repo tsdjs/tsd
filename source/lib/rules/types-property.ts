@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-import {Context, Diagnostic} from '../interfaces';
-import {getJSONPropertyPosition} from '../utils';
+import {Context, Diagnostic} from '../interfaces.js';
+import {getJSONPropertyPosition} from '../utils/index.js';
 
 /**
  * Rule which enforces the use of a `types` property over a `typings` property.

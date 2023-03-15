@@ -1,6 +1,6 @@
 import {Program, Node, CallExpression, forEachChild, isCallExpression, isPropertyAccessExpression, SymbolFlags} from '@tsd/typescript';
-import {Assertion} from './assertions';
-import {Location, Diagnostic} from './interfaces';
+import {Assertion} from './assertions/index.js';
+import {Location, Diagnostic} from './interfaces.js';
 
 const assertionFnNames = new Set<string>(Object.values(Assertion));
 

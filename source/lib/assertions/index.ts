@@ -1,5 +1,5 @@
 import {CallExpression, TypeChecker} from '@tsd/typescript';
-import {Diagnostic} from '../interfaces';
+import {Diagnostic} from '../interfaces.js';
 import {
 	Handler,
 	isIdentical,
@@ -10,7 +10,7 @@ import {
 	isNever,
 	printTypeWarning,
 	expectDocCommentIncludes,
-} from './handlers';
+} from './handlers/index.js';
 
 export enum Assertion {
 	EXPECT_TYPE = 'expectType',

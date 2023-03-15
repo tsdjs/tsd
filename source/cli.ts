@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import meow from 'meow';
-import formatter from './lib/formatter';
-import tsd from './lib';
+import formatter from './lib/formatter.js';
+import tsd from './lib/index.js';
 
 const cli = meow(`
 	Usage

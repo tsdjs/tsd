@@ -1,5 +1,5 @@
 import formatter from 'eslint-formatter-pretty';
-import {Diagnostic} from './interfaces';
+import {Diagnostic} from './interfaces.js';
 import {diffStringsUnified} from 'jest-diff';
 
 interface FileWithDiagnostics {

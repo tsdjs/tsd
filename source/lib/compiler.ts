@@ -3,9 +3,9 @@ import {
 	createProgram,
 	Diagnostic as TSDiagnostic
 } from '@tsd/typescript';
-import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
-import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
-import {handle} from './assertions';
+import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser.js';
+import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces.js';
+import {handle} from './assertions/index.js';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([

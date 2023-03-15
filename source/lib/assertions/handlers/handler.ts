@@ -1,5 +1,5 @@
 import {CallExpression, TypeChecker} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
+import {Diagnostic} from '../../interfaces.js';
 
 /**
  * A handler is a method which accepts the TypeScript type checker together with a set of assertion nodes. The type checker

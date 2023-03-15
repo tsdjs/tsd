@@ -1,6 +1,6 @@
 import {CallExpression, TypeChecker, TypeFlags} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic, makeDiagnosticWithDiff} from '../../utils';
+import {Diagnostic} from '../../interfaces.js';
+import {makeDiagnostic, makeDiagnosticWithDiff} from '../../utils/index.js';
 
 /**
  * Asserts that the argument of the assertion is identical to the generic type of the assertion.

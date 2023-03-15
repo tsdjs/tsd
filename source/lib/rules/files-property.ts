@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 import globby from 'globby';
-import {Context, Diagnostic} from '../interfaces';
-import {getJSONPropertyPosition} from '../utils';
+import {Context, Diagnostic} from '../interfaces.js';
+import {getJSONPropertyPosition} from '../utils/index.js';
 
 /**
  * Rule which enforces the typings file to be present in the `files` list in `package.json`.

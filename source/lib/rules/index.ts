@@ -1,6 +1,6 @@
-import filesProperty from './files-property';
-import typesProperty from './types-property';
-import {Diagnostic, Context} from '../interfaces';
+import filesProperty from './files-property.js';
+import typesProperty from './types-property.js';
+import {Diagnostic, Context} from '../interfaces.js';
 
 type RuleFunction = (context: Context) => Diagnostic[];
 

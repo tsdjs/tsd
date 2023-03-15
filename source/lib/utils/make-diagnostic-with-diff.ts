@@ -1,5 +1,5 @@
 import {Node, Type, TypeChecker, TypeFormatFlags} from '@tsd/typescript';
-import {Diagnostic} from '../interfaces';
+import {Diagnostic} from '../interfaces.js';
 
 interface DiagnosticWithDiffOptions {
 	checker: TypeChecker;

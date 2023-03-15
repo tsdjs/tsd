@@ -10,7 +10,7 @@ import {
 	parseJsonSourceFileConfigFileContent,
 	ModuleKind
 } from '@tsd/typescript';
-import {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces';
+import {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces.js';
 
 /**
  * Load the configuration settings.
