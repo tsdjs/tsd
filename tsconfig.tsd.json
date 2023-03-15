@@ -1,12 +1,12 @@
 {
 	"compilerOptions": {
 		"outDir": "dist",
-		"target": "es6",
+		"target": "ES2020", // Node.js 14
 		"lib": [
-			"es2015"
+			"ES2020"
 		],
-		"module": "commonjs",
-		"moduleResolution": "node",
+		"module": "node16",
+		"moduleResolution": "node16",
 		"declaration": true,
 		"pretty": true,
 		"newLine": "lf",
