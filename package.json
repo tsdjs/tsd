@@ -9,6 +9,7 @@
 		"email": "sam.verschueren@gmail.com",
 		"url": "https://github.com/SamVerschueren"
 	},
+	"type": "module",
 	"exports": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"bin": "./dist/cli.js",
@@ -17,10 +18,8 @@
 	},
 	"scripts": {
 		"prepublishOnly": "npm run build",
-		"pretest": "npm run build && cpy \"./**/**\" \"../../../dist/test/fixtures/\" --parents --cwd=source/test/fixtures",
 		"test": "npm run lint && ava",
-		"build": "npm run clean && tsc --project tsconfig.tsd.json && chmod +x dist/cli.js",
-		"clean": "del-cli dist",
+		"build": "del-cli dist && tsc --project tsconfig.tsd.json && chmod +x dist/cli.js",
 		"lint": "eslint \"source/**/*\"",
 		"lint:fix": "eslint --fix \"source/**/*\""
 	},
@@ -48,7 +47,6 @@
 		"read-pkg-up": "^7.0.0"
 	},
 	"devDependencies": {
-		"@ava/typescript": "^1.1.1",
 		"@types/node": "^14.18.21",
 		"@types/react": "^16.9.2",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
@@ -62,6 +60,7 @@
 		"execa": "^5.0.0",
 		"react": "^16.9.0",
 		"rxjs": "^6.5.3",
+		"tsx": "^3.12.5",
 		"typescript": "~4.9.5"
 	},
 	"ava": {
@@ -70,10 +69,11 @@
 			"source/test/**/*",
 			"!source/test/fixtures/**/*"
 		],
-		"typescript": {
-			"rewritePaths": {
-				"source/": "dist/"
-			}
-		}
+		"extensions": {
+			"ts": "module"
+		},
+		"nodeArguments": [
+			"--loader=tsx"
+		]
 	}
 }
