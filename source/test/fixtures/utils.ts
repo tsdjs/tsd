@@ -94,7 +94,7 @@ export const verifyWithFileName = (
  * @param diagnostics - List of diagnostics to verify.
  * @param expectations - Expected diagnostics.
  */
- export const verifyWithDiff = (
+export const verifyWithDiff = (
 	t: ExecutionContext,
 	diagnostics: Diagnostic[],
 	expectations: ExpectationWithDiff[]
@@ -116,4 +116,23 @@ export const verifyWithFileName = (
 	}));
 
 	t.deepEqual(diagnosticObjs, expectationObjs, 'Received diagnostics that are different from expectations!');
+};
+
+/**
+ * Verify a list of diagnostics reported from the CLI.
+ *
+ * @param t - The AVA execution context.
+ * @param diagnostics - List of diagnostics to verify.
+ * @param expectations - Expected diagnostics.
+ * @param startLine - Optionally specify how many lines to skip from start.
+ */
+export const verifyCli = (
+	t: ExecutionContext,
+	diagnostics: string,
+	expectedLines: string[],
+	{startLine}: {startLine: number} = {startLine: 1} // Skip file location.
+) => {
+	const receivedLines = diagnostics.trim().split('\n').slice(startLine).map(line => line.trim());
+
+	t.deepEqual(receivedLines, expectedLines, 'Received diagnostics that are different from expectations!');
 };

@@ -61,6 +61,7 @@
 		"eslint-config-xo-typescript": "^0.41.1",
 		"execa": "^5.0.0",
 		"react": "^16.9.0",
+		"resolve-from": "^5.0.0",
 		"rxjs": "^6.5.3",
 		"typescript": "~4.9.5"
 	},
