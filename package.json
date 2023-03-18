@@ -39,7 +39,7 @@
 		"typedefinitions"
 	],
 	"dependencies": {
-		"@tsd/typescript": "~4.9.5",
+		"@tsd/typescript": "~5.0.2",
 		"eslint-formatter-pretty": "^4.1.0",
 		"globby": "^11.0.1",
 		"jest-diff": "^29.0.3",
