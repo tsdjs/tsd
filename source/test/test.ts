@@ -2,7 +2,7 @@ import path from 'path';
 import test from 'ava';
 import {verify, verifyWithFileName} from './fixtures/utils';
 import tsd from '..';
-import {Diagnostic} from '../lib/interfaces';
+import {Diagnostic, TsdError} from '../lib/interfaces';
 
 test('throw if no type definition was found', async t => {
 	const cwd = path.join(__dirname, 'fixtures/no-tsd');
@@ -426,4 +426,15 @@ test('parsing undefined symbol should not fail', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/undefined-symbol')});
 
 	verify(t, diagnostics, []);
+});
+
+test('custom tsd errors are created correctly', t => {
+	const tsdError = t.throws<TsdError>(() => {
+		throw new TsdError('foo');
+	});
+
+	t.true(tsdError instanceof Error);
+	t.true(tsdError instanceof TsdError);
+	t.is(tsdError.name, 'TsdError');
+	t.is(tsdError.message, 'foo');
 });
