@@ -191,3 +191,12 @@ test('warnings are reported with errors', async t => {
 		'1 error',
 	]);
 });
+
+test('tsd failures (not crashes) report only the message', async t => {
+	const cwd = path.join(__dirname, 'fixtures/no-tsd');
+
+	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', {cwd}));
+
+	t.is(exitCode, 1);
+	t.is(stderr, `The type definition \`index.d.ts\` does not exist at \`${cwd}/index.d.ts\`. Is the path correct? Create one and try again.`);
+});

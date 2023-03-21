@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import meow from 'meow';
+import {TsdError} from './lib/interfaces';
 import formatter from './lib/formatter';
 import tsd from './lib';
 
@@ -75,6 +76,11 @@ const exit = (message: string, {isError = true}: {isError?: boolean} = {}) => {
 		}
 	} catch (error: unknown) {
 		const potentialError = error as Error | undefined;
+
+		if (potentialError instanceof TsdError) {
+			exit(potentialError.message);
+		}
+
 		const errorMessage = potentialError?.stack ?? potentialError?.message ?? 'tsd unexpectedly crashed.';
 
 		exit(`Error running tsd:\n${errorMessage}`);
