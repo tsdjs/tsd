@@ -1,8 +1,8 @@
-import formatter from 'eslint-formatter-pretty';
-import {Diagnostic} from './interfaces.js';
+import prettyFormatter from 'eslint-formatter-pretty';
 import {diffStringsUnified} from 'jest-diff';
+import {type Diagnostic} from './interfaces.js';
 
-interface FileWithDiagnostics {
+type FileWithDiagnostics = {
 	filePath: string;
 	errorCount: number;
 	warningCount: number;
@@ -11,7 +11,7 @@ interface FileWithDiagnostics {
 		expected: string;
 		received: string;
 	};
-}
+};
 
 /**
  * Format the TypeScript diagnostics to a human readable output.
@@ -20,7 +20,7 @@ interface FileWithDiagnostics {
  * @param showDiff - Display difference between expected and received types.
  * @returns Beautiful diagnostics output
  */
-export default (diagnostics: Diagnostic[], showDiff = false): string => {
+const formatter = (diagnostics: Diagnostic[], showDiff = false): string => {
 	const fileMap = new Map<string, FileWithDiagnostics>();
 
 	for (const diagnostic of diagnostics) {
@@ -31,7 +31,7 @@ export default (diagnostics: Diagnostic[], showDiff = false): string => {
 				filePath: diagnostic.fileName,
 				errorCount: 0,
 				warningCount: 0,
-				messages: []
+				messages: [],
 			};
 
 			fileMap.set(diagnostic.fileName, entry);
@@ -41,7 +41,7 @@ export default (diagnostics: Diagnostic[], showDiff = false): string => {
 			let difference = diffStringsUnified(
 				diagnostic.diff.expected,
 				diagnostic.diff.received,
-				{omitAnnotationLines: true}
+				{omitAnnotationLines: true},
 			);
 
 			if (difference) {
@@ -54,5 +54,7 @@ export default (diagnostics: Diagnostic[], showDiff = false): string => {
 		entry.messages.push(diagnostic);
 	}
 
-	return String(formatter([...fileMap.values()]));
+	return String(prettyFormatter([...fileMap.values()]));
 };
+
+export default formatter;

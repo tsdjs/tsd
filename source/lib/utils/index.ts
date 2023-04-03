@@ -1,11 +1,4 @@
-import makeDiagnostic from './make-diagnostic.js';
-import makeDiagnosticWithDiff from './make-diagnostic-with-diff.js';
-import getJSONPropertyPosition from './get-json-property-position.js';
-import * as tsutils from './typescript.js';
-
-export {
-	getJSONPropertyPosition,
-	makeDiagnostic,
-	makeDiagnosticWithDiff,
-	tsutils
-};
+export {default as makeDiagnostic} from './make-diagnostic.js';
+export {default as makeDiagnosticWithDiff} from './make-diagnostic-with-diff.js';
+export {default as getJsonPropertyPosition} from './get-json-property-position.js';
+export * as tsutils from './typescript.js';

@@ -1,38 +1,38 @@
-import path from 'path';
+import path from 'node:path';
 import test from 'ava';
-import execa from 'execa';
-import readPkgUp from 'read-pkg-up';
-import tsd, {formatter} from '..';
+import {execa} from 'execa';
+import {readPackageUp} from 'read-pkg-up';
+import tsd, {formatter} from '../index.js';
 
-interface ExecaError extends Error {
+type ExecaError = {
 	readonly exitCode: number;
 	readonly stderr: string;
-}
+} & Error;
 
 test('fail if errors are found', async t => {
 	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', {
-		cwd: path.join(__dirname, 'fixtures/failure')
+		cwd: path.resolve('fixtures/failure'),
 	}));
 
 	t.is(exitCode, 1);
-	t.regex(stderr, /5:19[ ]{2}Argument of type number is not assignable to parameter of type string./);
+	t.regex(stderr, /5:19 {2}Argument of type number is not assignable to parameter of type string./);
 });
 
 test('succeed if no errors are found', async t => {
 	const {exitCode} = await execa('../../../cli.js', {
-		cwd: path.join(__dirname, 'fixtures/success')
+		cwd: path.resolve('fixtures/success'),
 	});
 
 	t.is(exitCode, 0);
 });
 
 test('provide a path', async t => {
-	const file = path.join(__dirname, 'fixtures/failure');
+	const file = path.resolve('fixtures/failure');
 
 	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('dist/cli.js', [file]));
 
 	t.is(exitCode, 1);
-	t.regex(stderr, /5:19[ ]{2}Argument of type number is not assignable to parameter of type string./);
+	t.regex(stderr, /5:19 {2}Argument of type number is not assignable to parameter of type string./);
 });
 
 test('cli help flag', async t => {
@@ -42,7 +42,7 @@ test('cli help flag', async t => {
 });
 
 test('cli version flag', async t => {
-	const pkg = readPkgUp.sync({normalize: false})?.packageJson ?? {};
+	const pkg = await readPackageUp({normalize: false})?.packageJson ?? {};
 
 	const {exitCode, stdout} = await execa('dist/cli.js', ['--version']);
 
@@ -53,7 +53,7 @@ test('cli version flag', async t => {
 test('cli typings flag', async t => {
 	const runTest = async (arg: '--typings' | '-t') => {
 		const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', [arg, 'utils/index.d.ts'], {
-			cwd: path.join(__dirname, 'fixtures/typings-custom-dir')
+			cwd: path.resolve('fixtures/typings-custom-dir'),
 		}));
 
 		t.is(exitCode, 1);
@@ -67,7 +67,7 @@ test('cli typings flag', async t => {
 test('cli files flag', async t => {
 	const runTest = async (arg: '--files' | '-f') => {
 		const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', [arg, 'unknown.test.ts'], {
-			cwd: path.join(__dirname, 'fixtures/specify-test-files')
+			cwd: path.resolve('fixtures/specify-test-files'),
 		}));
 
 		t.is(exitCode, 1);
@@ -80,7 +80,7 @@ test('cli files flag', async t => {
 
 test('cli files flag array', async t => {
 	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', ['--files', 'unknown.test.ts', '--files', 'second.test.ts'], {
-		cwd: path.join(__dirname, 'fixtures/specify-test-files')
+		cwd: path.resolve('fixtures/specify-test-files'),
 	}));
 
 	t.is(exitCode, 1);
@@ -99,7 +99,7 @@ test('cli typings and files flags', async t => {
 
 test('tsd logs stacktrace on failure', async t => {
 	const {exitCode, stderr, stack} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', {
-		cwd: path.join(__dirname, 'fixtures/empty-package-json')
+		cwd: path.resolve('fixtures/empty-package-json'),
 	}));
 
 	t.is(exitCode, 1);
@@ -109,7 +109,7 @@ test('tsd logs stacktrace on failure', async t => {
 
 test('exported formatter matches cli results', async t => {
 	const options = {
-		cwd: path.join(__dirname, 'fixtures/failure'),
+		cwd: path.resolve('fixtures/failure'),
 	};
 
 	const {stderr: cliResults} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', options));

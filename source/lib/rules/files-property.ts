@@ -1,8 +1,9 @@
-import path from 'path';
-import fs from 'fs';
-import globby from 'globby';
-import {Context, Diagnostic} from '../interfaces.js';
-import {getJSONPropertyPosition} from '../utils/index.js';
+import path from 'node:path';
+import fs from 'node:fs';
+import pMap from 'p-map';
+import {globby} from 'globby';
+import {type Context, type Diagnostic} from '../interfaces.js';
+import {getJsonPropertyPosition} from '../utils/index.js';
 
 /**
  * Rule which enforces the typings file to be present in the `files` list in `package.json`.
@@ -10,7 +11,7 @@ import {getJSONPropertyPosition} from '../utils/index.js';
  * @param context - The context object.
  * @returns A list of custom diagnostics.
  */
-export default (context: Context): Diagnostic[] => {
+const filesProperty = async (context: Context): Promise<Diagnostic[]> => {
 	const {pkg, typingsFile} = context;
 
 	const packageFiles = pkg.files;
@@ -21,7 +22,10 @@ export default (context: Context): Diagnostic[] => {
 	const normalizedTypingsFile = path.normalize(typingsFile);
 
 	const patternProcessedPackageFiles = processGitIgnoreStylePatterns(packageFiles);
-	const normalizedFiles = globby.sync(patternProcessedPackageFiles, {cwd: context.cwd}).map(path.normalize);
+	const normalizedFiles = await pMap(
+		await globby(patternProcessedPackageFiles, {cwd: context.cwd}),
+		glob => path.normalize(glob),
+	);
 
 	if (normalizedFiles.includes(normalizedTypingsFile)) {
 		return [];
@@ -35,10 +39,12 @@ export default (context: Context): Diagnostic[] => {
 			fileName: packageJsonFullPath,
 			message: `TypeScript type definition \`${normalizedTypingsFile}\` is not part of the \`files\` list.`,
 			severity: 'error',
-			...getJSONPropertyPosition(content, 'files')
-		}
+			...getJsonPropertyPosition(content, 'files'),
+		},
 	];
 };
+
+export default filesProperty;
 
 function processGitIgnoreStylePatterns(patterns: readonly string[]): string[] {
 	const processedPatterns = patterns
@@ -51,7 +57,7 @@ function processGitIgnoreStylePatterns(patterns: readonly string[]): string[] {
 					.slice(negationMarkersCount)
 					// Strip off `/` from the start of the pattern
 					.replace(/^\/+/, ''),
-				negationMarkersCount % 2 === 0
+				negationMarkersCount % 2 === 0,
 			] as const;
 		})
 		// Only include pattern if it has an even count of negation markers

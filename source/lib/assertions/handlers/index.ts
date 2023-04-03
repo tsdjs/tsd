@@ -1,4 +1,4 @@
-export {Handler} from './handler.js';
+export type {Handler} from './handler.js';
 
 // Handlers
 export {isIdentical, isNotIdentical, isNever} from './identicality.js';

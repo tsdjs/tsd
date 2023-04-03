@@ -1,5 +1,5 @@
-import {CallExpression, TypeChecker, TypeFlags} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces.js';
+import {type CallExpression, type TypeChecker, TypeFlags} from '@tsd/typescript';
+import type {Diagnostic} from '../../interfaces.js';
 import {makeDiagnostic, makeDiagnosticWithDiff} from '../../utils/index.js';
 
 /**

@@ -1,6 +1,6 @@
 import path from 'path';
 import {ExecutionContext} from 'ava';
-import {Diagnostic} from '../../lib/interfaces';
+import type {Diagnostic} from '../../lib/interfaces.js';
 
 type Expectation = [
 	line: number,

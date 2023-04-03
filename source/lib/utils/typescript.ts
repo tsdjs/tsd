@@ -1,24 +1,29 @@
-import {TypeChecker, Expression, isCallLikeExpression, JSDocTagInfo, displayPartsToString} from '@tsd/typescript';
+import {type TypeChecker, type Expression, isCallLikeExpression, type JSDocTagInfo, displayPartsToString} from '@tsd/typescript';
 
 const resolveCommentHelper = <R extends 'JSDoc' | 'DocComment'>(resolve: R) => {
 	type ConditionalResolveReturn = (R extends 'JSDoc' ? Map<string, JSDocTagInfo> : string) | undefined;
 
 	const handler = (checker: TypeChecker, expression: Expression): ConditionalResolveReturn => {
-		const ref = isCallLikeExpression(expression) ?
-			checker.getResolvedSignature(expression) :
-			checker.getSymbolAtLocation(expression);
+		const ref = isCallLikeExpression(expression)
+			? checker.getResolvedSignature(expression)
+			: checker.getSymbolAtLocation(expression);
 
 		if (!ref) {
 			return;
 		}
 
 		switch (resolve) {
-			case 'JSDoc':
+			case 'JSDoc': {
 				return new Map<string, JSDocTagInfo>(ref.getJsDocTags().map(tag => [tag.name, tag])) as ConditionalResolveReturn;
-			case 'DocComment':
+			}
+
+			case 'DocComment': {
 				return displayPartsToString(ref.getDocumentationComment(checker)) as ConditionalResolveReturn;
-			default:
+			}
+
+			default: {
 				return undefined;
+			}
 		}
 	};
 
@@ -32,7 +37,7 @@ const resolveCommentHelper = <R extends 'JSDoc' | 'DocComment'>(resolve: R) => {
  * @param expression - The expression to resolve the JSDoc tags for.
  * @return A unique Set of JSDoc tags or `undefined` if they couldn't be resolved.
  */
-export const resolveJSDocTags = resolveCommentHelper('JSDoc');
+export const resolveJsDocTags = resolveCommentHelper('JSDoc');
 
 /**
  * Resolve the documentation comment from the expression. If the comment can't be found, it will return `undefined`.

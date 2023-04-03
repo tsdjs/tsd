@@ -1,6 +1,7 @@
 #!/usr/bin/env node
+import process from 'node:process';
 import meow from 'meow';
-import formatter from './lib/formatter.js';
+import prettyFormatter from './lib/formatter.js';
 import tsd from './lib/index.js';
 
 const cli = meow(`
@@ -28,6 +29,7 @@ const cli = meow(`
 	    index.test-d.ts
 	    ✖  10:20  Argument of type string is not assignable to parameter of type number.
 `, {
+	importMeta: import.meta,
 	flags: {
 		typings: {
 			type: 'string',
@@ -44,26 +46,24 @@ const cli = meow(`
 	},
 });
 
-(async () => {
-	try {
-		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
-		const {typings: typingsFile, files: testFiles, showDiff} = cli.flags;
+try {
+	const cwd = cli.input.at(0) ?? process.cwd();
+	const {typings: typingsFile, files: testFiles, showDiff} = cli.flags;
 
-		const options = {cwd, typingsFile, testFiles};
+	const options = {cwd, typingsFile, testFiles};
 
-		const diagnostics = await tsd(options);
+	const diagnostics = await tsd(options);
 
-		if (diagnostics.length > 0) {
-			throw new Error(formatter(diagnostics, showDiff));
-		}
-	} catch (error: unknown) {
-		const potentialError = error as Error | undefined;
-		const errorMessage = potentialError?.stack ?? potentialError?.message;
-
-		if (errorMessage) {
-			console.error(`Error running tsd: ${errorMessage}`);
-		}
-
-		process.exit(1);
+	if (diagnostics.length > 0) {
+		throw new Error(prettyFormatter(diagnostics, showDiff));
 	}
-})();
+} catch (error: unknown) {
+	const potentialError = error as Error | undefined;
+	const errorMessage = potentialError?.stack ?? potentialError?.message;
+
+	if (errorMessage) {
+		console.error(`Error running tsd: ${errorMessage}`);
+	}
+
+	process.exit(1);
+}

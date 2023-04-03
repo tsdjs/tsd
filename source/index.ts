@@ -1,6 +1,3 @@
-import tsd from './lib/index.js';
-import formatter from './lib/formatter.js';
-
 export * from './lib/assertions/assert.js';
-export {formatter};
-export default tsd;
+export {default as formatter} from './lib/formatter.js';
+export {default} from './lib/index.js';

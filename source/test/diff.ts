@@ -1,11 +1,11 @@
-import {verifyWithDiff} from './fixtures/utils';
-import execa, {ExecaError} from 'execa';
-import path from 'path';
+import path from 'node:path';
+import {execa, type ExecaError} from 'execa';
 import test from 'ava';
-import tsd from '..';
+import tsd from '../index.js';
+import {verifyWithDiff} from './fixtures/utils.js';
 
 test('diff', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/diff')});
+	const diagnostics = await tsd({cwd: path.resolve('fixtures/diff')});
 
 	verifyWithDiff(t, diagnostics, [
 		[8, 0, 'error', 'Parameter type `{ life?: number | undefined; }` is declared too wide for argument type `{ life: number; }`.', {
@@ -31,14 +31,14 @@ test('diff', async t => {
 		[18, 0, 'error', 'Documentation comment `This is a comment.` for expression `commented` does not include expected `This is not the same comment!`.', {
 			expected: 'This is not the same comment!',
 			received: 'This is a comment.',
-		}]
+		}],
 	]);
 });
 
 test('diff cli', async t => {
-	const file = path.join(__dirname, 'fixtures/diff');
+	const file = path.resolve('fixtures/diff');
 
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('dist/cli.js', [file, '--show-diff']));
+	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('tsx ../cli.js', [file, '--show-diff']));
 
 	t.is(exitCode, 1);
 
@@ -68,7 +68,7 @@ test('diff cli', async t => {
 		'- This is not the same comment!',
 		'+ This is a comment.',
 		'',
-		'6 errors'
+		'6 errors',
 	];
 
 	// NOTE: If lines are added to the output in the future startLine and endLine should be adjusted.

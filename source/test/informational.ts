@@ -1,10 +1,10 @@
-import path from 'path';
+import path from 'node:path';
 import test from 'ava';
-import {verify} from './fixtures/utils';
-import tsd from '..';
+import tsd from '../index.js';
+import {verify} from './fixtures/utils.js';
 
 test('print type', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/informational/print-type')});
+	const diagnostics = await tsd({cwd: path.resolve('fixtures/informational/print-type')});
 
 	verify(t, diagnostics, [
 		[4, 0, 'warning', 'Type for expression `aboveZero` is: `(foo: number) => number | null`'],
@@ -19,7 +19,7 @@ test('print type', async t => {
 });
 
 test('expect doc comment includes', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/informational/expect-doc-comment')});
+	const diagnostics = await tsd({cwd: path.resolve('fixtures/informational/expect-doc-comment')});
 
 	verify(t, diagnostics, [
 		[5, 0, 'error', 'Documentation comment for expression `noDocComment` not found.'],

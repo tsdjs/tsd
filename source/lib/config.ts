@@ -1,16 +1,16 @@
 import {
+	type CompilerOptions,
 	JsxEmit,
 	ScriptTarget,
 	ModuleResolutionKind,
 	parseJsonConfigFileContent,
-	CompilerOptions,
 	findConfigFile,
 	sys,
 	readJsonConfigFile,
 	parseJsonSourceFileConfigFileContent,
-	ModuleKind
+	ModuleKind,
 } from '@tsd/typescript';
-import {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces.js';
+import type {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces.js';
 
 /**
  * Load the configuration settings.
@@ -18,13 +18,13 @@ import {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces
  * @param pkg - The package.json object.
  * @returns The config object.
  */
-export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
+const loadConfig = (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 	const pkgConfig = pkg.tsd ?? {};
 
 	const tsConfigCompilerOptions = getOptionsFromTsConfig(cwd);
 	const packageJsonCompilerOptions = parseCompilerConfigObject(
 		pkgConfig.compilerOptions ?? {},
-		cwd
+		cwd,
 	);
 
 	const combinedCompilerOptions = {
@@ -45,15 +45,17 @@ export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 			target: ScriptTarget.ES2020,
 			esModuleInterop: true,
 			...combinedCompilerOptions,
-			moduleResolution: module === ModuleKind.NodeNext ?
-				ModuleResolutionKind.NodeNext :
-				module === ModuleKind.Node16 ?
-					ModuleResolutionKind.Node16 :
-					ModuleResolutionKind.NodeJs,
-			skipLibCheck: false
-		}
+			moduleResolution: module === ModuleKind.NodeNext
+				? ModuleResolutionKind.NodeNext
+				: (module === ModuleKind.Node16
+					? ModuleResolutionKind.Node16
+					: ModuleResolutionKind.NodeJs),
+			skipLibCheck: false,
+		},
 	};
 };
+
+export default loadConfig;
 
 function getOptionsFromTsConfig(cwd: string): CompilerOptions {
 	const configPath = findConfigFile(cwd, sys.fileExists);
@@ -75,7 +77,7 @@ function parseCompilerConfigObject(compilerOptions: RawCompilerOptions, cwd: str
 	return parseJsonConfigFileContent(
 		{compilerOptions: compilerOptions || {}},
 		sys,
-		cwd
+		cwd,
 	).options;
 }
 

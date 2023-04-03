@@ -1,25 +1,27 @@
-import path from 'path';
-import readPkgUp from 'read-pkg-up';
-import pathExists from 'path-exists';
-import globby from 'globby';
+import path from 'node:path';
+import process from 'node:process';
+import {readPackageUp} from 'read-pkg-up';
+import {pathExists} from 'path-exists';
+import {globby} from 'globby';
 import {getDiagnostics as getTSDiagnostics} from './compiler.js';
 import loadConfig from './config.js';
 import getCustomDiagnostics from './rules/index.js';
-import {Context, Config, Diagnostic, PackageJsonWithTsdConfig} from './interfaces.js';
+import {type Context, type Config, type Diagnostic, type PackageJsonWithTsdConfig} from './interfaces.js';
 
-export interface Options {
+export type Options = {
 	cwd: string;
 	typingsFile?: string;
 	testFiles?: readonly string[];
-}
+};
 
 const findTypingsFile = async (pkg: PackageJsonWithTsdConfig, options: Options): Promise<string> => {
-	const typings =
-		options.typingsFile ||
-		pkg.types ||
-		pkg.typings ||
-		(pkg.main && path.parse(pkg.main).name + '.d.ts') ||
-		'index.d.ts';
+	/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+	const typings = options.typingsFile
+		|| pkg.types
+		|| pkg.typings
+		|| (pkg.main && path.parse(pkg.main).name + '.d.ts')
+		|| 'index.d.ts';
+	/* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
 
 	const typingsPath = path.join(options.cwd, typings);
 	const typingsExist = await pathExists(typingsPath);
@@ -80,8 +82,9 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
  *
  * @returns A promise which resolves the diagnostics of the type definition.
  */
-export default async (options: Options = {cwd: process.cwd()}): Promise<Diagnostic[]> => {
-	const pkgResult = await readPkgUp({cwd: options.cwd});
+// eslint-disable-next-line unicorn/no-object-as-default-parameter
+const tsd = async (options: Options = {cwd: process.cwd()}): Promise<Diagnostic[]> => {
+	const pkgResult = await readPackageUp({cwd: options.cwd});
 
 	if (!pkgResult) {
 		throw new Error(`No \`package.json\` file found in \`${options.cwd}\`. Make sure you are running the command in a Node.js project.`);
@@ -95,7 +98,7 @@ export default async (options: Options = {cwd: process.cwd()}): Promise<Diagnost
 
 	const testFiles = await findTestFiles(typingsFile, {
 		...options,
-		config
+		config,
 	});
 
 	const context: Context = {
@@ -103,11 +106,13 @@ export default async (options: Options = {cwd: process.cwd()}): Promise<Diagnost
 		pkg,
 		typingsFile,
 		testFiles,
-		config
+		config,
 	};
 
 	return [
-		...getCustomDiagnostics(context),
-		...getTSDiagnostics(context)
+		...await getCustomDiagnostics(context),
+		...getTSDiagnostics(context),
 	];
 };
+
+export default tsd;

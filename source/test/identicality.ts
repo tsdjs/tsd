@@ -1,10 +1,10 @@
-import path from 'path';
+import path from 'node:path';
 import test from 'ava';
-import {verify} from './fixtures/utils';
-import tsd from '..';
+import tsd from '../index.js';
+import {verify} from './fixtures/utils.js';
 
 test('identical', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/identicality/identical')});
+	const diagnostics = await tsd({cwd: path.resolve('fixtures/identicality/identical')});
 
 	verify(t, diagnostics, [
 		[7, 0, 'error', 'Parameter type `any` is not identical to argument type `number`.'],
@@ -18,7 +18,7 @@ test('identical', async t => {
 });
 
 test('not identical', async t => {
-	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/identicality/not-identical')});
+	const diagnostics = await tsd({cwd: path.resolve('fixtures/identicality/not-identical')});
 
 	verify(t, diagnostics, [
 		[7, 0, 'error', 'Parameter type `string` is identical to argument type `string`.'],

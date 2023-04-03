@@ -1,39 +1,38 @@
-import {JSDocTagInfo} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces.js';
-import {Handler} from './handler.js';
+import type {JSDocTagInfo} from '@tsd/typescript';
+import type {Diagnostic} from '../../interfaces.js';
 import {makeDiagnostic, tsutils} from '../../utils/index.js';
+import {type Handler} from './handler.js';
 
-interface Options {
+type Options = {
 	filter(tags: Map<string, JSDocTagInfo>): boolean;
 	message(signature: string): string;
-}
+};
 
-const expectDeprecatedHelper = (options: Options): Handler => {
-	return (checker, nodes) => {
-		const diagnostics: Diagnostic[] = [];
+const expectDeprecatedHelper = (options: Options): Handler => (checker, nodes) => {
+	const diagnostics: Diagnostic[] = [];
 
-		if (!nodes) {
-			// Bail out if we don't have any nodes
-			return diagnostics;
-		}
-
-		for (const node of nodes) {
-			const argument = node.arguments[0];
-
-			const tags = tsutils.resolveJSDocTags(checker, argument);
-
-			if (!tags || !options.filter(tags)) {
-				// Bail out if not tags couldn't be resolved or when the node matches the filter expression
-				continue;
-			}
-
-			const message = tsutils.expressionToString(checker, argument);
-
-			diagnostics.push(makeDiagnostic(node, options.message(message ?? '?')));
-		}
-
+	if (!nodes) {
+		// Bail out if we don't have any nodes
 		return diagnostics;
-	};
+	}
+
+	for (const node of nodes) {
+		const argument = node.arguments[0];
+
+		const tags = tsutils.resolveJsDocTags(checker, argument);
+
+		// eslint-disable-next-line unicorn/no-array-callback-reference
+		if (!tags || !options.filter(tags)) {
+			// Bail out if not tags couldn't be resolved or when the node matches the filter expression
+			continue;
+		}
+
+		const message = tsutils.expressionToString(checker, argument);
+
+		diagnostics.push(makeDiagnostic(node, options.message(message ?? '?')));
+	}
+
+	return diagnostics;
 };
 
 /**
@@ -46,7 +45,7 @@ const expectDeprecatedHelper = (options: Options): Handler => {
  */
 export const expectDeprecated = expectDeprecatedHelper({
 	filter: tags => !tags.has('deprecated'),
-	message: signature => `Expected \`${signature}\` to be marked as \`@deprecated\``
+	message: signature => `Expected \`${signature}\` to be marked as \`@deprecated\``,
 });
 
 /**
@@ -59,5 +58,5 @@ export const expectDeprecated = expectDeprecatedHelper({
  */
 export const expectNotDeprecated = expectDeprecatedHelper({
 	filter: tags => tags.has('deprecated'),
-	message: signature => `Expected \`${signature}\` to not be marked as \`@deprecated\``
+	message: signature => `Expected \`${signature}\` to not be marked as \`@deprecated\``,
 });

@@ -1,6 +1,14 @@
-import {Program, Node, CallExpression, forEachChild, isCallExpression, isPropertyAccessExpression, SymbolFlags} from '@tsd/typescript';
+import {
+	type Program,
+	type Node,
+	type CallExpression,
+	forEachChild,
+	isCallExpression,
+	isPropertyAccessExpression,
+	SymbolFlags,
+} from '@tsd/typescript';
 import {Assertion} from './assertions/index.js';
-import {Location, Diagnostic} from './interfaces.js';
+import {type Location, type Diagnostic} from './interfaces.js';
 
 const assertionFnNames = new Set<string>(Object.values(Assertion));
 
@@ -17,9 +25,9 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	 * Checks if the given node is semantically valid and is an assertion.
 	 */
 	function handleNode(node: CallExpression) {
-		const expression = isPropertyAccessExpression(node.expression) ?
-			node.expression.name :
-			node.expression;
+		const expression = isPropertyAccessExpression(node.expression)
+			? node.expression.name
+			: node.expression;
 
 		const maybeSymbol = checker.getSymbolAtLocation(expression);
 
@@ -31,9 +39,9 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 			return;
 		}
 
-		const symbol = maybeSymbol.flags & SymbolFlags.Alias ?
-			checker.getAliasedSymbol(maybeSymbol) :
-			maybeSymbol;
+		const symbol = maybeSymbol.flags & SymbolFlags.Alias
+			? checker.getAliasedSymbol(maybeSymbol)
+			: maybeSymbol;
 
 		const identifier = symbol.getName();
 
@@ -75,7 +83,7 @@ export type ExpectedError = Pick<Diagnostic, 'fileName' | 'line' | 'column'> & {
  * @param assertions - Assertion map.
  */
 export const parseErrorAssertionToLocation = (
-	assertions: Map<Assertion, Set<CallExpression>>
+	assertions: Map<Assertion, Set<CallExpression>>,
 ): Map<Location, ExpectedError> => {
 	const nodes = assertions.get(Assertion.EXPECT_ERROR);
 
@@ -91,7 +99,7 @@ export const parseErrorAssertionToLocation = (
 		const location = {
 			fileName: node.getSourceFile().fileName,
 			start: node.getStart(),
-			end: node.getEnd() + 1
+			end: node.getEnd() + 1,
 		};
 
 		const pos = node
@@ -101,7 +109,7 @@ export const parseErrorAssertionToLocation = (
 		expectedErrors.set(location, {
 			fileName: location.fileName,
 			line: pos.line + 1,
-			column: pos.character
+			column: pos.character,
 		});
 	}
 
