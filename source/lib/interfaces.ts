@@ -71,3 +71,10 @@ export type Location = {
 	start: number;
 	end: number;
 };
+
+export class TsdError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = this.constructor.name;
+	}
+}

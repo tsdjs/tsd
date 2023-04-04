@@ -1,6 +1,6 @@
 {
 	"name": "tsd",
-	"version": "0.27.0",
+	"version": "0.28.1",
 	"description": "Check TypeScript type definitions",
 	"license": "MIT",
 	"repository": "SamVerschueren/tsd",
@@ -54,7 +54,9 @@
 		"del-cli": "^3.0.0",
 		"execa": "^7.1.1",
 		"react": "^16.9.0",
+		"resolve-from": "^5.0.0",
 		"rxjs": "^6.5.3",
+		"ts-node": "^10.9.1",
 		"tsx": "^3.12.6",
 		"typescript": "~5.0.3",
 		"xo": "^0.53.1"

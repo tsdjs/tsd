@@ -50,7 +50,12 @@ const formatter = (diagnostics: Diagnostic[], showDiff = false): string => {
 			}
 		}
 
-		entry.errorCount++;
+		if (diagnostic.severity === 'error') {
+			entry.errorCount++;
+		} else if (diagnostic.severity === 'warning') {
+			entry.warningCount++;
+		}
+
 		entry.messages.push(diagnostic);
 	}
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import process from 'node:process';
 import meow from 'meow';
-import prettyFormatter from './lib/formatter.js';
+import {TsdError} from './lib/interfaces.js';
+import formatter from './lib/formatter.js';
 import tsd from './lib/index.js';
 
 const cli = meow(`
@@ -46,24 +47,42 @@ const cli = meow(`
 	},
 });
 
+/**
+ * Displays a message and exits, conditionally erroring.
+ *
+ * @param message The message to display.
+ * @param isError Whether or not to fail on exit.
+ */
+const exit = (message: string, {isError = true}: {isError?: boolean} = {}) => {
+	if (isError) {
+		console.error(message);
+		process.exit(1);
+	} else {
+		console.log(message);
+		process.exit(0);
+	}
+};
+
 try {
 	const cwd = cli.input.at(0) ?? process.cwd();
 	const {typings: typingsFile, files: testFiles, showDiff} = cli.flags;
 
-	const options = {cwd, typingsFile, testFiles};
-
-	const diagnostics = await tsd(options);
+	const diagnostics = await tsd({cwd, typingsFile, testFiles});
 
 	if (diagnostics.length > 0) {
-		throw new Error(prettyFormatter(diagnostics, showDiff));
+		const hasErrors = diagnostics.some(diagnostic => diagnostic.severity === 'error');
+		const formattedDiagnostics = formatter(diagnostics, showDiff);
+
+		exit(formattedDiagnostics, {isError: hasErrors});
 	}
 } catch (error: unknown) {
 	const potentialError = error as Error | undefined;
-	const errorMessage = potentialError?.stack ?? potentialError?.message;
 
-	if (errorMessage) {
-		console.error(`Error running tsd: ${errorMessage}`);
+	if (potentialError instanceof TsdError) {
+		exit(potentialError.message);
 	}
 
-	process.exit(1);
+	const errorMessage = potentialError?.stack ?? potentialError?.message ?? 'tsd unexpectedly crashed.';
+
+	exit(`Error running tsd:\n${errorMessage}`);
 }

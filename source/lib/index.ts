@@ -6,7 +6,7 @@ import {globby} from 'globby';
 import {getDiagnostics as getTSDiagnostics} from './compiler.js';
 import loadConfig from './config.js';
 import getCustomDiagnostics from './rules/index.js';
-import {type Context, type Config, type Diagnostic, type PackageJsonWithTsdConfig} from './interfaces.js';
+import {type Context, type Config, type Diagnostic, type PackageJsonWithTsdConfig, TsdError} from './interfaces.js';
 
 export type Options = {
 	cwd: string;
@@ -27,7 +27,7 @@ const findTypingsFile = async (pkg: PackageJsonWithTsdConfig, options: Options):
 	const typingsExist = await pathExists(typingsPath);
 
 	if (!typingsExist) {
-		throw new Error(`The type definition \`${typings}\` does not exist at \`${typingsPath}\`. Is the path correct? Create one and try again.`);
+		throw new TsdError(`The type definition \`${typings}\` does not exist at \`${typingsPath}\`. Is the path correct? Create one and try again.`);
 	}
 
 	return typings;
@@ -45,7 +45,7 @@ const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: str
 	const testFiles = await globby(testFilesPattern, {cwd});
 
 	if (testFiles.length === 0) {
-		throw new Error('Could not find any test files with the given pattern(s). Create one and try again.');
+		throw new TsdError('Could not find any test files with the given pattern(s). Create one and try again.');
 	}
 
 	return testFiles.map(file => path.join(cwd, file));
@@ -67,7 +67,7 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
 
 	if (testFiles.length === 0 && !testDirExists) {
-		throw new Error(`The test file \`${testFile}\` or \`${tsxTestFile}\` does not exist in \`${options.cwd}\`. Create one and try again.`);
+		throw new TsdError(`The test file \`${testFile}\` or \`${tsxTestFile}\` does not exist in \`${options.cwd}\`. Create one and try again.`);
 	}
 
 	if (testFiles.length === 0) {
@@ -87,7 +87,7 @@ const tsd = async (options: Options = {cwd: process.cwd()}): Promise<Diagnostic[
 	const pkgResult = await readPackageUp({cwd: options.cwd});
 
 	if (!pkgResult) {
-		throw new Error(`No \`package.json\` file found in \`${options.cwd}\`. Make sure you are running the command in a Node.js project.`);
+		throw new TsdError(`No \`package.json\` file found in \`${options.cwd}\`. Make sure you are running the command in a Node.js project.`);
 	}
 
 	const pkg = pkgResult.packageJson as PackageJsonWithTsdConfig;
