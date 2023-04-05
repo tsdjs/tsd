@@ -1,5 +1,5 @@
-import {expectDocCommentIncludes, expectNotAssignable, expectType} from '../../..';
-import foo, { FooFunction, FooInterface, FooType } from '.';
+import {expectDocCommentIncludes, expectNotAssignable, expectType} from '../../../index.js';
+import foo, { FooFunction, FooInterface, FooType } from './index.js';
 
 // Should pass
 expectType<{life: number}>(foo({life: 42}));

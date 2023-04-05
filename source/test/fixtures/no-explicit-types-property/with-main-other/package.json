@@ -1,5 +1,6 @@
 {
 	"name": "foo",
+	"type": "module",
 	"main": "foo.js",
 	"files": [
 		"foo.d.ts"

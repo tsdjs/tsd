@@ -1,5 +1,5 @@
-import * as tsd from '../../../..';
-import one from '.';
+import * as tsd from '../../../../index.js';
+import one from './index.js';
 
 const x = tsd;
 x.expectError(one(true, true));

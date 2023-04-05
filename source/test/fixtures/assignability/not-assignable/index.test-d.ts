@@ -1,5 +1,5 @@
-import {expectNotAssignable} from '../../../..';
-import concat from '.';
+import {expectNotAssignable} from '../../../../index.js';
+import concat from './index.js';
 
 expectNotAssignable<string | number>(concat('foo', 'bar'));
 expectNotAssignable<any>(concat('foo', 'bar'));

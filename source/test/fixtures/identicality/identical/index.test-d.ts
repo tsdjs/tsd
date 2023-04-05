@@ -1,5 +1,5 @@
-import {expectType, expectNever} from '../../../..';
-import concat, {returnsNever} from '.';
+import {expectType, expectNever} from '../../../../index.js';
+import concat, {returnsNever} from './index.js';
 
 expectType<string>(concat('foo', 'bar'));
 expectType<number>(concat(1, 2));

@@ -1,5 +1,6 @@
 {
 	"name": "foo",
+	"type": "module",
 	"files": [
 		"out/**/*.d.ts",
 		"out/**/*.js"

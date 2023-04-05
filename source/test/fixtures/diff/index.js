@@ -1,3 +1,3 @@
-module.exports.default = (foo) => {
+export default (foo) => {
 	return foo;
 };

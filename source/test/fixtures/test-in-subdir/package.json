@@ -1,6 +1,7 @@
 {
 	"name": "foo",
-	"main": "src/index.js",
+	"type": "module",
+	"exports": "./src/index.js",
 	"types": "src/index.d.ts",
 	"files": [
 		"src/index.js",

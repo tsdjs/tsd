@@ -1,6 +1,6 @@
 import {Observable} from 'rxjs';
-import {expectType} from '../../../..';
-import one from '.';
+import {expectType} from '../../../../index.js';
+import one from './index.js';
 
 abstract class Foo<T> {
 	abstract unicorn(): T;

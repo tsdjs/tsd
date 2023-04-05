@@ -1,5 +1,5 @@
-import {expectError} from '../../../..';
-import one, {two, three} from '.';
+import {expectError} from '../../../../index.js';
+import one, {two, three} from './index.js';
 
 expectError(one(true, true));
 expectError(one('foo', 'bar'));

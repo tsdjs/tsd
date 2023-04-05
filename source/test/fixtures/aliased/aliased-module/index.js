@@ -1,1 +1,1 @@
-module.exports.default = (foo, bar) => foo + bar;
+export default (foo, bar) => foo + bar;

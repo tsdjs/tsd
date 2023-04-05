@@ -1,5 +1,4 @@
-'use strict';
-const React = require('react');
+import React from 'react';
 
 export class Unicorn extends React.Component {
 	constructor(props) {

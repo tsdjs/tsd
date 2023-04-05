@@ -1,4 +1,4 @@
-import {expectType, expectError} from '../../../..';
+import {expectType, expectError} from '../../../../index.js';
 import one from './foo';
 
 expectType<string>(one('foo', 'bar'));
