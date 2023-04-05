@@ -1,8 +1,4 @@
-import {
-	flattenDiagnosticMessageText,
-	createProgram,
-	type Diagnostic as TSDiagnostic,
-} from '@tsd/typescript';
+import ts, {type Diagnostic as TSDiagnostic} from '@tsd/typescript';
 import {type ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser.js';
 import {type Diagnostic, DiagnosticCode, type Context, type Location} from './interfaces.js';
 import {handle} from './assertions/index.js';
@@ -100,7 +96,7 @@ const ignoreDiagnostic = (
 export const getDiagnostics = (context: Context): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
-	const program = createProgram(context.testFiles, context.config.compilerOptions);
+	const program = ts.createProgram(context.testFiles, context.config.compilerOptions);
 
 	const tsDiagnostics = [
 		...program.getSemanticDiagnostics(),
@@ -136,7 +132,7 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 
 		diagnostics.push({
 			fileName: diagnostic.file.fileName,
-			message: flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
+			message: ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
 			severity: 'error',
 			line: position.line + 1,
 			column: position.character,

@@ -1,5 +1,5 @@
-import {type CompilerOptions} from '@tsd/typescript';
-import {type NormalizedPackageJson} from 'read-pkg-up';
+import type {CompilerOptions} from '@tsd/typescript';
+import type {NormalizedPackageJson} from 'read-pkg-up';
 
 export type RawCompilerOptions = Record<string, any>;
 

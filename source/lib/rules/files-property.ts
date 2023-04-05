@@ -2,7 +2,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import pMap from 'p-map';
 import {globby} from 'globby';
-import {type Context, type Diagnostic} from '../interfaces.js';
+import type {Context, Diagnostic} from '../interfaces.js';
 import {getJsonPropertyPosition} from '../utils/index.js';
 
 /**

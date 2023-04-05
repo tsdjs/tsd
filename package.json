@@ -56,7 +56,6 @@
 		"react": "^16.9.0",
 		"resolve-from": "^5.0.0",
 		"rxjs": "^6.5.3",
-		"ts-node": "^10.9.1",
 		"tsx": "^3.12.6",
 		"typescript": "~5.0.3",
 		"xo": "^0.53.1"
@@ -72,7 +71,10 @@
 		},
 		"nodeArguments": [
 			"--loader=tsx"
-		]
+		],
+		"environmentVariables": {
+			"ESBK_TSCONFIG_PATH": "tsconfig.tsd.json"
+		}
 	},
 	"xo": {
 		"ignores": [

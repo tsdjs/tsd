@@ -1,5 +1,5 @@
-import {type Node} from '@tsd/typescript';
-import {type Diagnostic} from '../interfaces.js';
+import type {Node} from '@tsd/typescript';
+import type {Diagnostic} from '../interfaces.js';
 
 /**
  * Create a diagnostic from the given `node`, `message` and optional `severity`.

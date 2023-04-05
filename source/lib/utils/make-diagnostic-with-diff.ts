@@ -1,5 +1,5 @@
-import {type Node, type Type, type TypeChecker, TypeFormatFlags} from '@tsd/typescript';
-import {type Diagnostic} from '../interfaces.js';
+import ts, {type Node, type Type, type TypeChecker} from '@tsd/typescript';
+import type {Diagnostic} from '../interfaces.js';
 
 type DiagnosticWithDiffOptions = {
 	checker: TypeChecker;
@@ -11,16 +11,16 @@ type DiagnosticWithDiffOptions = {
 };
 
 const typeToStringFormatFlags
-	= TypeFormatFlags.NoTruncation
-	| TypeFormatFlags.WriteArrayAsGenericType
-	| TypeFormatFlags.UseStructuralFallback
-	| TypeFormatFlags.UseAliasDefinedOutsideCurrentScope
-	| TypeFormatFlags.NoTypeReduction
-	| TypeFormatFlags.AllowUniqueESSymbolType
-	| TypeFormatFlags.InArrayType
-	| TypeFormatFlags.InElementType
-	| TypeFormatFlags.InFirstTypeArgument
-	| TypeFormatFlags.InTypeAlias;
+	= ts.TypeFormatFlags.NoTruncation
+	| ts.TypeFormatFlags.WriteArrayAsGenericType
+	| ts.TypeFormatFlags.UseStructuralFallback
+	| ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope
+	| ts.TypeFormatFlags.NoTypeReduction
+	| ts.TypeFormatFlags.AllowUniqueESSymbolType
+	| ts.TypeFormatFlags.InArrayType
+	| ts.TypeFormatFlags.InElementType
+	| ts.TypeFormatFlags.InFirstTypeArgument
+	| ts.TypeFormatFlags.InTypeAlias;
 
 /**
  * Create a diagnostic with type error diffs from the given `options`, see {@link DiagnosticWithDiffOptions}.

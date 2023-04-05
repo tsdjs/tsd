@@ -1,12 +1,4 @@
-import {
-	type Program,
-	type Node,
-	type CallExpression,
-	forEachChild,
-	isCallExpression,
-	isPropertyAccessExpression,
-	SymbolFlags,
-} from '@tsd/typescript';
+import ts, {type Program, type Node, type CallExpression} from '@tsd/typescript';
 import {Assertion} from './assertions/index.js';
 import {type Location, type Diagnostic} from './interfaces.js';
 
@@ -25,7 +17,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	 * Checks if the given node is semantically valid and is an assertion.
 	 */
 	function handleNode(node: CallExpression) {
-		const expression = isPropertyAccessExpression(node.expression)
+		const expression = ts.isPropertyAccessExpression(node.expression)
 			? node.expression.name
 			: node.expression;
 
@@ -39,7 +31,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 			return;
 		}
 
-		const symbol = maybeSymbol.flags & SymbolFlags.Alias
+		const symbol = maybeSymbol.flags & ts.SymbolFlags.Alias
 			? checker.getAliasedSymbol(maybeSymbol)
 			: maybeSymbol;
 
@@ -61,11 +53,11 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 	 * Recursively loop over all the nodes and extract all the assertions out of the source files.
 	 */
 	function walkNodes(node: Node) {
-		if (isCallExpression(node)) {
+		if (ts.isCallExpression(node)) {
 			handleNode(node);
 		}
 
-		forEachChild(node, walkNodes);
+		ts.forEachChild(node, walkNodes);
 	}
 
 	for (const sourceFile of program.getSourceFiles()) {

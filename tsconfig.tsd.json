@@ -5,10 +5,8 @@
 		"lib": [
 			"ES2021"
 		],
-		// "module": "node16",
-		// "moduleResolution": "node16",
-		"module": "ES2020",
-		"moduleResolution": "node",
+		"module": "node16",
+		"moduleResolution": "node16",
 		"declaration": true,
 		"pretty": true,
 		"newLine": "lf",

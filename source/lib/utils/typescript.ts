@@ -1,4 +1,6 @@
-import {type TypeChecker, type Expression, isCallLikeExpression, type JSDocTagInfo, displayPartsToString} from '@tsd/typescript';
+import type {TypeChecker, Expression, JSDocTagInfo} from '@tsd/typescript';
+
+const {isCallLikeExpression, displayPartsToString} = await import('@tsd/typescript');
 
 const resolveCommentHelper = <R extends 'JSDoc' | 'DocComment'>(resolve: R) => {
 	type ConditionalResolveReturn = (R extends 'JSDoc' ? Map<string, JSDocTagInfo> : string) | undefined;
