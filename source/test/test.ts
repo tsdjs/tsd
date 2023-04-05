@@ -5,27 +5,18 @@ import {type Diagnostic, TsdError} from '../lib/interfaces.js';
 import {
 	verify,
 	verifyTsd,
+	verifyTsdFails,
 	verifyTsdWithFileNames,
 	noDiagnostics,
 } from './_utils.js';
 
-test('throw if no type definition was found', async t => {
-	const cwd = path.resolve('fixtures/no-tsd');
-	const index = path.join(cwd, 'index.d.ts');
+test('throw if no type definition was found', verifyTsdFails, 'no-tsd', cwd => (
+	`The type definition \`index.d.ts\` does not exist at \`${path.join(cwd, 'index.d.ts')}\`. Is the path correct? Create one and try again.`
+));
 
-	await t.throwsAsync(
-		tsd({cwd}),
-		{message: `The type definition \`index.d.ts\` does not exist at \`${index}\`. Is the path correct? Create one and try again.`},
-	);
-});
-
-test('throw if no test is found', async t => {
-	const cwd = path.resolve('fixtures/no-test');
-	await t.throwsAsync(
-		tsd({cwd}),
-		{message: `The test file \`index.test-d.ts\` or \`index.test-d.tsx\` does not exist in \`${cwd}\`. Create one and try again.`},
-	);
-});
+test('throw if no test is found', verifyTsdFails, 'no-test', cwd => (
+	`The test file \`index.test-d.ts\` or \`index.test-d.tsx\` does not exist in \`${cwd}\`. Create one and try again.`
+));
 
 test('return diagnostics', verifyTsd, 'failure', [
 	[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.'],
@@ -144,39 +135,22 @@ test('loose types', verifyTsd, 'strict-types/loose', [
 
 test('strict types', noDiagnostics, 'strict-types/strict');
 
-test('typings in custom directory', async t => {
-	const diagnostics = await tsd({
-		cwd: path.resolve('fixtures/typings-custom-dir'),
-		typingsFile: 'utils/index.d.ts',
-	});
-
-	verify(t, diagnostics, [
+test('typings in custom directory', verifyTsd,
+	{fixtureName: 'typings-custom-dir', tsdOptions: {typingsFile: 'utils/index.d.ts'}}, [
 		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.'],
-	]);
-});
+	],
+);
 
-test('specify test files manually', async t => {
-	const diagnostics = await tsd({
-		cwd: path.resolve('fixtures/specify-test-files'),
-		testFiles: [
-			'unknown.test.ts',
-			'second.test.ts',
-		],
-	});
-
-	verify(t, diagnostics, [
+test('specify test files manually', verifyTsd,
+	{fixtureName: 'specify-test-files', tsdOptions: {testFiles: ['unknown.test.ts', 'second.test.ts']}}, [
 		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.'],
-	]);
-});
+	],
+);
 
-test('fails if typings file is not found in the specified path', async t => {
-	const cwd = path.resolve('fixtures/typings-custom-dir');
-
-	await t.throwsAsync(
-		tsd({cwd, typingsFile: 'unknown.d.ts'}),
-		{message: `The type definition \`unknown.d.ts\` does not exist at \`${path.join(cwd, 'unknown.d.ts')}\`. Is the path correct? Create one and try again.`},
-	);
-});
+test('fails if typings file is not found in the specified path', verifyTsdFails,
+	{fixtureName: 'typings-custom-dir', tsdOptions: {testFiles: ['unknown.test.ts']}},
+	cwd => `The type definition \`unknown.d.ts\` does not exist at \`${path.join(cwd, 'unknown.d.ts')}\`. Is the path correct? Create one and try again.`,
+);
 
 test('includes extended config files along with found ones', verifyTsd, 'ts-config-extends', [
 	[6, 64, 'error', 'Not all code paths return a value.'],

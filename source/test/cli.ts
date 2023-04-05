@@ -12,6 +12,9 @@ import {
 	verifyCliFails,
 } from './_utils.js';
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, unicorn/no-await-expression-member
+const pkg = (await readPackageUp())?.packageJson!;
+
 test('fail if errors are found', verifyCliFails, 'failure', [], [
 	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
 	'',
@@ -20,30 +23,17 @@ test('fail if errors are found', verifyCliFails, 'failure', [], [
 
 test('succeed if no errors are found', verifyCliPasses, 'success', [], []);
 
-test('provide a path', async t => {
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa(binPath, [getFixture('failure')]));
+test('provide a path', verifyCliFails, '', [getFixture('failure')], [
+	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+	'',
+	'1 error',
+]);
 
-	t.is(exitCode, 1);
-	verifyCli(t, stderr, [
-		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-		'',
-		'1 error',
-	]);
-});
+test('cli help flag: --help', verifyCliPasses, '', ['--help'], [
+	'Usage',
+]);
 
-test('cli help flag: --help', async t => {
-	const {exitCode} = await execa(binPath, ['--help']);
-
-	t.is(exitCode, 0);
-});
-
-test('cli version flag: --version', async t => {
-	const {packageJson: pkg} = await readPackageUp() ?? {packageJson: {}};
-	const {exitCode, stdout} = await execa(binPath, ['--version']);
-
-	t.is(exitCode, 0);
-	t.is(stdout, pkg.version);
-});
+test('cli version flag: --version', verifyCliPasses, '', ['--version'], [pkg.version]);
 
 test('cli typings flag: --typings', verifyCliFails, 'typings-custom-dir', ['--typings', 'utils/index.d.ts'], [
 	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
@@ -81,25 +71,24 @@ test('cli typings and files flags', verifyCliFails, 'typings-custom-dir', ['-t',
 	'1 error',
 ]);
 
-test('tsd logs stacktrace on failure', async t => {
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa(binPath, {cwd: getFixture('empty-package-json')}));
-
+test('tsd logs stacktrace on failure', verifyCliFails, 'empty-package-json', [], () => {
 	const nodeModulesPath = path.resolve('node_modules');
 	const parseJsonPath = resolveFrom.silent(`${nodeModulesPath}/read-pkg`, 'parse-json') ?? `${nodeModulesPath}/index.js`;
 
-	t.is(exitCode, 1);
-	verifyCli(t, stderr, [
+	return [
 		'Error running tsd:',
 		'JSONError: Unexpected end of JSON input while parsing empty string',
 		`at parseJson (${parseJsonPath}:29:21)`,
 		`at module.exports (${nodeModulesPath}/read-pkg/index.js:17:15)`,
 		`at async module.exports (${nodeModulesPath}/read-pkg-up/index.js:14:16)`,
-	], {startLine: 0});
-});
+	];
+}, {startLine: 0});
 
 test('exported formatter matches cli results', async t => {
 	const options = {cwd: getFixture('failure')};
+
 	const {stderr: cliResults} = await t.throwsAsync<ExecaError>(execa(binPath, options));
+	const formattedTsdResults = formatter(await tsd(options));
 
 	verifyCli(t, cliResults, [
 		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
@@ -107,10 +96,7 @@ test('exported formatter matches cli results', async t => {
 		'1 error',
 	]);
 
-	const tsdResults = await tsd(options);
-	const formattedResults = formatter(tsdResults);
-
-	verifyCli(t, formattedResults, [
+	verifyCli(t, formattedTsdResults, [
 		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
 		'',
 		'1 error',
@@ -131,11 +117,6 @@ test('warnings are reported with errors', verifyCliFails, 'warnings/with-errors'
 	'1 error',
 ]);
 
-test('tsd failures (not crashes) report only the message', async t => {
-	const cwd = path.resolve('fixtures/no-tsd');
-
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa(binPath, {cwd}));
-
-	t.is(exitCode, 1);
-	t.is(stderr, `The type definition \`index.d.ts\` does not exist at \`${cwd}/index.d.ts\`. Is the path correct? Create one and try again.`);
-});
+test('tsd failures (not crashes) report only the message', verifyCliFails, 'no-tsd', [], cwd => [
+	`The type definition \`index.d.ts\` does not exist at \`${cwd}/index.d.ts\`. Is the path correct? Create one and try again.`,
+]);

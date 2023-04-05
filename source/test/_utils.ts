@@ -1,7 +1,8 @@
+import process from 'node:process';
 import path from 'node:path';
 import test, {type ExecutionContext} from 'ava';
 import {type ExecaError, execa} from 'execa';
-import tsd from '../index.js';
+import tsd, {type Options} from '../lib/index.js';
 import type {Diagnostic} from '../lib/interfaces.js';
 
 export const binPath = path.resolve('../cli.js');
@@ -146,7 +147,9 @@ export const verifyCli = (
 	t.deepEqual(receivedLines, expectedLines, 'Received diagnostics that are different from expectations!');
 };
 
-export const getFixture = (fixtureName: string) => path.resolve('fixtures', fixtureName);
+export const getFixture = (fixtureName: string) => fixtureName.length > 0
+	? path.resolve('fixtures', fixtureName)
+	: process.cwd();
 
 type VerifyType = 'verify' | 'verifyWithFileName' | 'verifyWithDiff';
 
@@ -158,10 +161,27 @@ type ExpectationType<Type extends VerifyType> = (
 			: ExpectationWithDiff[]
 );
 
+type VerifyTsdOptions = {
+	fixtureName: string;
+	tsdOptions?: Omit<Options, 'cwd'>;
+};
+
+type FixtureName = string;
+
+const parseOptions = (options: FixtureName | VerifyTsdOptions) => {
+	const [fixtureName, tsdOptions] = typeof options === 'string'
+		? [options, {}]
+		: [options.fixtureName, options.tsdOptions ?? {}];
+
+	const cwd = getFixture(fixtureName);
+
+	return {cwd, tsdOptions};
+};
+
 const _verifyTsd = <Type extends VerifyType>(verifyType: Type) => (
-	test.macro(async (t, fixtureName: string, expectations: ExpectationType<Type>) => {
-		const cwd = getFixture(fixtureName);
-		const diagnostics = await tsd({cwd});
+	test.macro(async (t, options: FixtureName | VerifyTsdOptions, expectations: ExpectationType<Type>) => {
+		const {cwd, tsdOptions} = parseOptions(options);
+		const diagnostics = await tsd({cwd, ...tsdOptions});
 
 		switch (verifyType) {
 			case 'verify': {
@@ -191,21 +211,34 @@ export const verifyTsdWithFileNames = _verifyTsd('verifyWithFileName');
 export const verifyTsdWithDiff = _verifyTsd('verifyWithDiff');
 
 export const noDiagnostics = test.macro(async (t, fixtureName: string) => {
-	const cwd = path.resolve('fixtures', fixtureName);
+	const cwd = getFixture(fixtureName);
 	const diagnostics = await tsd({cwd});
 
 	verify(t, diagnostics, []);
 });
 
-const _verifyCli = (shouldPass: boolean) => test.macro(async (t, fixtureName: string, args: string[], expectedLines: string[], options?: VerifyCliOptions) => {
-	const cwd = getFixture(fixtureName);
-	const result = shouldPass
-		? await execa(binPath, args, {cwd})
-		: await t.throwsAsync<ExecaError>(execa(binPath, args, {cwd}));
-
-	verifyCli(t, result?.stdout ?? result?.stderr ?? '', expectedLines, options);
-	t.is(result?.exitCode, shouldPass ? 0 : 1, 'CLI exited with the wrong exit code!');
+// TODO: maybe use TsdError in generic
+export const verifyTsdFails = test.macro(async (t, options: FixtureName | VerifyTsdOptions, message: (cwd: string) => string) => {
+	const {cwd, tsdOptions} = parseOptions(options);
+	await t.throwsAsync(tsd({cwd, ...tsdOptions}), {message: message(cwd)});
 });
+
+const _verifyCli = (shouldPass: boolean) => (
+	test.macro(async (t, fixtureName: string, args: string[], expectations: string[] | ((cwd: string) => string[]), options?: VerifyCliOptions) => {
+		const cwd = getFixture(fixtureName);
+
+		const result = shouldPass
+			? await execa(binPath, args, {cwd})
+			: await t.throwsAsync<ExecaError>(execa(binPath, args, {cwd}));
+
+		const expectedLines = typeof expectations === 'function'
+			? expectations(cwd)
+			: expectations;
+
+		verifyCli(t, result?.stdout ?? result?.stderr ?? '', expectedLines, options);
+		t.is(result?.exitCode, shouldPass ? 0 : 1, 'CLI exited with the wrong exit code!');
+	})
+);
 
 export const verifyCliPasses = _verifyCli(true);
 export const verifyCliFails = _verifyCli(false);
