@@ -1,7 +1,10 @@
 import path from 'node:path';
 import test, {type ExecutionContext} from 'ava';
+import {type ExecaError, execa} from 'execa';
 import tsd from '../index.js';
 import type {Diagnostic} from '../lib/interfaces.js';
+
+export const binPath = path.resolve('../cli.js');
 
 type Expectation = [
 	line: number,
@@ -119,6 +122,10 @@ export const verifyWithDiff = (
 	t.deepEqual(diagnosticObjs, expectationObjs, 'Received diagnostics that are different from expectations!');
 };
 
+type VerifyCliOptions = {
+	startLine: number;
+};
+
 /**
  * Verify a list of diagnostics reported from the CLI.
  *
@@ -132,28 +139,28 @@ export const verifyCli = (
 	diagnostics: string,
 	expectedLines: string[],
 	// eslint-disable-next-line unicorn/no-object-as-default-parameter
-	{startLine}: {startLine: number} = {startLine: 1}, // Skip file location.
+	{startLine}: VerifyCliOptions = {startLine: 1}, // Skip file location.
 ) => {
 	const receivedLines = diagnostics.trim().split('\n').slice(startLine).map(line => line.trim());
 
 	t.deepEqual(receivedLines, expectedLines, 'Received diagnostics that are different from expectations!');
 };
 
-type VerifyType = 'verify' | 'verifyWithFileName' | 'verifyWithDiff' | 'verifyCli';
+export const getFixture = (fixtureName: string) => path.resolve('fixtures', fixtureName);
+
+type VerifyType = 'verify' | 'verifyWithFileName' | 'verifyWithDiff';
 
 type ExpectationType<Type extends VerifyType> = (
 	Type extends 'verify'
 		? Expectation[]
 		: Type extends 'verifyWithFileName'
 			? ExpectationWithFileName[]
-			: Type extends 'verifyWithDiff'
-				? ExpectationWithDiff[]
-				: string[]
+			: ExpectationWithDiff[]
 );
 
 const _verifyTsd = <Type extends VerifyType>(verifyType: Type) => (
 	test.macro(async (t, fixtureName: string, expectations: ExpectationType<Type>) => {
-		const cwd = path.resolve('fixtures', fixtureName);
+		const cwd = getFixture(fixtureName);
 		const diagnostics = await tsd({cwd});
 
 		switch (verifyType) {
@@ -172,10 +179,6 @@ const _verifyTsd = <Type extends VerifyType>(verifyType: Type) => (
 				break;
 			}
 
-			// Case 'verifyCli': {
-			// 	verifyCli(t, diagnostics, expectations as ExpectationType<'verifyCli'>);
-			// 	break;
-			// }
 			default: {
 				break;
 			}
@@ -186,7 +189,6 @@ const _verifyTsd = <Type extends VerifyType>(verifyType: Type) => (
 export const verifyTsd = _verifyTsd('verify');
 export const verifyTsdWithFileNames = _verifyTsd('verifyWithFileName');
 export const verifyTsdWithDiff = _verifyTsd('verifyWithDiff');
-// Export const verifyCli = _verifyTsd('verifyCli');
 
 export const noDiagnostics = test.macro(async (t, fixtureName: string) => {
 	const cwd = path.resolve('fixtures', fixtureName);
@@ -194,3 +196,16 @@ export const noDiagnostics = test.macro(async (t, fixtureName: string) => {
 
 	verify(t, diagnostics, []);
 });
+
+const _verifyCli = (shouldPass: boolean) => test.macro(async (t, fixtureName: string, args: string[], expectedLines: string[], options?: VerifyCliOptions) => {
+	const cwd = getFixture(fixtureName);
+	const result = shouldPass
+		? await execa(binPath, args, {cwd})
+		: await t.throwsAsync<ExecaError>(execa(binPath, args, {cwd}));
+
+	verifyCli(t, result?.stdout ?? result?.stderr ?? '', expectedLines, options);
+	t.is(result?.exitCode, shouldPass ? 0 : 1, 'CLI exited with the wrong exit code!');
+});
+
+export const verifyCliPasses = _verifyCli(true);
+export const verifyCliFails = _verifyCli(false);
