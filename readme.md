@@ -1,4 +1,4 @@
-# tsd ![CI](https://github.com/SamVerschueren/tsd/workflows/CI/badge.svg)
+# tsd ![CI](https://github.com/tsdjs/tsd/workflows/CI/badge.svg)
 
 > Check TypeScript type definitions
 
