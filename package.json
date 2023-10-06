@@ -3,7 +3,7 @@
 	"version": "0.29.0",
 	"description": "Check TypeScript type definitions",
 	"license": "MIT",
-	"repository": "SamVerschueren/tsd",
+	"repository": "tsdjs/tsd",
 	"author": {
 		"name": "Sam Verschueren",
 		"email": "sam.verschueren@gmail.com",
