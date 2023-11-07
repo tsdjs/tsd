@@ -14,7 +14,7 @@
 	"types": "./dist/index.d.ts",
 	"bin": "./dist/cli.js",
 	"engines": {
-		"node": ">=16"
+		"node": ">=18"
 	},
 	"scripts": {
 		"prepublishOnly": "npm run build",
