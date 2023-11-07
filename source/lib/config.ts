@@ -29,7 +29,7 @@ const loadConfig = (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 		compilerOptions: {
 			strict: true,
 			jsx: ts.JsxEmit.React,
-			lib: parseRawLibs(['es2020', 'dom', 'dom.iterable'], cwd),
+			lib: parseRawLibs(['es2022', 'dom', 'dom.iterable'], cwd),
 			module,
 			target: ts.ScriptTarget.ES2020,
 			esModuleInterop: true,
