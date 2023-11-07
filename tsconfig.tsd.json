@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
 		"outDir": "dist",
-		"target": "ES2021", // Node.js 16
+		"target": "ES2022", // Node.js 18
 		"lib": [
-			"ES2021"
+			"ES2022"
 		],
 		"module": "node16",
 		"moduleResolution": "node16",
