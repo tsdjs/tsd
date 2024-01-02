@@ -43,6 +43,7 @@ const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.MemberCannotHaveOverrideModifierBecauseItIsNotDeclaredInBaseClass,
 	DiagnosticCode.MemberMustHaveOverrideModifier,
 	DiagnosticCode.StringLiteralTypeIsNotAssignableToUnionTypeWithSuggestion,
+	DiagnosticCode.ObjectLiteralMayOnlySpecifyKnownProperties,
 ]);
 
 type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
