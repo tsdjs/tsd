@@ -44,6 +44,7 @@ const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.MemberMustHaveOverrideModifier,
 	DiagnosticCode.StringLiteralTypeIsNotAssignableToUnionTypeWithSuggestion,
 	DiagnosticCode.ObjectLiteralMayOnlySpecifyKnownProperties,
+	DiagnosticCode.ObjectLiteralMayOnlySpecifyKnownProperties2,
 ]);
 
 type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
