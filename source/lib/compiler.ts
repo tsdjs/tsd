@@ -76,6 +76,10 @@ const ignoreDiagnostic = (
 
 		// Diagnostic is inside of `expectError` clause
 		if (diagnosticFileName === location.fileName && start > location.start && start < location.end) {
+			if (expectErrorDiagnosticCodesToIgnore.has(diagnostic.code)) {
+				return location;
+			}
+
 			// Ignore syntactical errors
 			if (diagnostic.code < 2000) {
 				expectedErrors.delete(location);
@@ -83,12 +87,8 @@ const ignoreDiagnostic = (
 			}
 
 			// Set diagnostic code on `ExpectedError` to log
-			if (!expectErrorDiagnosticCodesToIgnore.has(diagnostic.code)) {
-				error.code = diagnostic.code;
-				return 'preserve';
-			}
-
-			return location;
+			error.code = diagnostic.code;
+			return 'preserve';
 		}
 	}
 
