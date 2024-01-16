@@ -45,6 +45,16 @@ const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.StringLiteralTypeIsNotAssignableToUnionTypeWithSuggestion,
 	DiagnosticCode.ObjectLiteralMayOnlySpecifyKnownProperties,
 	DiagnosticCode.ObjectLiteralMayOnlySpecifyKnownProperties2,
+	DiagnosticCode.UnableToResolveSignatureOfClassDecorator,
+	DiagnosticCode.UnableToResolveSignatureOfParameterDecorator,
+	DiagnosticCode.UnableToResolveSignatureOfPropertyDecorator,
+	DiagnosticCode.UnableToResolveSignatureOfMethodDecorator,
+	DiagnosticCode.DecoratorCanOnlyDecorateMethodImplementation,
+	DiagnosticCode.DecoratorFunctionReturnTypeNotAssignableToType,
+	DiagnosticCode.DecoratorFunctionReturnTypeExpectedToBeVoidOrAny,
+	DiagnosticCode.RuntimeWillInvokeDecoratorWithXArgumentsButDecoratorExpectsY,
+	DiagnosticCode.RuntimeWillInvokeDecoratorWithXArgumentsButDecoratorExpectsAtLeastY,
+	DiagnosticCode.AcceptsTooFewArgumentsToBeUsedAsDecoratorHere,
 ]);
 
 type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;

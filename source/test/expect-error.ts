@@ -52,6 +52,18 @@ test('expectError for values (exactOptionalPropertyTypes enabled)', async t => {
 	verify(t, diagnostics, []);
 });
 
+test('expectError for decorators', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/decorators')});
+
+	verify(t, diagnostics, []);
+});
+
+test('expectError for experimental decorators', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/experimental-decorators')});
+
+	verify(t, diagnostics, []);
+});
+
 test('expectError should report missing diagnostic codes', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/missing-diagnostic-code')});
 
