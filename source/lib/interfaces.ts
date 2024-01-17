@@ -23,7 +23,17 @@ export interface Context {
 }
 
 export enum DiagnosticCode {
+	UnableToResolveSignatureOfClassDecorator = 1238,
+	UnableToResolveSignatureOfParameterDecorator = 1239,
+	UnableToResolveSignatureOfPropertyDecorator = 1240,
+	UnableToResolveSignatureOfMethodDecorator = 1241,
+	DecoratorCanOnlyDecorateMethodImplementation = 1249,
+	DecoratorFunctionReturnTypeNotAssignableToType = 1270,
+	DecoratorFunctionReturnTypeExpectedToBeVoidOrAny = 1271,
+	RuntimeWillInvokeDecoratorWithXArgumentsButDecoratorExpectsY = 1278,
+	RuntimeWillInvokeDecoratorWithXArgumentsButDecoratorExpectsAtLeastY = 1279,
 	AwaitExpressionOnlyAllowedWithinAsyncFunction = 1308,
+	AcceptsTooFewArgumentsToBeUsedAsDecoratorHere = 1329,
 	TopLevelAwaitOnlyAllowedWhenModuleESNextOrSystem = 1378,
 	GenericTypeRequiresTypeArguments = 2314,
 	GenericTypeRequiresBetweenXAndYTypeArugments = 2707,
