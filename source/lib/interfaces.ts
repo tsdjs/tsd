@@ -46,6 +46,7 @@ export enum DiagnosticCode {
 	IndexSignatureOnlyPermitsReading = 2542,
 	NoOverloadExpectsCountOfArguments = 2575,
 	ThisContextOfTypeNotAssignableToMethodOfThisType = 2684,
+	Type1IsMissingPropertiesFromType2 = 2740,
 	PropertyMissingInType1ButRequiredInType2 = 2741,
 	NoOverloadExpectsCountOfTypeArguments = 2743,
 	NoOverloadMatches = 2769,
