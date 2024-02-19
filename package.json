@@ -1,6 +1,6 @@
 {
 	"name": "tsd",
-	"version": "0.30.4",
+	"version": "0.30.5",
 	"description": "Check TypeScript type definitions",
 	"license": "MIT",
 	"repository": "tsdjs/tsd",
