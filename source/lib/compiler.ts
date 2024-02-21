@@ -24,6 +24,7 @@ const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.NoOverloadExpectsCountOfArguments,
 	DiagnosticCode.NoOverloadExpectsCountOfTypeArguments,
 	DiagnosticCode.NoOverloadMatches,
+	DiagnosticCode.Type1IsMissingPropertiesFromType2,
 	DiagnosticCode.PropertyMissingInType1ButRequiredInType2,
 	DiagnosticCode.TypeHasNoPropertiesInCommonWith,
 	DiagnosticCode.ThisContextOfTypeNotAssignableToMethodOfThisType,
@@ -39,6 +40,18 @@ const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.MemberCannotHaveOverrideModifierBecauseItIsNotDeclaredInBaseClass,
 	DiagnosticCode.MemberMustHaveOverrideModifier,
 	DiagnosticCode.StringLiteralTypeIsNotAssignableToUnionTypeWithSuggestion,
+	DiagnosticCode.ObjectLiteralMayOnlySpecifyKnownProperties,
+	DiagnosticCode.ObjectLiteralMayOnlySpecifyKnownProperties2,
+	DiagnosticCode.UnableToResolveSignatureOfClassDecorator,
+	DiagnosticCode.UnableToResolveSignatureOfParameterDecorator,
+	DiagnosticCode.UnableToResolveSignatureOfPropertyDecorator,
+	DiagnosticCode.UnableToResolveSignatureOfMethodDecorator,
+	DiagnosticCode.DecoratorCanOnlyDecorateMethodImplementation,
+	DiagnosticCode.DecoratorFunctionReturnTypeNotAssignableToType,
+	DiagnosticCode.DecoratorFunctionReturnTypeExpectedToBeVoidOrAny,
+	DiagnosticCode.RuntimeWillInvokeDecoratorWithXArgumentsButDecoratorExpectsY,
+	DiagnosticCode.RuntimeWillInvokeDecoratorWithXArgumentsButDecoratorExpectsAtLeastY,
+	DiagnosticCode.AcceptsTooFewArgumentsToBeUsedAsDecoratorHere,
 ]);
 
 type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
@@ -68,6 +81,10 @@ const ignoreDiagnostic = (
 
 		// Diagnostic is inside of `expectError` clause
 		if (diagnosticFileName === location.fileName && start > location.start && start < location.end) {
+			if (expectErrorDiagnosticCodesToIgnore.has(diagnostic.code)) {
+				return location;
+			}
+
 			// Ignore syntactical errors
 			if (diagnostic.code < 2000) {
 				expectedErrors.delete(location);
@@ -75,12 +92,8 @@ const ignoreDiagnostic = (
 			}
 
 			// Set diagnostic code on `ExpectedError` to log
-			if (!expectErrorDiagnosticCodesToIgnore.has(diagnostic.code)) {
-				error.code = diagnostic.code;
-				return 'preserve';
-			}
-
-			return location;
+			error.code = diagnostic.code;
+			return 'preserve';
 		}
 	}
 

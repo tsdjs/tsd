@@ -1,9 +1,9 @@
 {
 	"name": "tsd",
-	"version": "0.28.1",
+	"version": "0.30.5",
 	"description": "Check TypeScript type definitions",
 	"license": "MIT",
-	"repository": "SamVerschueren/tsd",
+	"repository": "tsdjs/tsd",
 	"author": {
 		"name": "Sam Verschueren",
 		"email": "sam.verschueren@gmail.com",
@@ -36,7 +36,7 @@
 		"typedefinitions"
 	],
 	"dependencies": {
-		"@tsd/typescript": "~5.0.3",
+		"@tsd/typescript": "~5.3.3",
 		"eslint-formatter-pretty": "^5.0.0",
 		"globby": "^13.1.3",
 		"jest-diff": "^29.5.0",

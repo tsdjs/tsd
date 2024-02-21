@@ -22,6 +22,18 @@ test('expectError for values (noImplicitAny disabled)', noDiagnostics, 'expect-e
 
 test('expectError for values (exactOptionalPropertyTypes enabled)', noDiagnostics, 'expect-error/enabled-exact-optional-property-types');
 
+test('expectError for decorators', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/decorators')});
+
+	verify(t, diagnostics, []);
+});
+
+test('expectError for experimental decorators', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/experimental-decorators')});
+
+	verify(t, diagnostics, []);
+});
+
 test('expectError should report missing diagnostic codes', verifyTsd, 'expect-error/missing-diagnostic-code', [
 	[8, 12, 'error', 'Cannot find name \'undeclared\'.'],
 	[5, 0, 'error', 'Expected an error, but found none.'],
