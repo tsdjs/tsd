@@ -80,16 +80,16 @@
 		"ignores": [
 			"source/test/fixtures"
 		],
+		"parserOptions": {
+			"project": "./tsconfig.tsd.json"
+		},
 		"rules": {
 			"no-bitwise": "off",
-			"unicorn/prevent-abbreviations": [
-				"error",
-				{
-					"replacements": {
-						"doc": false
-					}
+			"unicorn/prevent-abbreviations": ["error", {
+				"replacements": {
+					"doc": false
 				}
-			]
+			}]
 		}
 	}
 }
