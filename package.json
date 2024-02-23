@@ -10,8 +10,10 @@
 		"url": "https://github.com/SamVerschueren"
 	},
 	"type": "module",
-	"exports": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"exports": {
+		"types": "./dist/index.d.ts",
+		"default": "./dist/index.js"
+	},
 	"bin": "./dist/cli.js",
 	"engines": {
 		"node": ">=18"
@@ -19,7 +21,7 @@
 	"scripts": {
 		"prepublishOnly": "npm run build",
 		"test": "xo && tsc --project tsconfig.tsd.json --noEmit && ava",
-		"build": "del-cli dist && tsc --project tsconfig.tsd.json && chmod +x dist/cli.js"
+		"build": "tsc --project tsconfig.build.json && chmod +x dist/cli.js && tsup"
 	},
 	"files": [
 		"dist/**/*.js",
@@ -37,40 +39,38 @@
 	],
 	"dependencies": {
 		"@tsd/typescript": "~5.3.3",
-		"eslint-formatter-pretty": "^5.0.0",
-		"globby": "^13.1.3",
-		"jest-diff": "^29.5.0",
-		"meow": "^11.0.0",
-		"p-map": "^5.5.0",
+		"eslint-formatter-pretty": "^6.0.1",
+		"globby": "^14.0.1",
+		"jest-diff": "^29.7.0",
+		"meow": "^13.2.0",
+		"p-map": "^7.0.1",
 		"path-exists": "^5.0.0",
-		"read-pkg-up": "^9.1.0"
+		"read-package-up": "^11.0.0"
 	},
 	"devDependencies": {
-		"@types/common-tags": "^1.8.1",
-		"@types/node": "^16",
-		"@types/react": "^16.9.2",
-		"ava": "^5.2.0",
+		"@sindresorhus/tsconfig": "^5.0.0",
+		"@types/common-tags": "^1.8.4",
+		"@types/node": "^18",
+		"@types/react": "^18",
+		"ava": "^6.1.1",
 		"common-tags": "^1.8.2",
-		"del-cli": "^3.0.0",
-		"execa": "^7.1.1",
+		"eslint": "^8.56.0",
+		"execa": "^8.0.1",
 		"react": "^16.9.0",
 		"resolve-from": "^5.0.0",
 		"rxjs": "^6.5.3",
-		"tsx": "^3.12.6",
-		"typescript": "~5.0.3",
-		"xo": "^0.53.1"
+		"tsimp": "^2.0.11",
+		"tsup": "^8.0.2",
+		"typescript": "~5.3.3",
+		"xo": "^0.57.0"
 	},
 	"ava": {
 		"timeout": "2m",
-		"files": [
-			"source/test/**/*",
-			"!source/test/fixtures/**/*"
-		],
 		"extensions": {
 			"ts": "module"
 		},
 		"nodeArguments": [
-			"--loader=tsx"
+			"--import=tsimp"
 		],
 		"environmentVariables": {
 			"ESBK_TSCONFIG_PATH": "tsconfig.tsd.json"
@@ -81,7 +81,15 @@
 			"source/test/fixtures"
 		],
 		"rules": {
-			"no-bitwise": "off"
+			"no-bitwise": "off",
+			"unicorn/prevent-abbreviations": [
+				"error",
+				{
+					"replacements": {
+						"doc": false
+					}
+				}
+			]
 		}
 	}
 }

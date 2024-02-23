@@ -13,7 +13,7 @@ const getJsonPropertyPosition = (content: string, property: string) => {
 	}
 
 	const lines = match[0].split('\n');
-	const lastLine = lines[lines.length - 1];
+	const lastLine = lines.at(-1);
 
 	return {
 		line: lines.length,

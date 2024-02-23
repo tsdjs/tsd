@@ -10,12 +10,10 @@ import {
 	noDiagnostics,
 } from './_utils.js';
 
-test('throw if no type definition was found', verifyTsdFails, 'no-tsd', cwd => (
-	`The type definition \`index.d.ts\` does not exist at \`${path.join(cwd, 'index.d.ts')}\`. Is the path correct? Create one and try again.`
-));
+// TODO: remove unused fixtures
 
 test('throw if no test is found', verifyTsdFails, 'no-test', cwd => (
-	`The test file \`index.test-d.ts\` or \`index.test-d.tsx\` does not exist in \`${cwd}\`. Create one and try again.`
+	`No test files were found in \`${cwd}\` or in any of its subdirectories.`
 ));
 
 test('return diagnostics', verifyTsd, 'failure', [
@@ -25,26 +23,6 @@ test('return diagnostics', verifyTsd, 'failure', [
 test('return diagnostics from imported files as well', verifyTsdWithFileNames, 'failure-nested', [
 	[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', 'child.test-d.ts'],
 	[6, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.', 'index.test-d.ts'],
-]);
-
-test('fail if typings file is not part of `files` list', verifyTsdWithFileNames, 'no-files', [
-	[3, 1, 'error', 'TypeScript type definition `index.d.ts` is not part of the `files` list.', 'package.json'],
-]);
-
-test('allow specifying folders containing typings file in `files` list', noDiagnostics, 'files-folder');
-
-test('allow specifying negative gitignore-style patterns in `files` list', verifyTsd, 'files-gitignore-patterns/negative-pattern', [
-	[3, 1, 'error', 'TypeScript type definition `index.d.ts` is not part of the `files` list.'],
-]);
-
-test('allow specifying negated negative (positive) gitignore-style patterns in `files` list', noDiagnostics, 'files-gitignore-patterns/negative-pattern-negated');
-
-test('allow specifying root marker (/) gitignore-style patterns in `files` list', noDiagnostics, 'files-gitignore-patterns/root-marker-pattern');
-
-test('allow specifying glob patterns containing typings file in `files` list', noDiagnostics, 'files-glob');
-
-test('fail if `typings` property is used instead of `types`', verifyTsdWithFileNames, 'types-property/typings', [
-	[3, 1, 'error', 'Use property `types` instead of `typings`.', 'package.json'],
 ]);
 
 test('fail if tests don\'t pass in strict mode', verifyTsdWithFileNames, 'failure-strict-null-checks', [
@@ -74,8 +52,6 @@ test('use moduleResolution `node16` when module is `node16` in tsconfig.json', n
 
 test('use moduleResolution `node16` when module is `node16` in package.json', noDiagnostics, 'module-resolution/node16-from-package-json');
 
-test('add support for esm with esModuleInterop', noDiagnostics, 'esm');
-
 test('add DOM support by default', noDiagnostics, 'dom');
 
 test('a lib option in package.json overrdides a lib option in tsconfig.json', noDiagnostics, 'lib-config/lib-from-package-json-overrides-tsconfig-json');
@@ -85,18 +61,6 @@ test('pass in loose mode when strict mode is disabled in settings', noDiagnostic
 test('return no diagnostics', noDiagnostics, 'success');
 
 test('support non-barrel main', noDiagnostics, 'test-non-barrel-main');
-
-test('allow omitting `types` property when `main` property is missing but main is a barrel (`index.js`) and .d.ts file matches main', verifyTsd, 'no-explicit-types-property/without-main', [
-	[6, 0, 'error', 'Expected an error, but found none.'],
-]);
-
-test('allow omitting `types` property when `main` property is set to a barrel (`index.js`) and .d.ts file matches main', verifyTsd, 'no-explicit-types-property/with-main-barrel', [
-	[6, 0, 'error', 'Expected an error, but found none.'],
-]);
-
-test('allow omitting `types` property when `main` property is set to non-barrel (`foo.js`) and .d.ts file matches main', verifyTsd, 'no-explicit-types-property/with-main-other', [
-	[6, 0, 'error', 'Expected an error, but found none.'],
-]);
 
 test('support testing in sub-directories', noDiagnostics, 'test-in-subdir');
 
@@ -114,9 +78,7 @@ test('missing import', verifyTsd, 'missing-import', [
 	[3, 18, 'error', 'Cannot find name \'Primitive\'.'],
 ]);
 
-test('tsx component', noDiagnostics, 'tsx/component');
-
-test('tsx component type', noDiagnostics, 'tsc/component-type');
+test('tsx component', noDiagnostics, 'tsx');
 
 test('loose types', verifyTsd, 'strict-types/loose', [
 	[5, 0, 'error', 'Parameter type `string` is declared too wide for argument type `"cat"`.'],
@@ -135,11 +97,9 @@ test('loose types', verifyTsd, 'strict-types/loose', [
 
 test('strict types', noDiagnostics, 'strict-types/strict');
 
-test('typings in custom directory', verifyTsd,
-	{fixtureName: 'typings-custom-dir', tsdOptions: {typingsFile: 'utils/index.d.ts'}}, [
-		[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.'],
-	],
-);
+test('typings in custom directory', verifyTsd, 'typings-custom-dir', [
+	[5, 19, 'error', 'Argument of type \'number\' is not assignable to parameter of type \'string\'.'],
+]);
 
 test('specify test files manually', verifyTsd,
 	{fixtureName: 'specify-test-files', tsdOptions: {testFiles: ['unknown.test.ts', 'second.test.ts']}}, [
@@ -149,7 +109,7 @@ test('specify test files manually', verifyTsd,
 
 test('fails if typings file is not found in the specified path', verifyTsdFails,
 	{fixtureName: 'typings-custom-dir', tsdOptions: {testFiles: ['unknown.test.ts']}},
-	cwd => `The type definition \`unknown.d.ts\` does not exist at \`${path.join(cwd, 'unknown.d.ts')}\`. Is the path correct? Create one and try again.`,
+	() => 'Could not find any test files with the given pattern(s).',
 );
 
 test('includes extended config files along with found ones', verifyTsd, 'ts-config-extends', [
@@ -222,3 +182,5 @@ test('custom tsd errors are created correctly', t => {
 	t.is(tsdError?.name, 'TsdError');
 	t.is(tsdError?.message, 'foo');
 });
+
+// TODO: provide export like tsd/assertions?

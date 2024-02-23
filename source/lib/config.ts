@@ -1,18 +1,20 @@
 import ts, {type CompilerOptions} from '@tsd/typescript';
 import type {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces.js';
 
+// TODO: update this
+
 /**
  * Load the configuration settings.
  *
  * @param pkg - The package.json object.
  * @returns The config object.
  */
-const loadConfig = (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
-	const pkgConfig = pkg.tsd ?? {};
+const loadConfig = (package_: PackageJsonWithTsdConfig, cwd: string): Config => {
+	const packageConfig = package_.tsd ?? {};
 
 	const tsConfigCompilerOptions = getOptionsFromTsConfig(cwd);
 	const packageJsonCompilerOptions = parseCompilerConfigObject(
-		pkgConfig.compilerOptions ?? {},
+		packageConfig.compilerOptions ?? {},
 		cwd,
 	);
 
@@ -25,7 +27,7 @@ const loadConfig = (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 
 	return {
 		directory: 'test-d',
-		...pkgConfig,
+		...packageConfig,
 		compilerOptions: {
 			strict: true,
 			jsx: ts.JsxEmit.React,

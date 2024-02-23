@@ -1,4 +1,4 @@
-import {expectType} from '../../../../index.js';
+import {expectType} from '../../../index.js';
 import append from './index.js';
 
 const parent = document.createElement('div');

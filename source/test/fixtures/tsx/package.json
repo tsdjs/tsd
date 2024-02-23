@@ -6,6 +6,9 @@
 		"index.d.ts"
 	],
 	"dependencies": {
-		"react": "*"
+		"react": "18"
+	},
+	"imports": {
+		"#tsd": "../../../index.js"
 	}
 }

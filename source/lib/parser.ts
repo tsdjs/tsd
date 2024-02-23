@@ -2,7 +2,7 @@ import ts, {type Program, type Node, type CallExpression} from '@tsd/typescript'
 import {Assertion} from './assertions/index.js';
 import {type Location, type Diagnostic} from './interfaces.js';
 
-const assertionFnNames = new Set<string>(Object.values(Assertion));
+const assertionFunctionNames = new Set<string>(Object.values(Assertion));
 
 /**
  * Extract all assertions.
@@ -38,7 +38,7 @@ export const extractAssertions = (program: Program): Map<Assertion, Set<CallExpr
 		const identifier = symbol.getName();
 
 		// Check if the call type is a valid assertion
-		if (assertionFnNames.has(identifier)) {
+		if (assertionFunctionNames.has(identifier)) {
 			const assertion = identifier as Assertion;
 
 			const nodes = assertions.get(assertion) ?? new Set<CallExpression>();

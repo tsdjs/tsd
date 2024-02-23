@@ -1,5 +1,5 @@
 import type {CompilerOptions} from '@tsd/typescript';
-import type {NormalizedPackageJson} from 'read-pkg-up';
+import type {NormalizedPackageJson} from 'read-package-up';
 
 export type RawCompilerOptions = Record<string, any>;
 
@@ -17,7 +17,6 @@ export type PackageJsonWithTsdConfig = NormalizedPackageJson & {
 export type Context = {
 	cwd: string;
 	pkg: PackageJsonWithTsdConfig;
-	typingsFile: string;
 	testFiles: string[];
 	config: Config;
 };
@@ -84,13 +83,6 @@ export type Location = {
 	start: number;
 	end: number;
 };
-
-export class TsdError extends Error {
-	constructor(message: string) {
-		super(message);
-		this.name = this.constructor.name;
-	}
-}
 
 export class TsdError extends Error {
 	constructor(message: string) {

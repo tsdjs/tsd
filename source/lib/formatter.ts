@@ -59,6 +59,7 @@ const formatter = (diagnostics: Diagnostic[], showDiff = false): string => {
 		entry.messages.push(diagnostic);
 	}
 
+	// @ts-expect-error
 	return String(prettyFormatter([...fileMap.values()]));
 };
 

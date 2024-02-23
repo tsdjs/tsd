@@ -1,11 +1,15 @@
 import process from 'node:process';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import test, {type ExecutionContext} from 'ava';
-import {type ExecaError, execa} from 'execa';
+import {
+	type ExecaError, execa, execaNode, execaCommand,
+} from 'execa';
 import tsd, {type Options} from '../lib/index.js';
 import type {Diagnostic} from '../lib/interfaces.js';
 
-export const binPath = path.resolve('../cli.js');
+// TODO: switch to URL when execa is updated
+export const binPath = fileURLToPath(new URL('../cli.ts', import.meta.url));
 
 type Expectation = [
 	line: number,
@@ -148,7 +152,7 @@ export const verifyCli = (
 };
 
 export const getFixture = (fixtureName: string) => fixtureName.length > 0
-	? path.resolve('fixtures', fixtureName)
+	? fileURLToPath(new URL(`fixtures/${fixtureName}`, import.meta.url))
 	: process.cwd();
 
 type VerifyType = 'verify' | 'verifyWithFileName' | 'verifyWithDiff';
@@ -183,26 +187,32 @@ const _verifyTsd = <Type extends VerifyType>(verifyType: Type) => (
 		const {cwd, tsdOptions} = parseOptions(options);
 		const diagnostics = await tsd({cwd, ...tsdOptions});
 
-		switch (verifyType) {
-			case 'verify': {
-				verify(t, diagnostics, expectations as ExpectationType<'verify'>);
-				break;
-			}
+		const assertions = await t.try(tt => {
+			tt.log('cwd:', cwd);
 
-			case 'verifyWithFileName': {
-				verifyWithFileName(t, cwd, diagnostics, expectations as ExpectationType<'verifyWithFileName'>);
-				break;
-			}
+			switch (verifyType) {
+				case 'verify': {
+					verify(tt, diagnostics, expectations as ExpectationType<'verify'>);
+					break;
+				}
 
-			case 'verifyWithDiff': {
-				verifyWithDiff(t, diagnostics, expectations as ExpectationType<'verifyWithDiff'>);
-				break;
-			}
+				case 'verifyWithFileName': {
+					verifyWithFileName(tt, cwd, diagnostics, expectations as ExpectationType<'verifyWithFileName'>);
+					break;
+				}
 
-			default: {
-				break;
+				case 'verifyWithDiff': {
+					verifyWithDiff(tt, diagnostics, expectations as ExpectationType<'verifyWithDiff'>);
+					break;
+				}
+
+				default: {
+					break;
+				}
 			}
-		}
+		});
+
+		assertions.commit({retainLogs: !assertions.passed});
 	})
 );
 
@@ -214,7 +224,12 @@ export const noDiagnostics = test.macro(async (t, fixtureName: string) => {
 	const cwd = getFixture(fixtureName);
 	const diagnostics = await tsd({cwd});
 
-	verify(t, diagnostics, []);
+	const assertions = await t.try(tt => {
+		tt.log('cwd:', cwd);
+		verify(tt, diagnostics, []);
+	});
+
+	assertions.commit({retainLogs: !assertions.passed});
 });
 
 // TODO: maybe use TsdError in generic
@@ -224,19 +239,27 @@ export const verifyTsdFails = test.macro(async (t, options: FixtureName | Verify
 });
 
 const _verifyCli = (shouldPass: boolean) => (
-	test.macro(async (t, fixtureName: string, args: string[], expectations: string[] | ((cwd: string) => string[]), options?: VerifyCliOptions) => {
+	test.macro(async (t, fixtureName: string, arguments_: string[], expectations: string[] | ((cwd: string) => string[]), options?: VerifyCliOptions) => {
 		const cwd = getFixture(fixtureName);
 
-		const result = shouldPass
-			? await execa(binPath, args, {cwd})
-			: await t.throwsAsync<ExecaError>(execa(binPath, args, {cwd}));
+		const assertions = await t.try(async tt => {
+			tt.log('cwd:', cwd);
 
-		const expectedLines = typeof expectations === 'function'
-			? expectations(cwd)
-			: expectations;
+			const result = shouldPass
+				? await execa(binPath, arguments_, {cwd})
+				: await tt.throwsAsync<ExecaError>(execa(binPath, arguments_, {cwd, preferLocal: true}));
 
-		verifyCli(t, result?.stdout ?? result?.stderr ?? '', expectedLines, options);
-		t.is(result?.exitCode, shouldPass ? 0 : 1, 'CLI exited with the wrong exit code!');
+			tt.log(result);
+
+			const expectedLines = typeof expectations === 'function'
+				? expectations(cwd)
+				: expectations;
+
+			verifyCli(tt, result.stdout ?? result.stderr ?? '', expectedLines, options);
+			tt.is(result?.exitCode, shouldPass ? 0 : 1, 'CLI exited with the wrong exit code!');
+		});
+
+		assertions.commit({retainLogs: !assertions.passed});
 	})
 );
 

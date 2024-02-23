@@ -1,0 +1,10 @@
+{
+	"extends": "./tsconfig.tsd.json",
+	"include": ["source"],
+	"exclude": ["source/test"],
+	"compilerOptions": {
+		"outDir": "dist",
+		"removeComments": true,
+		"declaration": false,
+	},
+}

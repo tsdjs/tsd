@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env tsimp
 import process from 'node:process';
 import meow from 'meow';
 import {TsdError} from './lib/interfaces.js';
@@ -9,21 +9,20 @@ const cli = meow(`
 	Usage
 	  $ tsd [path]
 
-	  The given directory must contain a package.json and a typings file.
+	  The given directory must contain a package.json.
 
 	Info
 	  --help           Display help text
 	  --version        Display version info
 
 	Options
-	  --typings    -t  Type definition file to test  [Default: "types" property in package.json]
-	  --files      -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
-	  --show-diff      Show type error diffs         [Default: don't show]
+	  --files      -f  Glob of files to test  [Default: 'path/test-d/**/*.test-d.ts']
+	  --show-diff      Show type error diffs  [Default: don't show]
 
 	Examples
-	  $ tsd /path/to/project
+	  $ tsd path/to/project
 
-	  $ tsd --files /test/some/folder/*.ts --files /test/other/folder/*.tsx
+	  $ tsd --files test/some/folder/*.ts --files test/other/folder/*.tsx
 
 	  $ tsd
 
@@ -32,13 +31,9 @@ const cli = meow(`
 `, {
 	importMeta: import.meta,
 	flags: {
-		typings: {
-			type: 'string',
-			alias: 't',
-		},
 		files: {
 			type: 'string',
-			alias: 'f',
+			shortFlag: 'f',
 			isMultiple: true,
 		},
 		showDiff: {
@@ -65,9 +60,9 @@ const exit = (message: string, {isError = true}: {isError?: boolean} = {}) => {
 
 try {
 	const cwd = cli.input.at(0) ?? process.cwd();
-	const {typings: typingsFile, files: testFiles, showDiff} = cli.flags;
+	const {files: testFiles, showDiff} = cli.flags;
 
-	const diagnostics = await tsd({cwd, typingsFile, testFiles});
+	const diagnostics = await tsd({cwd, testFiles});
 
 	if (diagnostics.length > 0) {
 		const hasErrors = diagnostics.some(diagnostic => diagnostic.severity === 'error');
@@ -75,7 +70,7 @@ try {
 
 		exit(formattedDiagnostics, {isError: hasErrors});
 	}
-} catch (error: unknown) {
+} catch (error) {
 	const potentialError = error as Error | undefined;
 
 	if (potentialError instanceof TsdError) {

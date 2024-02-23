@@ -1,6 +1,11 @@
 import ts, {type Diagnostic as TSDiagnostic} from '@tsd/typescript';
 import {type ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser.js';
-import {type Diagnostic, DiagnosticCode, type Context, type Location} from './interfaces.js';
+import {
+	DiagnosticCode,
+	type Diagnostic,
+	type Context,
+	type Location,
+} from './interfaces.js';
 import {handle} from './assertions/index.js';
 
 // List of diagnostic codes that should be ignored in general

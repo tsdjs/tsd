@@ -1,7 +1,7 @@
 import path from 'node:path';
 import test from 'ava';
 import {execa, type ExecaError} from 'execa';
-import {readPackageUp} from 'read-pkg-up';
+import {readPackageUp} from 'read-package-up';
 import resolveFrom from 'resolve-from';
 import tsd, {formatter} from '../index.js';
 import {
@@ -13,7 +13,7 @@ import {
 } from './_utils.js';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, unicorn/no-await-expression-member
-const pkg = (await readPackageUp())?.packageJson!;
+const package_ = (await readPackageUp())?.packageJson!;
 
 test('fail if errors are found', verifyCliFails, 'failure', [], [
 	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
@@ -33,19 +33,7 @@ test('cli help flag: --help', verifyCliPasses, '', ['--help'], [
 	'Usage',
 ]);
 
-test('cli version flag: --version', verifyCliPasses, '', ['--version'], [pkg.version]);
-
-test('cli typings flag: --typings', verifyCliFails, 'typings-custom-dir', ['--typings', 'utils/index.d.ts'], [
-	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-	'',
-	'1 error',
-]);
-
-test('cli typings flag: -t', verifyCliFails, 'typings-custom-dir', ['-t', 'utils/index.d.ts'], [
-	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-	'',
-	'1 error',
-]);
+test('cli version flag: --version', verifyCliPasses, '', ['--version'], [package_.version]);
 
 test('cli files flag: --files', verifyCliFails, 'specify-test-files', ['--files', 'unknown.test.ts'], [
 	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
@@ -65,12 +53,6 @@ test('cli files flag: array', verifyCliFails, 'specify-test-files', ['--files', 
 	'1 error',
 ]);
 
-test('cli typings and files flags', verifyCliFails, 'typings-custom-dir', ['-t', 'utils/index.d.ts', '-f', 'index.test-d.ts'], [
-	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-	'',
-	'1 error',
-]);
-
 test('tsd logs stacktrace on failure', verifyCliFails, 'empty-package-json', [], () => {
 	const nodeModulesPath = path.resolve('node_modules');
 	const parseJsonPath = resolveFrom.silent(`${nodeModulesPath}/read-pkg`, 'parse-json') ?? `${nodeModulesPath}/index.js`;
@@ -80,7 +62,7 @@ test('tsd logs stacktrace on failure', verifyCliFails, 'empty-package-json', [],
 		'JSONError: Unexpected end of JSON input while parsing empty string',
 		`at parseJson (${parseJsonPath}:29:21)`,
 		`at module.exports (${nodeModulesPath}/read-pkg/index.js:17:15)`,
-		`at async module.exports (${nodeModulesPath}/read-pkg-up/index.js:14:16)`,
+		`at async module.exports (${nodeModulesPath}/read-package-up/index.js:14:16)`,
 	];
 }, {startLine: 0});
 

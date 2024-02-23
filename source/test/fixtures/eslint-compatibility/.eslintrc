@@ -1,9 +1,10 @@
 {
-	"root": false,
+	"root": true,
 	"parserOptions": {
 		"project": "source/test/fixtures/eslint-compatibility/tsconfig.json"
 	},
 	"rules": {
 		"@typescript-eslint/no-unsafe-call": "error"
 	}
+	// TODO: fix config now that tsd is using xo
 }

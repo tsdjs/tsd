@@ -1,26 +1,24 @@
-import type {TypeChecker, Expression, JSDocTagInfo} from '@tsd/typescript';
-
-const {isCallLikeExpression, displayPartsToString} = await import('@tsd/typescript');
+import ts from '@tsd/typescript';
 
 const resolveCommentHelper = <R extends 'JSDoc' | 'DocComment'>(resolve: R) => {
-	type ConditionalResolveReturn = (R extends 'JSDoc' ? Map<string, JSDocTagInfo> : string) | undefined;
+	type ConditionalResolveReturn = (R extends 'JSDoc' ? Map<string, ts.JSDocTagInfo> : string) | undefined;
 
-	const handler = (checker: TypeChecker, expression: Expression): ConditionalResolveReturn => {
-		const ref = isCallLikeExpression(expression)
+	const handler = (checker: ts.TypeChecker, expression: ts.Expression): ConditionalResolveReturn => {
+		const reference = ts.isCallLikeExpression(expression)
 			? checker.getResolvedSignature(expression)
 			: checker.getSymbolAtLocation(expression);
 
-		if (!ref) {
+		if (!reference) {
 			return;
 		}
 
 		switch (resolve) {
 			case 'JSDoc': {
-				return new Map<string, JSDocTagInfo>(ref.getJsDocTags().map(tag => [tag.name, tag])) as ConditionalResolveReturn;
+				return new Map<string, ts.JSDocTagInfo>(reference.getJsDocTags().map(tag => [tag.name, tag])) as ConditionalResolveReturn;
 			}
 
 			case 'DocComment': {
-				return displayPartsToString(ref.getDocumentationComment(checker)) as ConditionalResolveReturn;
+				return ts.displayPartsToString(reference.getDocumentationComment(checker)) as ConditionalResolveReturn;
 			}
 
 			default: {
@@ -57,8 +55,8 @@ export const resolveDocComment = resolveCommentHelper('DocComment');
  * @param expression - The expression to convert.
  * @return The string representation of the expression or `undefined` if it couldn't be resolved.
  */
-export const expressionToString = (checker: TypeChecker, expression: Expression): string | undefined => {
-	if (isCallLikeExpression(expression)) {
+export const expressionToString = (checker: ts.TypeChecker, expression: ts.Expression): string | undefined => {
+	if (ts.isCallLikeExpression(expression)) {
 		const signature = checker.getResolvedSignature(expression);
 
 		if (!signature) {
