@@ -40,6 +40,8 @@ expectError(() => {
 	triggerSuggestion.fooOrBar = 'fooo';
 })
 
+expectError(triggerSuggestion.fooOrBars);
+
 expectError(() => {
     const foo: ReadonlyKeys = {
 		bar: 'baz',

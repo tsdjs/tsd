@@ -42,6 +42,7 @@ export enum DiagnosticCode {
 	PropertyDoesNotExistOnType = 2339,
 	ArgumentTypeIsNotAssignableToParameterType = 2345,
 	CannotAssignToReadOnlyProperty = 2540,
+	PropertyDoesNotExistOnTypeDidYouMean = 2551,
 	ExpectedArgumentsButGotOther = 2554,
 	ExpectedAtLeastArgumentsButGotOther = 2555,
 	TypeHasNoPropertiesInCommonWith = 2559,
