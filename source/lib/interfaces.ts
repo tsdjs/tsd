@@ -65,6 +65,7 @@ export enum DiagnosticCode {
 	MemberCannotHaveOverrideModifierBecauseItIsNotDeclaredInBaseClass = 4113,
 	MemberMustHaveOverrideModifier = 4114,
 	NewExpressionTargetLackingConstructSignatureHasAnyType = 7009,
+	ErrorIsOfTypeUnknown = 18046,
 }
 
 export interface Diagnostic {
