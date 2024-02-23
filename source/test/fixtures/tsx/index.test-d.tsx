@@ -1,6 +1,6 @@
-import * as React from 'react';
-import {expectType, expectError} from '../../../..';
-import {Unicorn} from '.';
+import React from 'react';
+import {expectType, expectError} from '#tsd';
+import {Unicorn} from './index.js';
 
 expectType<JSX.Element>(<Unicorn unicorn={1} rainbow='🌈' />);
 

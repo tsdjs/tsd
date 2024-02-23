@@ -1,17 +1,18 @@
+import ts, {type Diagnostic as TSDiagnostic} from '@tsd/typescript';
+import {type ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser.js';
 import {
-	flattenDiagnosticMessageText,
-	createProgram,
-	Diagnostic as TSDiagnostic
-} from '@tsd/typescript';
-import {ExpectedError, extractAssertions, parseErrorAssertionToLocation} from './parser';
-import {Diagnostic, DiagnosticCode, Context, Location} from './interfaces';
-import {handle} from './assertions';
+	DiagnosticCode,
+	type Diagnostic,
+	type Context,
+	type Location,
+} from './interfaces.js';
+import {handle} from './assertions/index.js';
 
 // List of diagnostic codes that should be ignored in general
 const ignoredDiagnostics = new Set<number>([
 	// Older TS version report 'await expression only allowed within async function
 	DiagnosticCode.AwaitExpressionOnlyAllowedWithinAsyncFunction,
-	DiagnosticCode.TopLevelAwaitOnlyAllowedWhenModuleESNextOrSystem
+	DiagnosticCode.TopLevelAwaitOnlyAllowedWhenModuleESNextOrSystem,
 ]);
 
 // List of diagnostic codes which should be ignored inside `expectError` statements
@@ -72,18 +73,16 @@ type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
  */
 const ignoreDiagnostic = (
 	diagnostic: TSDiagnostic,
-	expectedErrors: Map<Location, ExpectedError>
+	expectedErrors: Map<Location, ExpectedError>,
 ): IgnoreDiagnosticResult => {
 	if (ignoredDiagnostics.has(diagnostic.code)) {
 		// Filter out diagnostics which are present in the `ignoredDiagnostics` set
 		return 'ignore';
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const diagnosticFileName = diagnostic.file!.fileName;
 
 	for (const [location, error] of expectedErrors) {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const start = diagnostic.start!;
 
 		// Diagnostic is inside of `expectError` clause
@@ -116,11 +115,12 @@ const ignoreDiagnostic = (
 export const getDiagnostics = (context: Context): Diagnostic[] => {
 	const diagnostics: Diagnostic[] = [];
 
-	const program = createProgram(context.testFiles, context.config.compilerOptions);
+	const program = ts.createProgram(context.testFiles, context.config.compilerOptions);
 
-	const tsDiagnostics = program
-		.getSemanticDiagnostics()
-		.concat(program.getSyntacticDiagnostics());
+	const tsDiagnostics = [
+		...program.getSemanticDiagnostics(),
+		...program.getSyntacticDiagnostics(),
+	];
 
 	const assertions = extractAssertions(program);
 
@@ -147,15 +147,14 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 			continue;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
 
 		diagnostics.push({
 			fileName: diagnostic.file.fileName,
-			message: flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
+			message: ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'),
 			severity: 'error',
 			line: position.line + 1,
-			column: position.character
+			column: position.character,
 		});
 	}
 
@@ -164,14 +163,14 @@ export const getDiagnostics = (context: Context): Diagnostic[] => {
 	}
 
 	for (const [, diagnostic] of expectedErrors) {
-		const message = diagnostic.code ?
-			`Found an error that tsd does not currently support (\`ts${diagnostic.code}\`), consider creating an issue on GitHub.` :
-			'Expected an error, but found none.';
+		const message = diagnostic.code
+			? `Found an error that tsd does not currently support (\`ts${diagnostic.code}\`), consider creating an issue on GitHub.`
+			: 'Expected an error, but found none.';
 
 		diagnostics.push({
 			...diagnostic,
 			message,
-			severity: 'error'
+			severity: 'error',
 		});
 	}
 

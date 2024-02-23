@@ -1,7 +1,7 @@
-export {Handler} from './handler';
+export type {Handler} from './handler.js';
 
 // Handlers
-export {isIdentical, isNotIdentical, isNever} from './identicality';
-export {isNotAssignable} from './assignability';
-export {expectDeprecated, expectNotDeprecated} from './expect-deprecated';
-export {printTypeWarning, expectDocCommentIncludes} from './informational';
+export {isIdentical, isNotIdentical, isNever} from './identicality.js';
+export {isNotAssignable} from './assignability.js';
+export {expectDeprecated, expectNotDeprecated} from './expect-deprecated.js';
+export {printTypeWarning, expectDocCommentIncludes} from './informational.js';

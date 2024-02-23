@@ -1,5 +1,5 @@
-import {expectDeprecated} from '../../../..';
-import concat, {Unicorn, Options} from '.';
+import {expectDeprecated} from '../../../../index.js';
+import concat, {Unicorn, Options} from './index.js';
 
 // Methods
 expectDeprecated(concat('foo', 'bar'));

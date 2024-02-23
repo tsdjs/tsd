@@ -1,14 +1,9 @@
-import filesProperty from './files-property';
-import typesProperty from './types-property';
-import {Diagnostic, Context} from '../interfaces';
+import type {Diagnostic, Context} from '../interfaces.js';
 
-type RuleFunction = (context: Context) => Diagnostic[];
+type RuleFunction = (context: Context) => Promise<Diagnostic[]>;
 
 // List of custom rules
-const rules = new Set<RuleFunction>([
-	filesProperty,
-	typesProperty
-]);
+const rules: RuleFunction[] = [];
 
 /**
  * Get a list of custom diagnostics within the current context.
@@ -16,12 +11,11 @@ const rules = new Set<RuleFunction>([
  * @param context - The context object.
  * @returns List of diagnostics
  */
-export default (context: Context) => {
-	const diagnostics: Diagnostic[] = [];
-
-	for (const rule of rules) {
-		diagnostics.push(...rule(context));
-	}
-
-	return diagnostics;
+const getCustomDiagnostics = async (context: Context): Promise<Diagnostic[]> => {
+	const diagnostics = await Promise.all(rules.map(async rule => rule(context)));
+	return diagnostics.flat();
 };
+
+export default getCustomDiagnostics;
+
+// TODO: add rules for modern best practices?

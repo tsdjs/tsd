@@ -1,5 +1,5 @@
-import {expectNotType} from '../../../..';
-import concat from '.';
+import {expectNotType} from '../../../../index.js';
+import concat from './index.js';
 
 expectNotType<number>(concat('foo', 'bar'));
 expectNotType<string | number>(concat('foo', 'bar'));

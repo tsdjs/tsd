@@ -1,5 +1,5 @@
-module.exports.default = (foo, bar) => {
+export default (foo, bar) => {
 	return foo + bar;
 };
 
-module.exports.returnsNever = () => {};
+export const returnsNever = () => {};

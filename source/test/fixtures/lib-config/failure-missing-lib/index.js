@@ -1,1 +1,1 @@
-module.exports.default = window;
+export default window;

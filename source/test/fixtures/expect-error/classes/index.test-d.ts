@@ -1,5 +1,5 @@
-import {expectError} from '../../../..';
-import {Foo} from '.';
+import {expectError} from '../../../../index.js';
+import {Foo} from './index.js';
 
 const numberFoo = new Foo<number>();
 

@@ -1,24 +1,8 @@
 {
+	"extends": "@sindresorhus/tsconfig",
 	"compilerOptions": {
-		"outDir": "dist",
-		"target": "es6",
-		"lib": [
-			"es2015"
-		],
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"declaration": true,
-		"pretty": true,
-		"newLine": "lf",
-		"stripInternal": true,
-		"strict": true,
-		"noImplicitReturns": true,
-		"noImplicitOverride": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
-		"noEmitOnError": true,
-		"forceConsistentCasingInFileNames": true,
+		// TODO: enable this rule
+		"noUncheckedIndexedAccess": false,
 		"esModuleInterop": true,
 	},
 	"exclude": [

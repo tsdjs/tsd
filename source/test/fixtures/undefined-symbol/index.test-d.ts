@@ -1,4 +1,4 @@
-import {expectType} from '../../../..';
+import {expectType} from '../../../index.js';
 
 // Identifier `bar` has no Symbol
 const anyCall = (foo: any) => foo.bar();

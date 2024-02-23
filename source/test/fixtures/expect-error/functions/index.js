@@ -1,6 +1,6 @@
-module.exports.default = (foo, bar) => foo + bar;
+export default (foo, bar) => foo + bar;
 
-module.exports.two = (foo, bar, baz) => {
+export const two = (foo, bar, baz) => {
 	if (foo!= null && bar != null && baz != null) {
 		return foo + bar + baz;
 	} else {
@@ -8,4 +8,4 @@ module.exports.two = (foo, bar, baz) => {
 	}
 };
 
-exports.three = (foo) => 'a';
+export const three = (foo) => 'a';

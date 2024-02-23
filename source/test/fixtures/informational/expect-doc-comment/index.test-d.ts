@@ -1,4 +1,4 @@
-import {expectDocCommentIncludes} from '../../../..';
+import {expectDocCommentIncludes} from '../../../../index.js';
 
 const noDocComment = 'no doc comment';
 

@@ -5,7 +5,7 @@
  * @param property - Property to search for.
  * @returns Position of the property or `undefined` if the property could not be found.
  */
-export default (content: string, property: string) => {
+const getJsonPropertyPosition = (content: string, property: string) => {
 	const match = new RegExp(`([\\s\\S]*?)"${property}"`, 'm').exec(content);
 
 	if (!match) {
@@ -13,10 +13,12 @@ export default (content: string, property: string) => {
 	}
 
 	const lines = match[0].split('\n');
-	const lastLine = lines[lines.length - 1];
+	const lastLine = lines.at(-1);
 
 	return {
 		line: lines.length,
-		column: lastLine ? lastLine.indexOf(`"${property}"`) : 0
+		column: lastLine ? lastLine.indexOf(`"${property}"`) : 0,
 	};
 };
+
+export default getJsonPropertyPosition;

@@ -1,3 +1,3 @@
-exports.default = (parent, child) => {
+export default (parent, child) => {
 	parent.appendChild(child);
 };

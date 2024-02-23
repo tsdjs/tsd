@@ -1,5 +1,5 @@
-import {printType} from '../../../..';
-import {aboveZero, bigType} from '.';
+import {printType} from '../../../../index.js';
+import {aboveZero, bigType} from './index.js';
 
 printType(aboveZero);
 printType(null);

@@ -1,6 +1,6 @@
-import {CallExpression, TypeChecker, TypeFlags} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic, makeDiagnosticWithDiff} from '../../utils';
+import ts, {type CallExpression, type TypeChecker} from '@tsd/typescript';
+import type {Diagnostic} from '../../interfaces.js';
+import {makeDiagnostic, makeDiagnosticWithDiff} from '../../utils/index.js';
 
 /**
  * Asserts that the argument of the assertion is identical to the generic type of the assertion.
@@ -112,7 +112,7 @@ export const isNever = (checker: TypeChecker, nodes: Set<CallExpression>): Diagn
 	for (const node of nodes) {
 		const argumentType = checker.getTypeAtLocation(node.arguments[0]);
 
-		if (argumentType.flags !== TypeFlags.Never) {
+		if (argumentType.flags !== ts.TypeFlags.Never) {
 			diagnostics.push(makeDiagnostic(node, `Argument of type \`${checker.typeToString(argumentType)}\` is not \`never\`.`));
 		}
 	}

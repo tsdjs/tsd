@@ -1,8 +1,8 @@
-module.exports.default = (foo, bar) => {
+export default (foo, bar) => {
 	return foo + bar;
 };
 
-exports.two = (foo, bar) => {
+export const two = (foo, bar) => {
 	if (foo != null && bar != null) {
 		return bar;
 	} else {

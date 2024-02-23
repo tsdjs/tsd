@@ -1,4 +1,4 @@
-import {expectType} from '../../../..';
-import window from '.';
+import {expectType} from '../../../../index.js';
+import window from './index.js';
 
 expectType<Window>(window);

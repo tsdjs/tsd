@@ -1,16 +1,7 @@
-import {
-	JsxEmit,
-	ScriptTarget,
-	ModuleResolutionKind,
-	parseJsonConfigFileContent,
-	CompilerOptions,
-	findConfigFile,
-	sys,
-	readJsonConfigFile,
-	parseJsonSourceFileConfigFileContent,
-	ModuleKind
-} from '@tsd/typescript';
-import {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces';
+import ts, {type CompilerOptions} from '@tsd/typescript';
+import type {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces.js';
+
+// TODO: update this
 
 /**
  * Load the configuration settings.
@@ -18,13 +9,13 @@ import {Config, PackageJsonWithTsdConfig, RawCompilerOptions} from './interfaces
  * @param pkg - The package.json object.
  * @returns The config object.
  */
-export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
-	const pkgConfig = pkg.tsd ?? {};
+const loadConfig = (package_: PackageJsonWithTsdConfig, cwd: string): Config => {
+	const packageConfig = package_.tsd ?? {};
 
 	const tsConfigCompilerOptions = getOptionsFromTsConfig(cwd);
 	const packageJsonCompilerOptions = parseCompilerConfigObject(
-		pkgConfig.compilerOptions ?? {},
-		cwd
+		packageConfig.compilerOptions ?? {},
+		cwd,
 	);
 
 	const combinedCompilerOptions = {
@@ -32,40 +23,42 @@ export default (pkg: PackageJsonWithTsdConfig, cwd: string): Config => {
 		...packageJsonCompilerOptions,
 	};
 
-	const module = combinedCompilerOptions.module ?? ModuleKind.CommonJS;
+	const module = combinedCompilerOptions.module ?? ts.ModuleKind.CommonJS;
 
 	return {
 		directory: 'test-d',
-		...pkgConfig,
+		...packageConfig,
 		compilerOptions: {
 			strict: true,
-			jsx: JsxEmit.React,
-			lib: parseRawLibs(['es2020', 'dom', 'dom.iterable'], cwd),
+			jsx: ts.JsxEmit.React,
+			lib: parseRawLibs(['es2022', 'dom', 'dom.iterable'], cwd),
 			module,
-			target: ScriptTarget.ES2020,
+			target: ts.ScriptTarget.ES2020,
 			esModuleInterop: true,
 			noUnusedLocals: false,
 			...combinedCompilerOptions,
-			moduleResolution: module === ModuleKind.NodeNext ?
-				ModuleResolutionKind.NodeNext :
-				module === ModuleKind.Node16 ?
-					ModuleResolutionKind.Node16 :
-					ModuleResolutionKind.NodeJs,
-			skipLibCheck: false
-		}
+			moduleResolution: module === ts.ModuleKind.NodeNext
+				? ts.ModuleResolutionKind.NodeNext
+				: (module === ts.ModuleKind.Node16
+					? ts.ModuleResolutionKind.Node16
+					: ts.ModuleResolutionKind.Node10),
+			skipLibCheck: false,
+		},
 	};
 };
 
+export default loadConfig;
+
 function getOptionsFromTsConfig(cwd: string): CompilerOptions {
-	const configPath = findConfigFile(cwd, sys.fileExists);
+	const configPath = ts.findConfigFile(cwd, ts.sys.fileExists);
 
 	if (!configPath) {
 		return {};
 	}
 
-	return parseJsonSourceFileConfigFileContent(
-		readJsonConfigFile(configPath, sys.readFile),
-		sys,
+	return ts.parseJsonSourceFileConfigFileContent(
+		ts.readJsonConfigFile(configPath, ts.sys.readFile),
+		ts.sys,
 		cwd,
 		undefined,
 		configPath,
@@ -73,10 +66,10 @@ function getOptionsFromTsConfig(cwd: string): CompilerOptions {
 }
 
 function parseCompilerConfigObject(compilerOptions: RawCompilerOptions, cwd: string): CompilerOptions {
-	return parseJsonConfigFileContent(
+	return ts.parseJsonConfigFileContent(
 		{compilerOptions: compilerOptions || {}},
-		sys,
-		cwd
+		ts.sys,
+		cwd,
 	).options;
 }
 

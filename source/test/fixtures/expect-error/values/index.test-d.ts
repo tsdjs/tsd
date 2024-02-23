@@ -1,5 +1,5 @@
-import {expectError} from '../../../..';
-import {default as one, atLeastOne, foo, getFoo, HasKey, hasProperty, MyClass, Options, triggerSuggestion, ReadonlyKeys} from '.';
+import {expectError} from '../../../../index.js';
+import {default as one, atLeastOne, foo, getFoo, HasKey, hasProperty, MyClass, Options, triggerSuggestion, ReadonlyKeys} from './index.js';
 
 expectError<string>(1);
 expectError<string>('fo');

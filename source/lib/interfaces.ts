@@ -1,12 +1,12 @@
-import {CompilerOptions} from '@tsd/typescript';
-import {NormalizedPackageJson} from 'read-pkg-up';
+import type {CompilerOptions} from '@tsd/typescript';
+import type {NormalizedPackageJson} from 'read-package-up';
 
 export type RawCompilerOptions = Record<string, any>;
 
-export interface Config<Options = CompilerOptions> {
+export type Config<Options = CompilerOptions> = {
 	directory: string;
 	compilerOptions: Options;
-}
+};
 
 export type RawConfig = Partial<Config<RawCompilerOptions>>;
 
@@ -14,13 +14,12 @@ export type PackageJsonWithTsdConfig = NormalizedPackageJson & {
 	tsd?: RawConfig;
 };
 
-export interface Context {
+export type Context = {
 	cwd: string;
 	pkg: PackageJsonWithTsdConfig;
-	typingsFile: string;
 	testFiles: string[];
 	config: Config;
-}
+};
 
 export enum DiagnosticCode {
 	UnableToResolveSignatureOfClassDecorator = 1238,
@@ -68,7 +67,7 @@ export enum DiagnosticCode {
 	NewExpressionTargetLackingConstructSignatureHasAnyType = 7009,
 }
 
-export interface Diagnostic {
+export type Diagnostic = {
 	fileName: string;
 	message: string;
 	severity: 'error' | 'warning';
@@ -78,13 +77,13 @@ export interface Diagnostic {
 		expected: string;
 		received: string;
 	};
-}
+};
 
-export interface Location {
+export type Location = {
 	fileName: string;
 	start: number;
 	end: number;
-}
+};
 
 export class TsdError extends Error {
 	constructor(message: string) {

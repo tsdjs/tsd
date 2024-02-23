@@ -1,152 +1,76 @@
-import path from 'path';
+import path from 'node:path';
 import test from 'ava';
-import execa from 'execa';
-import readPkgUp from 'read-pkg-up';
-import tsd, {formatter} from '..';
-import {verifyCli} from './fixtures/utils';
+import {execa, type ExecaError} from 'execa';
+import {readPackageUp} from 'read-package-up';
 import resolveFrom from 'resolve-from';
+import tsd, {formatter} from '../index.js';
+import {
+	binPath,
+	getFixture,
+	verifyCli,
+	verifyCliPasses,
+	verifyCliFails,
+} from './_utils.js';
 
-interface ExecaError extends Error {
-	readonly exitCode: number;
-	readonly stderr: string;
-}
+// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, unicorn/no-await-expression-member
+const package_ = (await readPackageUp())?.packageJson!;
 
-test('fail if errors are found', async t => {
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', {
-		cwd: path.join(__dirname, 'fixtures/failure')
-	}));
+test('fail if errors are found', verifyCliFails, 'failure', [], [
+	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+	'',
+	'1 error',
+]);
 
-	t.is(exitCode, 1);
-	verifyCli(t, stderr, [
-		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-		'',
-		'1 error',
-	]);
-});
+test('succeed if no errors are found', verifyCliPasses, 'success', [], []);
 
-test('succeed if no errors are found', async t => {
-	const {exitCode} = await execa('../../../cli.js', {
-		cwd: path.join(__dirname, 'fixtures/success')
-	});
+test('provide a path', verifyCliFails, '', [getFixture('failure')], [
+	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+	'',
+	'1 error',
+]);
 
-	t.is(exitCode, 0);
-});
+test('cli help flag: --help', verifyCliPasses, '', ['--help'], [
+	'Usage',
+]);
 
-test('provide a path', async t => {
-	const file = path.join(__dirname, 'fixtures/failure');
+test('cli version flag: --version', verifyCliPasses, '', ['--version'], [package_.version]);
 
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('dist/cli.js', [file]));
+test('cli files flag: --files', verifyCliFails, 'specify-test-files', ['--files', 'unknown.test.ts'], [
+	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+	'',
+	'1 error',
+]);
 
-	t.is(exitCode, 1);
-	verifyCli(t, stderr, [
-		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-		'',
-		'1 error',
-	]);
-});
+test('cli files flag: -f', verifyCliFails, 'specify-test-files', ['-f', 'unknown.test.ts'], [
+	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+	'',
+	'1 error',
+]);
 
-test('cli help flag', async t => {
-	const {exitCode} = await execa('dist/cli.js', ['--help']);
+test('cli files flag: array', verifyCliFails, 'specify-test-files', ['--files', 'unknown.test.ts', '--files', 'second.test.ts'], [
+	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+	'',
+	'1 error',
+]);
 
-	t.is(exitCode, 0);
-});
-
-test('cli version flag', async t => {
-	const pkg = readPkgUp.sync({normalize: false})?.packageJson ?? {};
-
-	const {exitCode, stdout} = await execa('dist/cli.js', ['--version']);
-
-	t.is(exitCode, 0);
-	t.is(stdout, pkg.version);
-});
-
-test('cli typings flag', async t => {
-	const runTest = async (arg: '--typings' | '-t') => {
-		const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', [arg, 'utils/index.d.ts'], {
-			cwd: path.join(__dirname, 'fixtures/typings-custom-dir')
-		}));
-
-		t.is(exitCode, 1);
-		verifyCli(t, stderr, [
-			'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-			'',
-			'1 error',
-		]);
-	};
-
-	await runTest('--typings');
-	await runTest('-t');
-});
-
-test('cli files flag', async t => {
-	const runTest = async (arg: '--files' | '-f') => {
-		const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', [arg, 'unknown.test.ts'], {
-			cwd: path.join(__dirname, 'fixtures/specify-test-files')
-		}));
-
-		t.is(exitCode, 1);
-		verifyCli(t, stderr, [
-			'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-			'',
-			'1 error',
-		]);
-	};
-
-	await runTest('--files');
-	await runTest('-f');
-});
-
-test('cli files flag array', async t => {
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', ['--files', 'unknown.test.ts', '--files', 'second.test.ts'], {
-		cwd: path.join(__dirname, 'fixtures/specify-test-files')
-	}));
-
-	t.is(exitCode, 1);
-	verifyCli(t, stderr, [
-		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-		'',
-		'1 error',
-	]);
-});
-
-test('cli typings and files flags', async t => {
-	const typingsFile = 'dist/test/fixtures/typings-custom-dir/utils/index.d.ts';
-	const testFile = 'dist/test/fixtures/typings-custom-dir/index.test-d.ts';
-
-	const {exitCode, stderr} = t.throws<ExecaError>(() => execa.commandSync(`dist/cli.js -t ${typingsFile} -f ${testFile}`));
-
-	t.is(exitCode, 1);
-	verifyCli(t, stderr, [
-		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-		'',
-		'1 error',
-	]);
-});
-
-test('tsd logs stacktrace on failure', async t => {
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', {
-		cwd: path.join(__dirname, 'fixtures/empty-package-json')
-	}));
-
+test('tsd logs stacktrace on failure', verifyCliFails, 'empty-package-json', [], () => {
 	const nodeModulesPath = path.resolve('node_modules');
 	const parseJsonPath = resolveFrom.silent(`${nodeModulesPath}/read-pkg`, 'parse-json') ?? `${nodeModulesPath}/index.js`;
 
-	t.is(exitCode, 1);
-	verifyCli(t, stderr, [
+	return [
 		'Error running tsd:',
 		'JSONError: Unexpected end of JSON input while parsing empty string',
 		`at parseJson (${parseJsonPath}:29:21)`,
 		`at module.exports (${nodeModulesPath}/read-pkg/index.js:17:15)`,
-		`at async module.exports (${nodeModulesPath}/read-pkg-up/index.js:14:16)`,
-	], {startLine: 0});
-});
+		`at async module.exports (${nodeModulesPath}/read-package-up/index.js:14:16)`,
+	];
+}, {startLine: 0});
 
 test('exported formatter matches cli results', async t => {
-	const options = {
-		cwd: path.join(__dirname, 'fixtures/failure'),
-	};
+	const options = {cwd: getFixture('failure')};
 
-	const {stderr: cliResults} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', options));
+	const {stderr: cliResults} = await t.throwsAsync<ExecaError>(execa(binPath, options));
+	const formattedTsdResults = formatter(await tsd(options));
 
 	verifyCli(t, cliResults, [
 		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
@@ -154,49 +78,27 @@ test('exported formatter matches cli results', async t => {
 		'1 error',
 	]);
 
-	const tsdResults = await tsd(options);
-	const formattedResults = formatter(tsdResults);
-
-	verifyCli(t, formattedResults, [
+	verifyCli(t, formattedTsdResults, [
 		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
 		'',
 		'1 error',
 	]);
 });
 
-test('warnings are reported correctly and do not fail', async t => {
-	const {exitCode, stdout} = await execa('../../../../cli.js', {
-		cwd: path.join(__dirname, 'fixtures/warnings/only-warnings'),
-	});
+test('warnings are reported correctly and do not fail', verifyCliPasses, 'warnings/only-warnings', [], [
+	'⚠  4:0  Type for expression one(1, 1) is: number',
+	'',
+	'1 warning',
+]);
 
-	t.is(exitCode, 0);
-	verifyCli(t, stdout, [
-		'⚠  4:0  Type for expression one(1, 1) is: number',
-		'',
-		'1 warning',
-	]);
-});
+test('warnings are reported with errors', verifyCliFails, 'warnings/with-errors', [], [
+	'✖  5:19  Argument of type number is not assignable to parameter of type string.',
+	'⚠  4:0   Type for expression one(1, 1) is: number',
+	'',
+	'1 warning',
+	'1 error',
+]);
 
-test('warnings are reported with errors', async t => {
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../../cli.js', {
-		cwd: path.join(__dirname, 'fixtures/warnings/with-errors'),
-	}));
-
-	t.is(exitCode, 1);
-	verifyCli(t, stderr, [
-		'✖  5:19  Argument of type number is not assignable to parameter of type string.',
-		'⚠  4:0   Type for expression one(1, 1) is: number',
-		'',
-		'1 warning',
-		'1 error',
-	]);
-});
-
-test('tsd failures (not crashes) report only the message', async t => {
-	const cwd = path.join(__dirname, 'fixtures/no-tsd');
-
-	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', {cwd}));
-
-	t.is(exitCode, 1);
-	t.is(stderr, `The type definition \`index.d.ts\` does not exist at \`${cwd}/index.d.ts\`. Is the path correct? Create one and try again.`);
-});
+test('tsd failures (not crashes) report only the message', verifyCliFails, 'no-tsd', [], cwd => [
+	`The type definition \`index.d.ts\` does not exist at \`${cwd}/index.d.ts\`. Is the path correct? Create one and try again.`,
+]);

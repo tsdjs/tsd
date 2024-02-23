@@ -1,6 +1,6 @@
-import {CallExpression, TypeChecker} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic} from '../../utils';
+import type {CallExpression, TypeChecker} from '@tsd/typescript';
+import type {Diagnostic} from '../../interfaces.js';
+import {makeDiagnostic} from '../../utils/index.js';
 
 /**
  * Performs strict type assertion between the argument if the assertion, and the generic type of the assertion.

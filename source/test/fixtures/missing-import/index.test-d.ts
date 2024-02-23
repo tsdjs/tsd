@@ -1,5 +1,5 @@
-import {expectType} from '../../..';
-import {LiteralUnion} from '.';
+import {expectType} from '../../../index.js';
+import {LiteralUnion} from './index.js';
 
 type Pet = LiteralUnion<'dog' | 'cat', string>;
 

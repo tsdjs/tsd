@@ -1,5 +1,5 @@
-import {expectAssignable} from '../../../..';
-import concat from '.';
+import {expectAssignable} from '../../../../index.js';
+import concat from './index.js';
 
 expectAssignable<string | number>(concat('foo', 'bar'));
 expectAssignable<string | number>(concat(1, 2));

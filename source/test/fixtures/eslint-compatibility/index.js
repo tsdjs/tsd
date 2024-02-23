@@ -1,4 +1,3 @@
-module.exports.default = (foo, bar) => {
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/restrict-plus-operands
+export default (foo, bar) => {
 	return foo + bar;
 };

@@ -1,16 +1,16 @@
-import {CallExpression, TypeChecker, TypeFormatFlags} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
-import {makeDiagnostic, makeDiagnosticWithDiff, tsutils} from '../../utils';
+import ts, {type CallExpression, type TypeChecker} from '@tsd/typescript';
+import type {Diagnostic} from '../../interfaces.js';
+import {makeDiagnostic, makeDiagnosticWithDiff, tsutils} from '../../utils/index.js';
 
 /**
  * Default formatting flags set by TS plus the {@link TypeFormatFlags.NoTruncation NoTruncation} flag.
  *
  * @see {@link https://github.dev/microsoft/TypeScript/blob/b975dfa1027d1f3073fa7cbe6f7045bf4c882785/src/compiler/checker.ts#L4717 TypeChecker.typeToString}
  */
-const typeToStringFormatFlags =
-	TypeFormatFlags.AllowUniqueESSymbolType |
-	TypeFormatFlags.UseAliasDefinedOutsideCurrentScope |
-	TypeFormatFlags.NoTruncation;
+const typeToStringFormatFlags
+	= ts.TypeFormatFlags.AllowUniqueESSymbolType
+	| ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope
+	| ts.TypeFormatFlags.NoTruncation;
 
 /**
  * Prints the type of the argument of the assertion as a warning.

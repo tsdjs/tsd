@@ -1,6 +1,6 @@
-import {CallExpression, TypeChecker} from '@tsd/typescript';
-import {Diagnostic} from '../../interfaces';
-import {makeDiagnosticWithDiff} from '../../utils';
+import type {CallExpression, TypeChecker} from '@tsd/typescript';
+import type {Diagnostic} from '../../interfaces.js';
+import {makeDiagnosticWithDiff} from '../../utils/index.js';
 
 /**
  * Asserts that the argument of the assertion is not assignable to the generic type of the assertion.
