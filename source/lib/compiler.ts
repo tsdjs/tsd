@@ -56,6 +56,7 @@ const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.RuntimeWillInvokeDecoratorWithXArgumentsButDecoratorExpectsY,
 	DiagnosticCode.RuntimeWillInvokeDecoratorWithXArgumentsButDecoratorExpectsAtLeastY,
 	DiagnosticCode.AcceptsTooFewArgumentsToBeUsedAsDecoratorHere,
+	DiagnosticCode.PropertyDoesNotExistOnTypeDidYouMean,
 ]);
 
 type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
