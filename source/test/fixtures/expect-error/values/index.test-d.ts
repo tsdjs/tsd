@@ -13,7 +13,9 @@ try {
 		expectError(foo.bar = 'quux');
 		expectError(foo.quux);
 	}
-} catch {}
+} catch (error) {
+	expectError(error.code);
+}
 
 expectError(hasProperty({name: 1}));
 
