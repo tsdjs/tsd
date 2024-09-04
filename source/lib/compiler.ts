@@ -59,6 +59,7 @@ const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.AcceptsTooFewArgumentsToBeUsedAsDecoratorHere,
 	DiagnosticCode.PropertyDoesNotExistOnTypeDidYouMean,
 	DiagnosticCode.ErrorIsOfTypeUnknown,
+	DiagnosticCode.TwoDifferentTypesSameName,
 ]);
 
 type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;
