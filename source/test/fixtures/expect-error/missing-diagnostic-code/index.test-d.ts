@@ -8,14 +8,14 @@ expectError(one('foo', 'bar'));
 expectError(undeclared = one('foo', 'bar'));
 
 // ts2719
-interface T { }
+interface T {}
 declare const a: T;
 expectError(class Foo<T> {
-  x: T;
-  constructor(a: T) {
-    this.x = a;
-  }
-  fn() {
-    this.x = a;
-  }
+	x: T;
+	constructor(a: T) {
+		this.x = a;
+	}
+	fn() {
+		this.x = a;
+	}
 })
