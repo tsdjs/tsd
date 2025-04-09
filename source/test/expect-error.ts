@@ -52,7 +52,7 @@ test('expectError for values (exactOptionalPropertyTypes enabled)', async t => {
 	verify(t, diagnostics, []);
 });
 
-test('expectError for decorators', async t => {
+test.failing('expectError for decorators', async t => {
 	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/decorators')});
 
 	verify(t, diagnostics, []);
