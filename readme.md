@@ -22,7 +22,7 @@ The `tsd` CLI will search for the main `.d.ts` file in the current or specified 
 
 Use `tsd --help` for usage information. See [Order of Operations](#order-of-operations) for more details on how `tsd` finds and executes tests.
 
-*Note: the CLI is primarily used to test an entire project, not a specific file. For more specific configuration and advanced usage, see [Configuration](#configuration) and [Programmatic API](#programmatic-api).*
+_Note: the CLI is primarily used to test an entire project, not a specific file. For more specific configuration and advanced usage, see [Configuration](#configuration) and [Programmatic API](#programmatic-api)._
 
 ## Usage
 
@@ -40,9 +40,9 @@ export default concat;
 In order to test this definition, add a `index.test-d.ts` file.
 
 ```ts
-import concat from '.';
+import concat from ".";
 
-concat('foo', 'bar');
+concat("foo", "bar");
 concat(1, 2);
 ```
 
@@ -51,10 +51,10 @@ Running `npx tsd` as a command will verify that the type definition works correc
 Let's add some extra [assertions](#assertions). We can assert the return type of our function call to match a certain type.
 
 ```ts
-import {expectType} from 'tsd';
-import concat from '.';
+import { expectType } from "tsd";
+import concat from ".";
 
-expectType<string>(concat('foo', 'bar'));
+expectType<string>(concat("foo", "bar"));
 expectType<string>(concat(1, 2));
 ```
 
@@ -80,11 +80,11 @@ If we don't change the test file and we run the `tsd` command again, the test wi
 Type assertions are strict. This means that if you expect the type to be `string | number` but the argument is of type `string`, the tests will fail.
 
 ```ts
-import {expectType} from 'tsd';
-import concat from '.';
+import { expectType } from "tsd";
+import concat from ".";
 
-expectType<string>(concat('foo', 'bar'));
-expectType<string | number>(concat('foo', 'bar'));
+expectType<string>(concat("foo", "bar"));
+expectType<string | number>(concat("foo", "bar"));
 ```
 
 If we run `tsd`, we will notice that it reports an error because the `concat` method returns the type `string` and not `string | number`.
@@ -94,11 +94,11 @@ If we run `tsd`, we will notice that it reports an error because the `concat` me
 If you still want loose type assertion, you can use `expectAssignable` for that.
 
 ```ts
-import {expectType, expectAssignable} from 'tsd';
-import concat from '.';
+import { expectType, expectAssignable } from "tsd";
+import concat from ".";
 
-expectType<string>(concat('foo', 'bar'));
-expectAssignable<string | number>(concat('foo', 'bar'));
+expectType<string>(concat("foo", "bar"));
+expectAssignable<string | number>(concat("foo", "bar"));
 ```
 
 ### Top-level `await`
@@ -106,12 +106,12 @@ expectAssignable<string | number>(concat('foo', 'bar'));
 If your method returns a `Promise`, you can use top-level `await` to resolve the value instead of wrapping it in an `async` [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE).
 
 ```ts
-import {expectType, expectError} from 'tsd';
-import concat from '.';
+import { expectType, expectError } from "tsd";
+import concat from ".";
 
-expectType<Promise<string>>(concat('foo', 'bar'));
+expectType<Promise<string>>(concat("foo", "bar"));
 
-expectType<string>(await concat('foo', 'bar'));
+expectType<string>(await concat("foo", "bar"));
 
 expectError(await concat(true, false));
 ```
@@ -124,7 +124,15 @@ When searching for `.test-d.ts` files and executing them, `tsd` does the followi
 
 2. Finds a `.d.ts` file, checking to see if one was specified manually or in the `types` field of the `package.json`. If neither is found, attempts to find one in the project directory named the same as the `main` field of the `package.json` or `index.d.ts`. Fails if no `.d.ts` file is found.
 
-3. Finds `.test-d.ts` and `.test-d.tsx` files, which can either be in the project's root directory, a [specific folder](#test-directory) (by default `/[project-root]/test-d`), or specified individually [programatically](#testfiles) or via [the CLI](#via-the-cli). Fails if no test files are found.
+3. Finds `.test-d.ts` and `.test-d.tsx` files using the following priority order:
+
+   - **First**: Looks for test files in the project's root directory (e.g., `index.test-d.ts`)
+   - **Second**: Only if no root test files are found, looks in the [test directory](#test-directory) (by default `/[project-root]/test-d`) for any `.ts` or `.tsx` files
+   - **Alternative**: Test files can be specified individually [programatically](#testfiles) or via [the CLI](#via-the-cli)
+
+   **Important**: If you have both a root-level test file (like `index.test-d.ts`) and a test directory (like `test-d/`), only the root-level file will be executed. The test directory will be ignored. To use both, either move all tests to the test directory or use the `--files` flag to specify all test files explicitly.
+
+   Fails if no test files are found.
 
 4. Runs the `.test-d.ts` files through the TypeScript compiler and statically analyzes them for errors.
 
@@ -203,6 +211,8 @@ When you have spread your tests over multiple files, you can store all those fil
 
 Now you can put all your test files in the `my-test-dir` directory.
 
+**Note**: The test directory is only used when no test files are found in the project root. If you have both root-level test files (like `index.test-d.ts`) and a test directory, only the root files will be executed. See [Order of Operations](#order-of-operations) for more details.
+
 #### Custom TypeScript Config
 
 By default, `tsd` applies the following configuration:
@@ -240,7 +250,7 @@ These options will be overridden if a `tsconfig.json` file is found in your proj
 }
 ```
 
-*Default options will apply if you don't override them explicitly. You can't override the `moduleResolution` or `skipLibCheck` options.*
+_Default options will apply if you don't override them explicitly. You can't override the `moduleResolution` or `skipLibCheck` options._
 
 ### Via the CLI
 
@@ -258,12 +268,18 @@ Alias: `-f`
 
 An array of test files with their path. Same as [`testFiles`](#testfiles).
 
+This is particularly useful when you need to run tests from multiple locations (e.g., both root-level and test directory files):
+
+```bash
+tsd --files "index.test-d.ts" --files "test-d/**/*.test-d.ts"
+```
+
 ## Programmatic API
 
 You can use the programmatic API to retrieve the diagnostics and do something with them. This can be useful to run the tests with AVA, Jest or any other testing framework.
 
 ```ts
-import tsd from 'tsd';
+import tsd from "tsd";
 
 const diagnostics = await tsd();
 
@@ -274,7 +290,7 @@ console.log(diagnostics.length);
 You can also make use of the CLI's formatter to generate the same formatting output when running `tsd` programmatically.
 
 ```ts
-import tsd, {formatter} from 'tsd';
+import tsd, { formatter } from "tsd";
 
 const formattedDiagnostics = formatter(await tsd());
 ```
