@@ -140,23 +140,23 @@ When searching for `.test-d.ts` files and executing them, `tsd` does the followi
 
 ## Assertions
 
-### expectType&lt;T&gt;(expression: T)
+### expectType<T>(expression: T)
 
 Asserts that the type of `expression` is identical to type `T`.
 
-### expectNotType&lt;T&gt;(expression: any)
+### expectNotType<T>(expression: any)
 
 Asserts that the type of `expression` is not identical to type `T`.
 
-### expectAssignable&lt;T&gt;(expression: T)
+### expectAssignable<T>(expression: T)
 
 Asserts that the type of `expression` is assignable to type `T`.
 
-### expectNotAssignable&lt;T&gt;(expression: any)
+### expectNotAssignable<T>(expression: any)
 
 Asserts that the type of `expression` is not assignable to type `T`.
 
-### expectError&lt;T = any&gt;(expression: T)
+### expectError<T = any>(expression: T)
 
 Asserts that `expression` throws an error. Will not ignore syntax errors.
 
@@ -180,7 +180,7 @@ Asserts that the type and return type of `expression` is `never`.
 
 Useful for checking that all branches are covered.
 
-### expectDocCommentIncludes&lt;T&gt;(expression: any)
+### expectDocCommentIncludes<T>(expression: any)
 
 Asserts that the documentation comment of `expression` includes string literal type `T`.
 
