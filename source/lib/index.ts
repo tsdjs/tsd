@@ -11,6 +11,7 @@ export interface Options {
 	cwd: string;
 	typingsFile?: string;
 	testFiles?: readonly string[];
+	passWithNoTests?: boolean;
 }
 
 const findTypingsFile = async (pkg: PackageJsonWithTsdConfig, options: Options): Promise<string> => {
@@ -39,8 +40,12 @@ const normalizeTypingsFilePath = (typingsFilePath: string, options: Options) => 
 	return typingsFilePath;
 };
 
-const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: string) => {
+const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: string, passWithNoTests: boolean) => {
 	const testFiles = await globby(testFilesPattern, {cwd});
+
+	if (testFiles.length === 0 && passWithNoTests) {
+		return [];
+	}
 
 	if (testFiles.length === 0) {
 		throw new TsdError('Could not find any test files with the given pattern(s). Create one and try again.');
@@ -50,8 +55,10 @@ const findCustomTestFiles = async (testFilesPattern: readonly string[], cwd: str
 };
 
 const findTestFiles = async (typingsFilePath: string, options: Options & {config: Config}) => {
+	const passWithNoTests = options.passWithNoTests === true;
+
 	if (options.testFiles?.length) {
-		return findCustomTestFiles(options.testFiles, options.cwd);
+		return findCustomTestFiles(options.testFiles, options.cwd, passWithNoTests);
 	}
 
 	// Return only the filename if the `typingsFile` option is used.
@@ -63,6 +70,10 @@ const findTestFiles = async (typingsFilePath: string, options: Options & {config
 
 	let testFiles = await globby([testFile, tsxTestFile], {cwd: options.cwd});
 	const testDirExists = await pathExists(path.join(options.cwd, testDir));
+
+	if (testFiles.length === 0 && passWithNoTests) {
+		return [];
+	}
 
 	if (testFiles.length === 0 && !testDirExists) {
 		throw new TsdError(`The test file \`${testFile}\` or \`${tsxTestFile}\` does not exist in \`${options.cwd}\`. Create one and try again.`);
