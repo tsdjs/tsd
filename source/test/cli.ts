@@ -123,6 +123,32 @@ test('cli typings and files flags', async t => {
 	]);
 });
 
+test('cli passWithNoTests flag', async t => {
+	const runTest = async (arg: '--passWithNoTests') => {
+		const {exitCode} = await execa('../../../cli.js', [arg], {
+			cwd: path.join(__dirname, 'fixtures/no-test')
+		});
+
+		t.is(exitCode, 0);
+	};
+
+	await runTest('--passWithNoTests');
+});
+
+test('cli passWithNoTests flag and files', async t => {
+	const runTest = async (arg: '--pass-with-no-tests') => {
+		const testFile = path.join(__dirname, 'fixtures/does-not-exist.test-d.ts');
+
+		const {exitCode} = await execa('../../../cli.js', [arg, `--files ${testFile}`], {
+			cwd: path.join(__dirname, 'fixtures/no-test')
+		});
+
+		t.is(exitCode, 0);
+	};
+
+	await runTest('--pass-with-no-tests');
+});
+
 test('tsd logs stacktrace on failure', async t => {
 	const {exitCode, stderr} = await t.throwsAsync<ExecaError>(execa('../../../cli.js', {
 		cwd: path.join(__dirname, 'fixtures/empty-package-json')

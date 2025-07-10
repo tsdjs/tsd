@@ -11,13 +11,14 @@ const cli = meow(`
 	  The given directory must contain a package.json and a typings file.
 
 	Info
-	  --help           Display help text
-	  --version        Display version info
+	  --help                Display help text
+	  --version             Display version info
 
 	Options
-	  --typings    -t  Type definition file to test  [Default: "types" property in package.json]
-	  --files      -f  Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
-	  --show-diff      Show type error diffs         [Default: don't show]
+	  --typings    -t       Type definition file to test  [Default: "types" property in package.json]
+	  --files      -f       Glob of files to test         [Default: '/path/test-d/**/*.test-d.ts' or '.tsx']
+	  --show-diff           Show type error diffs         [Default: don't show]
+	  --pass-with-no-tests  Pass when no tests are found  [Default: false]
 
 	Examples
 	  $ tsd /path/to/project
@@ -42,6 +43,10 @@ const cli = meow(`
 		showDiff: {
 			type: 'boolean',
 		},
+		passWithNoTests: {
+			default: false,
+			type: 'boolean',
+		},
 	},
 });
 
@@ -64,9 +69,9 @@ const exit = (message: string, {isError = true}: {isError?: boolean} = {}) => {
 (async () => {
 	try {
 		const cwd = cli.input.length > 0 ? cli.input[0] : process.cwd();
-		const {typings: typingsFile, files: testFiles, showDiff} = cli.flags;
+		const {typings: typingsFile, files: testFiles, showDiff, passWithNoTests} = cli.flags;
 
-		const diagnostics = await tsd({cwd, typingsFile, testFiles});
+		const diagnostics = await tsd({cwd, typingsFile, testFiles, passWithNoTests});
 
 		if (diagnostics.length > 0) {
 			const hasErrors = diagnostics.some(diagnostic => diagnostic.severity === 'error');
