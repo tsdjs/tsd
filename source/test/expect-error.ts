@@ -73,3 +73,12 @@ test('expectError should report missing diagnostic codes', async t => {
 		[8, 0, 'error', 'Found an error that tsd does not currently support (`ts2304`), consider creating an issue on GitHub.'],
 	]);
 });
+
+test('expectError for disjoint comparisons', async t => {
+	const diagnostics = await tsd({cwd: path.join(__dirname, 'fixtures/expect-error/comparisons')});
+
+	verify(t, diagnostics, [
+		[11, 0, 'error', 'This comparison appears to be unintentional because the types \'string\' and \'number\' have no overlap.'],
+		[12, 0, 'error', 'Expected an error, but found none.'],
+	]);
+});
