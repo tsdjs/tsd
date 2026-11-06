@@ -60,6 +60,7 @@ const expectErrorDiagnosticCodesToIgnore = new Set<DiagnosticCode>([
 	DiagnosticCode.PropertyDoesNotExistOnTypeDidYouMean,
 	DiagnosticCode.ErrorIsOfTypeUnknown,
 	DiagnosticCode.TwoDifferentTypesSameName,
+	DiagnosticCode.UnintentionalComparison,
 ]);
 
 type IgnoreDiagnosticResult = 'preserve' | 'ignore' | Location;

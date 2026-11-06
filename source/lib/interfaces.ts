@@ -52,6 +52,7 @@ export enum DiagnosticCode {
 	ExpressionNotConstructable = 2351,
 	ObjectLiteralMayOnlySpecifyKnownProperties = 2353,
 	ObjectLiteralMayOnlySpecifyKnownProperties2 = 2561,
+	UnintentionalComparison = 2367,
 	TypeNotAssignableWithExactOptionalPropertyTypes = 2375,
 	TypeNotAssignableToParameterWithExactOptionalPropertyTypes = 2379,
 	TypeNotAssignableTypeOfTargetWithExactOptionalPropertyTypes = 2412,
