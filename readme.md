@@ -122,7 +122,7 @@ When searching for `.test-d.ts` files and executing them, `tsd` does the followi
 
 1. Locates the project's `package.json`, which needs to be in the current or specified directory (e.g. `/path/to/project` or `process.cwd()`). Fails if none is found.
 
-2. Finds a `.d.ts` file, checking to see if one was specified manually or in the `types` field of the `package.json`. If neither is found, attempts to find one in the project directory named the same as the `main` field of the `package.json` or `index.d.ts`. Fails if no `.d.ts` file is found.
+2. Selects a `.d.ts` file from a path specified manually, the `types` (or legacy `typings`) field of `package.json`, or a filename in the project directory derived from `main` (for example, `public-api.js` selects `public-api.d.ts`). If none of those are specified, selects `index.d.ts`. Fails if the selected file does not exist; it does not fall back to `index.d.ts` when a file selected from `main` is missing. Set `types` or use [`--typings`](#--typings) to select a different file.
 
 3. Finds `.test-d.ts` and `.test-d.tsx` files, which can either be in the project's root directory, a [specific folder](#test-directory) (by default `/[project-root]/test-d`), or specified individually [programatically](#testfiles) or via [the CLI](#via-the-cli). Fails if no test files are found.
 
